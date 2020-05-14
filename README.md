@@ -16,9 +16,12 @@
 
 ### Contribution guidelines ###
 
-* No guidelines yet, apart from the overall comments that
+No guidelines yet, apart from the overall comments that
+
 (1) the design of KIT is documented in the LibreOffice file  KIT Design Document.odt;
+
 (2) all interaction with SQLite is kept inside the file KITDAO.kt - the rest of the code is straight Kotlin code; and
+
 (3) comments about the software design are contained in comments in the source code.
 
 ### Whom do I talk to? ###
