@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ccs.kitand">
+    package="com.ccs.kitand"
+    android:name=".KITApp">
 
     <application
         android:allowBackup="true"
