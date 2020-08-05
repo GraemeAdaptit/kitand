@@ -765,6 +765,7 @@ id expand_activities_button
 id expanded_menu
 id forever
 id gone
+id greeting
 id group_divider
 id groups
 id home
