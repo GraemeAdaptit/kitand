@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="kitand/app" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/kitand.iml" filepath="$PROJECT_DIR$/.idea/modules/kitand.iml" group="kitand" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sqlite-android-3320300/sqlite-android-3320300.iml" filepath="$PROJECT_DIR$/.idea/modules/sqlite-android-3320300/sqlite-android-3320300.iml" group="kitand/sqlite-android-3320300" />
     </modules>
   </component>
 </project>
