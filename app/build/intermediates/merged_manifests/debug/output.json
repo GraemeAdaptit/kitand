@@ -21,7 +21,7 @@
       "properties": {
         "packageId": "com.ccs.kitand",
         "split": "",
-        "minSdkVersion": "22"
+        "minSdkVersion": "25"
       }
     }
   ]

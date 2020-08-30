@@ -28,6 +28,10 @@
         "source": "/Users/graemecostin/kitand/app/src/main/res/mipmap-mdpi/ic_launcher.png"
     },
     {
+        "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/raw_kit_bookspec.flat",
+        "source": "/Users/graemecostin/kitand/app/src/main/res/raw/kit_bookspec"
+    },
+    {
         "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_ic_launcher_round.png.flat",
         "source": "/Users/graemecostin/kitand/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png"
     },
@@ -50,6 +54,10 @@
     {
         "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher.png.flat",
         "source": "/Users/graemecostin/kitand/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/raw_kit_booknames.flat",
+        "source": "/Users/graemecostin/kitand/app/src/main/res/raw/kit_booknames"
     },
     {
         "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher_round.png.flat",
