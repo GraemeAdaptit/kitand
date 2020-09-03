@@ -5,6 +5,8 @@ import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.text.Editable
+import android.widget.EditText
 import com.ccs.kitand.databinding.ActivityMainBinding
 import java.io.BufferedReader
 import java.io.File
@@ -17,40 +19,41 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+//        binding = ActivityMainBinding.inflate(layoutInflater)
+//        setContentView(binding.root)
+        // Create the KITDAO instance
+        val dao = KITDAO(this)
+        KITApp.dao = dao
         println("onCreate()")
     }
 
     override fun onStart() {
         super.onStart()
-        binding.greeting.text = "onStart()"
-        println("onStart()")
-        val stream = getResources().openRawResource(R.raw.kit_booknames)
-        val reader = BufferedReader(stream.reader())
-        var content: String
-        try {
-            content = reader.readText()
-        } finally {
-            reader.close()
-        }
+		println("onStart()")
+		// Get the Bible record from kdb.sqlite
+	// Code to use elsewhere (probably in KITDAO)
+//        val stream = getResources().openRawResource(R.raw.kit_booknames)
+//        val reader = BufferedReader(stream.reader())
+//        var content: String
+//        try {
+//            content = reader.readText()
+//        } finally {
+//            reader.close()
+//        }
     }
 
     override fun onResume() {
         super.onResume()
-        binding.greeting.text = "onResume()"
         println("onResume()")
-        binding.greeting.text = KITApp.greeting
-        println(KITApp.greeting)
-        KITApp.greeting = "Here is the new greeting"
-        binding.greeting.text = KITApp.greeting
-        println(KITApp.greeting)
-        val tw = KITApp.du.twice(2)
-        println ("Twice 2 = $tw")
-        binding.greeting.text = "Twice 2 = $tw"
-        KITApp.dao.whoAmI()
-        val flsDir = getFilesDir()
-        println("Files directory = $flsDir")
-        KITApp.dao.start()
+        // Read the single Bibles record from kdb.sqlite
+
+        val bibname: EditText = findViewById(R.id.txt_bibname)
+        bibname.setText(KITApp.greeting)
+//        println(KITApp.greeting)
+//        KITApp.greeting = "Here is the new greeting"
+//        println(KITApp.greeting)
+//        KITApp.dao.whoAmI()
+//        val flsDir = getFilesDir()
+//        println("Files directory = $flsDir")
     }
 }

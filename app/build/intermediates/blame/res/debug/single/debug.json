@@ -52,6 +52,10 @@
         "source": "/Users/graemecostin/kitand/app/src/main/res/mipmap-xxhdpi/ic_launcher.png"
     },
     {
+        "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/drawable_kit_icon180x180.png.flat",
+        "source": "/Users/graemecostin/kitand/app/src/main/res/drawable/kit_icon180x180.png"
+    },
+    {
         "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher.png.flat",
         "source": "/Users/graemecostin/kitand/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
     },
