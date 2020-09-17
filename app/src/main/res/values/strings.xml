@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">kitand</string>
+    <string name="app_name">Key It</string>
     <string name="KIT_logo_descr">Key It logo</string>
     <string name="hintBibleName">Bible Name</string>
     <string name="startWork">Go</string>
+    <string name="txt_splash">Key It helps you keyboard\nScripture for use with Adapt It</string>
 </resources>

@@ -40,7 +40,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         this.db = db
         // Create the Bibles table
         val sqlBibT = "CREATE TABLE " + TAB_Bibles + "(" +
-                COL_BibleID + " INT PRIMARY KEY AUTOINCREMENT, " +
+                COL_BibleID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COL_BibleName + " TEXT, " +
                 COL_BookRecsCr + " BOOL, " +
                 COL_CurrentBook + " INT)"
@@ -57,7 +57,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         db.execSQL(sqlBookT)
         // Create the Chapters table
         val sqlChapT = "CREATE TABLE " + TAB_Chapters + "(" +
-                COL_ChapterID + " INT PRIMARY KEY AUTOINCREMENT, " +
+                COL_ChapterID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLF_ChBibID + " INT, " +
                 COLF_BookID + " INT, " +
                 COL_ChapNum + " INT, " +
@@ -69,7 +69,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         db.execSQL(sqlChapT)
         // Create the VerseItems table
         val sqlVerseT = "CREATE TABLE " + TAB_VerseItems + "(" +
-                COL_ItemID + " INT PRIMARY KEY AUTOINCREMENT, " +
+                COL_ItemID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLF_ChapID + " INT, " +
                 COL_VerseNum + " INT, " +
                 COL_ItemType + " TEXT, " +
@@ -81,11 +81,12 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         db.execSQL(sqlVerseT)
         // Create the BridgeItems table
         val sqlBridgT = "CREATE TABLE " + TAB_BridgeItems + "(" +
-                COL_BridgeID + " INT PRIMARY KEY AUTOINCREMENT, " +
+                COL_BridgeID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLF_ItemID + " INT, " +
                 COL_TextCurrBridge + " TEXT, " +
                 COL_TextExtraVerse + " TEXT)"
         db.execSQL(sqlBridgT)
+        // Create the single Bibles record
         val cv = ContentValues()
         cv.put(COL_BibleID, 1)
         cv.put(COL_BibleName, "Bible")
@@ -98,6 +99,9 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         TODO("Not yet implemented")
     }
 
+    fun bibNameKey(): String {
+        return COL_BibleName
+    }
     fun whoAmI() {
         println("Database access via KITDAO")
     }
@@ -124,6 +128,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
             // in the Bibles table will have bibleID = 1.
             cv.put(COL_BibleID, 0)
         }
+        cursor.close()
         return cv
     }
  /*
