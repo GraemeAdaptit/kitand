@@ -1,37 +1,36 @@
 package com.ccs.kitand
 
-import android.content.ContentValues
-import android.content.res.AssetManager
-import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
-import android.text.Editable
+import android.view.View
+import android.widget.Button
 import android.widget.EditText
-import com.ccs.kitand.databinding.ActivityMainBinding
-//import com.ccs.kitand.KITDAO
-import java.io.BufferedReader
-import java.io.File
-import java.io.InputStream
 
-class MainActivity : AppCompatActivity() {
-//    private lateinit var binding: ActivityMainBinding
+class SetupActivity : AppCompatActivity() {
+
+    lateinit var btn_go: Button
+    lateinit var txt_bibname: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
-//      binding = ActivityMainBinding.inflate(layoutInflater)
-//      setContentView(binding.root)
-//      // Create the KITDAO instance
-//      val dao = KITDAO(this)
-//      KITApp.dao = dao
-        println("MainActivity::onCreate()")
+        setContentView(R.layout.activity_setup)
+        // Get references to layout widgets
+        btn_go = findViewById(R.id.btn_go)
+        txt_bibname = findViewById(R.id.txt_bibname)
+
+        btn_go.setOnClickListener(View.OnClickListener {
+            println("Go button clicked")
+            val bName: String = txt_bibname.text.toString()
+            KITApp.dao.bibleUpdateName(bName)
+        })
+
+        println("SetupActivity::onCreate()")
     }
 
     override fun onStart() {
         super.onStart()
-		println("onStart()")
+		println("SetupActivity::onStart()")
 		// Get the Bible record from kdb.sqlite
 	// Code to use elsewhere (probably in KITDAO)
 //        val stream = getResources().openRawResource(R.raw.kit_booknames)
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        println("onResume()")
+        println("SetupActivity::onResume()")
         // Read the single Bibles record from kdb.sqlite
         val cv = KITApp.dao.bibleGetRec()
         val bibname: EditText = findViewById(R.id.txt_bibname)

@@ -27,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ccs.kitand.MainActivity" >
+        <activity android:name="com.ccs.kitand.SetupActivity" >
         </activity>
     </application>
 

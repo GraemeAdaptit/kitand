@@ -131,22 +131,48 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         cursor.close()
         return cv
     }
- /*
-	func bibleGetRec () -> (bibID:Int, bibName:String, bkRCr:Bool, currBk:Int) {
+	// The single record needs to be updated
+	//  * to set a new name for the Bible at the user's command
+	//	* to set the flag that indicates that the Books records have been created (on first launch)
+	//	* to change the current Book whenever the user selects a different Book to work on
+
+	// This function needs a String parameter for the revised Bible name
+	fun bibleUpdateName(bibName: String): Boolean {
+		this.db = this.getWritableDatabase()
+		val cv = ContentValues()
+		cv.put(COL_BibleName, bibName)
+		val rows = db.update(TAB_Bibles, cv, COL_BibleID + " = 1", null)
+        if (rows == 1) {
+            return true
+        } else {
+            return false
+        }
+	}
+/*
+	// The bookRecsCreated flag starts as false and is changed to true during the first launch;
+	// it is never changed back to false, and so this function does not need any parameters.
+	func bibleUpdateRecsCreated () -> Bool {
 		var sqlite3_stmt:OpaquePointer?=nil
-		let sql:String = "SELECT bibleID, name, bookRecsCreated, currBook FROM Bibles;"
+		let sql:String = "UPDATE Bibles SET bookRecsCreated = 1 WHERE bibleID = 1;"
 		let nByte:Int32 = Int32(sql.utf8.count)
 
 		sqlite3_prepare_v2(db, sql, nByte, &sqlite3_stmt, nil)
 		sqlite3_step(sqlite3_stmt)
-		let bID = Int(sqlite3_column_int(sqlite3_stmt, 0))
-		let bNamep: UnsafePointer<UInt8>? = sqlite3_column_text(sqlite3_stmt, 1)
-		let bNamen = Int(sqlite3_column_bytes(sqlite3_stmt,1))
-		let data = Data(bytes: bNamep!, count: Int(bNamen))
-		let str = String(data: data, encoding: String.Encoding.utf8)
-		let bkC = Int(sqlite3_column_int(sqlite3_stmt, 2))
-		let cBk = Int(sqlite3_column_int(sqlite3_stmt, 3))
-		return (bID, str!, (bkC > 0 ? true : false), cBk)
+		let result = sqlite3_finalize(sqlite3_stmt)
+		return (result == 0 ? true : false)
+	}
+
+	// This function needs an Integer parameter for the current Book
+	func bibleUpdateCurrBook (_ bookID: Int) -> Bool {
+		var sqlite3_stmt:OpaquePointer?=nil
+		let sql:String = "UPDATE Bibles SET currBook = ?1 WHERE bibleID = 1;"
+		let nByte:Int32 = Int32(sql.utf8.count)
+
+		sqlite3_prepare_v2(db, sql, nByte, &sqlite3_stmt, nil)
+		sqlite3_bind_int(sqlite3_stmt, 1, Int32(bookID))
+		sqlite3_step(sqlite3_stmt)
+		let result = sqlite3_finalize(sqlite3_stmt)
+		return (result == 0 ? true : false)
 	}
 */
 

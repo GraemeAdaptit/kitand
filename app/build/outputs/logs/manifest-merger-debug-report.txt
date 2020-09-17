@@ -82,10 +82,10 @@ category#android.intent.category.LAUNCHER
 ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:16:17-77
 	android:name
 		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:16:27-74
-activity#com.ccs.kitand.MainActivity
+activity#com.ccs.kitand.SetupActivity
 ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:19:9-20:20
 	android:name
-		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:19:19-47
+		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:19:19-48
 uses-sdk
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml

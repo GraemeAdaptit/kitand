@@ -43,9 +43,9 @@
 26-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:16:27-74
 27            </intent-filter>
 28        </activity>
-29        <activity android:name="com.ccs.kitand.MainActivity" >
+29        <activity android:name="com.ccs.kitand.SetupActivity" >
 29-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:19:9-20:20
-29-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:19:19-47
+29-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:19:19-48
 30        </activity>
 31    </application>
 32
