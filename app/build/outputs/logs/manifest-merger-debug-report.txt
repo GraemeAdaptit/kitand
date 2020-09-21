@@ -68,10 +68,10 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/grae
 		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:7:9-35
 	android:theme
 		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:12:9-40
-activity#com.ccs.kitand.Splash
+activity#com.ccs.kitand.SplashActivity
 ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:9-18:20
 	android:name
-		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:19-41
+		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:19-49
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
 ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:14:13-17:29
 action#android.intent.action.MAIN

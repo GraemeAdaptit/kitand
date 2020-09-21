@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-//  Created by Graeme Costin on 12/8/2020.
+//  Created by Graeme Costin on 12AUG20.
 // The author disclaims copyright to this source code.  In place of
 // a legal notice, here is a blessing:
 //
@@ -99,19 +99,18 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         TODO("Not yet implemented")
     }
 
-    fun bibNameKey(): String {
-        return COL_BibleName
-    }
-    fun whoAmI() {
-        println("Database access via KITDAO")
-    }
-
 //--------------------------------------------------------------------------------------------
 //	Bibles data table
 
     // The single record in the Bibles table needs to be read when the app launches to find out
     //	* whether the Books records need to be created (on first launch) or
     //	* what is the current Book (on subsequent launches)
+    //
+    //  Return values
+    // cv("1") = COL_BibleID
+    // cv("2") = COL_BibleName
+    // cv("3") = COL_BookRecsCr
+    // cv("4") = COL_CurrentBook
 
     fun bibleGetRec(): ContentValues {
         this.db = this.getReadableDatabase()
@@ -119,10 +118,10 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         val cursor = db.rawQuery(sql, null)
         val cv = ContentValues()
         if (cursor.moveToFirst()) {
-            cv.put(COL_BibleID, cursor.getInt(0))
-            cv.put(COL_BibleName, cursor.getString(1))
-            cv.put(COL_BookRecsCr, if (cursor.getInt(2) == 1) true else false)
-            cv.put(COL_CurrentBook, cursor.getInt(3))
+            cv.put("1", cursor.getInt(0))
+            cv.put("2", cursor.getString(1))
+            cv.put("3", if (cursor.getInt(2) == 1) true else false)
+            cv.put("4", cursor.getInt(3))
         } else {
             // If the read from database has failed, return bibleID = 0. The normal, one and only record
             // in the Bibles table will have bibleID = 1.
@@ -142,39 +141,28 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 		val cv = ContentValues()
 		cv.put(COL_BibleName, bibName)
 		val rows = db.update(TAB_Bibles, cv, COL_BibleID + " = 1", null)
-        if (rows == 1) {
-            return true
-        } else {
-            return false
-        }
+        return (rows == 1)
 	}
-/*
+
 	// The bookRecsCreated flag starts as false and is changed to true during the first launch;
 	// it is never changed back to false, and so this function does not need any parameters.
-	func bibleUpdateRecsCreated () -> Bool {
-		var sqlite3_stmt:OpaquePointer?=nil
-		let sql:String = "UPDATE Bibles SET bookRecsCreated = 1 WHERE bibleID = 1;"
-		let nByte:Int32 = Int32(sql.utf8.count)
-
-		sqlite3_prepare_v2(db, sql, nByte, &sqlite3_stmt, nil)
-		sqlite3_step(sqlite3_stmt)
-		let result = sqlite3_finalize(sqlite3_stmt)
-		return (result == 0 ? true : false)
+	fun bibleUpdateRecsCreated(): Boolean {
+    	this.db = this.getWritableDatabase()
+		val cv = ContentValues()
+		cv.put(COL_BookRecsCr, true)
+		val rows = db.update(TAB_Bibles, cv, COL_BibleID + " = 1", null)
+        return rows == 1
 	}
+
 
 	// This function needs an Integer parameter for the current Book
-	func bibleUpdateCurrBook (_ bookID: Int) -> Bool {
-		var sqlite3_stmt:OpaquePointer?=nil
-		let sql:String = "UPDATE Bibles SET currBook = ?1 WHERE bibleID = 1;"
-		let nByte:Int32 = Int32(sql.utf8.count)
-
-		sqlite3_prepare_v2(db, sql, nByte, &sqlite3_stmt, nil)
-		sqlite3_bind_int(sqlite3_stmt, 1, Int32(bookID))
-		sqlite3_step(sqlite3_stmt)
-		let result = sqlite3_finalize(sqlite3_stmt)
-		return (result == 0 ? true : false)
+	fun bibleUpdateCurrBook (currBk: Int):Boolean {
+        this.db = this.getWritableDatabase()
+        val cv = ContentValues()
+        cv.put(COL_CurrentBook, currBk)
+        val rows = db.update(TAB_Bibles, cv, COL_BibleID + " = 1", null)
+        return (rows == 1)
 	}
-*/
 
     companion object {
         const val TAB_Bibles = "Bibles"
@@ -219,6 +207,5 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         const val COLF_ItemID = "itemID"
         const val COL_TextCurrBridge = "textCurrBridge"
         const val COL_TextExtraVerse = "textExtraVerse"
-        
     }
 }

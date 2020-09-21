@@ -2,6 +2,8 @@ package com.ccs.kitand
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Resources
+import java.io.InputStream
 
 class KITApp : Application() {
 
@@ -16,6 +18,8 @@ class KITApp : Application() {
             private set
         var instance: KITApp? = null
             private set
-       lateinit var dao: KITDAO
+        lateinit var dao: KITDAO
+        lateinit var instr: InputStream
+        lateinit var res: Resources
     }
 }
