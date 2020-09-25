@@ -68,6 +68,10 @@
         "source": "/Users/graemecostin/kitand/app/src/main/res/raw/kit_booknames"
     },
     {
+        "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/layout_activity_choosebook.xml.flat",
+        "source": "/Users/graemecostin/kitand/app/src/main/res/layout/activity_choosebook.xml"
+    },
+    {
         "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher_round.png.flat",
         "source": "/Users/graemecostin/kitand/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png"
     },

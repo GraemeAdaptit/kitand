@@ -26,8 +26,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ccs.kitand.SetupActivity" >
-        </activity>
+        <activity android:name="com.ccs.kitand.SetupActivity" />
+        <activity android:name="com.ccs.kitand.ChooseBookActivity" />
+
+        <provider
+            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+            android:authorities="com.ccs.kitand.lifecycle-process"
+            android:exported="false"
+            android:multiprocess="true" />
     </application>
 
 </manifest>

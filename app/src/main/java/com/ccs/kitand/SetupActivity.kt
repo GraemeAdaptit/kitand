@@ -1,5 +1,6 @@
 package com.ccs.kitand
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -12,6 +13,7 @@ class SetupActivity : AppCompatActivity() {
     lateinit var txt_bibname: EditText
 
     // Safe initialisations of the four Properties of the Bible record
+    // These variables of SetupActivity are used when creating the Bible instance
     var bibID: Int = 1	// Bible ID - always 1 for KIT v1
     var bibName: String = "Bible"	// Bible name
     var bkRCr: Boolean = false	// true when the Books records for this Bible have been created
@@ -30,10 +32,16 @@ class SetupActivity : AppCompatActivity() {
         txt_bibname = findViewById(R.id.txt_bibname)
 
         btn_go.setOnClickListener(View.OnClickListener {
-            println("Go button clicked")
-            val bName: String = txt_bibname.text.toString()
-            KITApp.dao.bibleUpdateName(bName)
+            // Get the (possibly edited) Bible name from the EditText widget
+            val bibName: String = txt_bibname.text.toString()
+            // Save the Bible name into the Bible record in kdb.sqlite
+            KITApp.dao.bibleUpdateName(bibName)
+            // Create the instance of Bible
             bibInst = Bible(bibID, bibName, bkRCr, currBook)
+            // Go to the ChooseBookActivity
+            val i = Intent(this, ChooseBookActivity::class.java)
+            startActivity(i)
+            finish()
         })
         println("SetupActivity::onCreate()")
     }

@@ -23,6 +23,13 @@ anim btn_radio_to_off_mtrl_ring_outer_path_animation
 anim btn_radio_to_on_mtrl_dot_group_animation
 anim btn_radio_to_on_mtrl_ring_outer_animation
 anim btn_radio_to_on_mtrl_ring_outer_path_animation
+anim fragment_close_enter
+anim fragment_close_exit
+anim fragment_fade_enter
+anim fragment_fade_exit
+anim fragment_fast_out_extra_slow_in
+anim fragment_open_enter
+anim fragment_open_exit
 attr actionBarDivider
 attr actionBarItemBackground
 attr actionBarPopupTheme
@@ -186,6 +193,11 @@ attr editTextColor
 attr editTextStyle
 attr elevation
 attr expandActivityOverflowButtonDrawable
+attr fastScrollEnabled
+attr fastScrollHorizontalThumbDrawable
+attr fastScrollHorizontalTrackDrawable
+attr fastScrollVerticalThumbDrawable
+attr fastScrollVerticalTrackDrawable
 attr firstBaselineToTopHeight
 attr flow_firstHorizontalBias
 attr flow_firstHorizontalStyle
@@ -238,6 +250,7 @@ attr lastBaselineToBottomHeight
 attr layout
 attr layoutDescription
 attr layoutDuringTransition
+attr layoutManager
 attr layout_constrainedHeight
 attr layout_constrainedWidth
 attr layout_constraintBaseline_creator
@@ -374,10 +387,12 @@ attr radioButtonStyle
 attr ratingBarStyle
 attr ratingBarStyleIndicator
 attr ratingBarStyleSmall
+attr recyclerViewStyle
 attr region_heightLessThan
 attr region_heightMoreThan
 attr region_widthLessThan
 attr region_widthMoreThan
+attr reverseLayout
 attr round
 attr roundPercent
 attr saturation
@@ -394,11 +409,13 @@ attr showText
 attr showTitle
 attr singleChoiceItemLayout
 attr sizePercent
+attr spanCount
 attr spinBars
 attr spinnerDropDownItemStyle
 attr spinnerStyle
 attr splitTrack
 attr srcCompat
+attr stackFromEnd
 attr staggered
 attr state_above_anchor
 attr subMenuArrow
@@ -667,6 +684,9 @@ dimen compat_notification_large_icon_max_height
 dimen compat_notification_large_icon_max_width
 dimen disabled_alpha_material_dark
 dimen disabled_alpha_material_light
+dimen fastscroll_default_thickness
+dimen fastscroll_margin
+dimen fastscroll_minimum_range
 dimen highlight_alpha_material_colored
 dimen highlight_alpha_material_dark
 dimen highlight_alpha_material_light
@@ -674,6 +694,9 @@ dimen hint_alpha_material_dark
 dimen hint_alpha_material_light
 dimen hint_pressed_alpha_material_dark
 dimen hint_pressed_alpha_material_light
+dimen item_touch_helper_max_drag_scroll_per_frame
+dimen item_touch_helper_swipe_escape_max_velocity
+dimen item_touch_helper_swipe_escape_velocity
 dimen notification_action_icon_size
 dimen notification_action_text_size
 dimen notification_big_circle_margin
@@ -930,6 +953,7 @@ id expand_activities_button
 id expanded_menu
 id flip
 id forever
+id fragment_container_view_tag
 id gone
 id graph
 id graph_wrap
@@ -949,6 +973,7 @@ id img_kitlogo
 id info
 id invisible
 id italic
+id item_touch_helper_previous_elevation
 id jumpToEnd
 id jumpToStart
 id layout
@@ -958,6 +983,7 @@ id line3
 id linear
 id listMode
 id list_item
+id lst_books
 id message
 id middle
 id motion_base
@@ -1051,13 +1077,17 @@ id topPanel
 id transitionToEnd
 id transitionToStart
 id triangle
+id tv_splashmsg
+id tv_splashmsg2
 id txt_bibname
-id txt_splashmsg
+id txt_bk_bibname
+id txt_bk_prompt
 id unchecked
 id uniform
 id up
 id useLogo
 id visible
+id visible_removing_fragment_view_tag
 id withText
 id wrap
 id wrap_content
@@ -1101,6 +1131,7 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_choosebook
 layout activity_setup
 layout activity_splash
 layout custom_dialog
@@ -1152,6 +1183,7 @@ string hintBibleName
 string search_menu_title
 string startWork
 string status_bar_notification_info_overflow
+string txt_bk_prompt
 string txt_splash
 style AlertDialog_AppCompat
 style AlertDialog_AppCompat_Light
@@ -1530,6 +1562,8 @@ styleable CustomAttribute attributeName customBoolean customColorDrawableValue c
 styleable DrawerArrowToggle arrowHeadLength arrowShaftLength barLength color drawableSize gapBetweenBars spinBars thickness
 styleable FontFamily fontProviderAuthority fontProviderCerts fontProviderFetchStrategy fontProviderFetchTimeout fontProviderPackage fontProviderQuery
 styleable FontFamilyFont android_font android_fontWeight android_fontStyle android_ttcIndex android_fontVariationSettings font fontStyle fontVariationSettings fontWeight ttcIndex
+styleable Fragment android_name android_id android_tag
+styleable FragmentContainerView android_name android_tag
 styleable GradientColor android_startColor android_endColor android_type android_centerX android_centerY android_gradientRadius android_tileMode android_centerColor android_startX android_startY android_endX android_endY
 styleable GradientColorItem android_color android_offset
 styleable ImageFilterView altSrc brightness contrast crossfade overlay round roundPercent saturation warmth
@@ -1560,6 +1594,7 @@ styleable PopupWindow android_popupBackground android_popupAnimationStyle overla
 styleable PopupWindowBackgroundState state_above_anchor
 styleable PropertySet android_visibility android_alpha layout_constraintTag motionProgress visibilityMode
 styleable RecycleListView paddingBottomNoButtons paddingTopNoTitle
+styleable RecyclerView android_orientation android_clipToPadding android_descendantFocusability fastScrollEnabled fastScrollHorizontalThumbDrawable fastScrollHorizontalTrackDrawable fastScrollVerticalThumbDrawable fastScrollVerticalTrackDrawable layoutManager reverseLayout spanCount stackFromEnd
 styleable SearchView android_focusable android_maxWidth android_inputType android_imeOptions closeIcon commitIcon defaultQueryHint goIcon iconifiedByDefault layout queryBackground queryHint searchHintIcon searchIcon submitBackground suggestionRowLayout voiceIcon
 styleable Spinner android_entries android_popupBackground android_prompt android_dropDownWidth popupTheme
 styleable State android_id constraints

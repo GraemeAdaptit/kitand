@@ -32,7 +32,7 @@ import android.database.sqlite.SQLiteOpenHelper
 
 // class DatabaseHelper(context: Context?) : SQLiteOpenHelper(context, "customer.db", null, 1)
 class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 1) {
-    lateinit var db: SQLiteDatabase
+    private lateinit var db: SQLiteDatabase
 
     // On first launch the data tables do not exist, so create all the tables and the initial Bible record
     override fun onCreate(db: SQLiteDatabase) {
@@ -163,6 +163,50 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         val rows = db.update(TAB_Bibles, cv, COL_BibleID + " = 1", null)
         return (rows == 1)
 	}
+
+    //--------------------------------------------------------------------------------------------
+    //	Books data table
+
+    // The 66 records for the Books table need to be created and populated on the initial launch of the app
+    // This function will be called 66 times by the KIT software
+
+    fun booksInsertRec (bkID: Int, bibID: Int, bkCode: String, bkName: String, chRCr: Boolean, numCh: Int, currCh: Int): Boolean {
+        this.db = this.getWritableDatabase()
+        val cv = ContentValues()
+        cv.put(COL_BookID, bkID)
+        cv.put(COLF_BibID, bibID)
+        cv.put(COL_BookCode, bkCode)
+        cv.put(COL_BookName, bkName)
+        cv.put(COL_ChapRecsCr, chRCr)
+        cv.put(COL_NumChaps, numCh)
+        cv.put(COL_CurrentChap, currCh)
+        val insert = db.insert(TAB_Books, null, cv)
+        return (insert > 0L)
+    }
+
+    // The Books records need to be read to populate the array of books for the Bible
+    // that the user can choose from. They need to be sorted in ascending order of the
+    // UBS assigned bookID.
+    //
+    //  Returns column values via the call back function appendBibBookToArray()
+
+    fun readBooksRecs(bibInst: Bible) {
+        this.db = this.getReadableDatabase()
+        val sql = "SELECT * FROM " + TAB_Books + " WHERE " + COLF_BibID + " = 1"
+        val cursor = db.rawQuery(sql, null)
+        cursor.moveToFirst()
+        do {
+            val bkID = cursor.getInt(0)
+            val bibID = cursor.getInt(1)
+            val bkCode = cursor.getString(2)
+            val bkName = cursor.getString(3)
+            val chRCr = if (cursor.getInt(4) == 1) true else false
+            val numCh = cursor.getInt(5)
+            val curCh = cursor.getInt(6)
+            bibInst.appendBibBookToArray(bkID, bibID, bkCode, bkName, chRCr, numCh, curCh)
+        } while (cursor.moveToNext())
+        cursor.close()
+    }
 
     companion object {
         const val TAB_Bibles = "Bibles"

@@ -21,5 +21,6 @@ class KITApp : Application() {
         lateinit var dao: KITDAO
         lateinit var instr: InputStream
         lateinit var res: Resources
+        lateinit var bibInst: Bible
     }
 }

@@ -1,5 +1,6 @@
 package com.ccs.kitand
 
+import android.content.ContentValues
 import android.content.res.Resources
 import java.io.BufferedReader
 import java.io.InputStream
@@ -24,7 +25,7 @@ import java.io.InputStream
 // 4. Do the other initialisations needed to build the partial in-memory data for the
 //    Bible -> curr Book -> curr Chapter -> curr VerseItem data structures.
 
-class Bible {
+class Bible (bID: Int, bName: String, bkRecCr: Boolean, currBk: Int) {
 
 	// The following variables and data structures have lifetimes of the Bible object
 	// which is also the lifetime of this run of the app
@@ -34,11 +35,10 @@ class Bible {
 
 	// MARK: Properties
 
-	// Safe initialisations of the four Properties of the Bible record
-	var bibID: Int = 1				// Bible ID - always 1 for KIT v1
-	var bibName: String = "Bible"	// Bible name
-	var bkRCr: Boolean = false		// true if the Books records for this Bible have been created
-	var currBook: Int = 0			// current Book ID (defined by the Bible Societies 1 to 39 OT and 41 to 67 NT)
+	var bibID: Int = bID			// Bible ID - always 1 for KIT v1
+	var bibName: String = bName		// Bible name
+	var bkRCr: Boolean = bkRecCr	// true if the Books records for this Bible have been created
+	var currBook: Int = currBk		// current Book ID (defined by the Bible Societies 1 to 39 OT and 41 to 67 NT)
 
 	var currBookOfst = -1			// Offset in BibBooks[] to the current book 0 to 38 (OT) 39 to 65 (NT)
 	lateinit var bookInst: Book		// instance in memory of the current Book
@@ -52,105 +52,99 @@ class Bible {
 		var chapRCr: Boolean,    // chapRecsCreated INTEGER
 		var numCh: Int,            // numChaps INTEGER
 		var currChap: Int        // currChapter INTEGER
-	)
+
+	)	{
+		override fun toString(): String {
+			val displayStr = bkName + (if (numCh > 0) "  " + numCh.toString() + " chapters" else "")
+			return  displayStr
+		}
+	}
 
 	val BibBooks = ArrayList<BibBook>()
 
 	// Initialisation of the single instance of class Bible with an array of Books to select from
-//	???	appendBibBookToArray()  - called by dao.readBooksRecs()
+	//	???	appendBibBookToArray()  - called by dao.readBooksRecs()
 
-	constructor(bID: Int, bName: String, bkRecCr: Boolean, currBk: Int) {
-
-		bibID = bID
-		bibName = bName
-		bkRCr = bkRecCr
-		currBook = currBk
+	init {
 		currBookOfst = if (currBook > 39) (currBook - 2) else (currBook - 1)
-
-		// First launch: the Books records will not have been created so create them
 		if (!bkRCr) {
 			// Create the 66 Book records for this Bible
 			createBooksRecords(bID)
 		}
-
 		// Every launch: the Books records will have been created at this point,
 		// so set up the array BibBooks by reading the 66 Books records from kdb.sqlite.
 		// This array will last for the current launch of the app and will be used
 		// whenever the user is allowed to select a book; it will also be updated
 		// when Chapters records for a book are created, and when the user chooses
 		// a different Book to edit.
-//		dao!.readBooksRecs (bibInst: self)
-		// calls readBooksRecs() in KITDAO.swift to read the kdb.sqlite database Books table
-		// readBooksRecs() calls appendBibBookToArray() in this file for each ROW read from kdb.sqlite
-		print("Every launch: the BibBooks array of 66 Books records has been populated from kdb.sqlite")
+		//
+		// readBooksRecs() in KITDAO.kt reads the kdb.sqlite database Books table
+		// and calls appendBibBookToArray() in this file for each ROW read from kdb.sqlite
+		// appendBibBookToArray() builds the array BibBooks
+		dao.readBooksRecs (this)
+		KITApp.bibInst = this
 	}
 
 	// createBooksRecords creates the Books records for every Bible book from the text files in the
 	// app's resources and stores these records in the database kdb.sqlite
-
 	fun createBooksRecords(bID: Int) {
-		// Open KIT_BooksSpec.txt and read its data
-		val res: Resources = KITApp.res
-		val stream = res.openRawResource(R.raw.kit_booknames)
-        val reader = BufferedReader(stream.reader())
-        var content: String
-        try {
-            content = reader.readText()
-        } finally {
-            reader.close()
-        }
-	}
-/*
-		var specLines:[String] = []
-		var nameLines:[String] = []
-		var bookNames = [Int: String]()
 
-		let booksSpec:URL = Bundle.main.url (forResource: "KIT_BooksSpec", withExtension: "txt")!
-		do {
-			let string = try String.init(contentsOf: booksSpec)
-			specLines = string.components(separatedBy: .newlines)
-		} catch  {
-			print(error);
+		// Open kit_bookspec and read its data
+		val res: Resources = KITApp.res
+		val specStr = res.openRawResource(R.raw.kit_bookspec)
+		val specRdr = BufferedReader(specStr.reader())
+		val specTxt: String
+		try {
+			specTxt = specRdr.readText()
+		} finally {
+			specRdr.close()
 		}
-		// Open KIT_BooksNames.txt and read its data
-		let booksNames:URL = Bundle.main.url (forResource: "KIT_BooksNames", withExtension: "txt")!
-		do {
-			let namesStr = try String.init(contentsOf: booksNames)
-			nameLines = namesStr.components(separatedBy: .newlines)
-		} catch  {
-			print(error);
-		}
+
+		// Open kit_booknames and read its data
+		val namesStr = res.openRawResource(R.raw.kit_booknames)
+        val nameRdr = BufferedReader(namesStr.reader())
+        val nameTxt: String
+        try {
+			nameTxt = nameRdr.readText()
+        } finally {
+			nameRdr.close()
+        }
+
+		val specLines = specTxt.split("\n").toTypedArray()
+		val nameLines = nameTxt.split("\n").toTypedArray()
+		val bookNames = mutableMapOf<Int, String>()
 		// Make a look-up dictionary for book name given book ID number
-		for nameItem in nameLines {
-			if !nameItem.isEmpty {
-				let nmStrs:[String] = nameItem.components(separatedBy: ", ")
-				let i = Int(nmStrs[0])!
-				let n = nmStrs [1]
+		for (nameItem in nameLines) {
+			if (!nameItem.isEmpty()) {
+				val nmStrs = nameItem.split(", ").toTypedArray()
+				val i = nmStrs[0].toInt()
+				val n = nmStrs[1]
 				bookNames[i] = n
 			}
 		}
 
 		// Step through the lines of KIT_BooksSpec.txt, creating the Book objects and
 		// getting the book names from the look-up dictionary made from KIT_BooksNames.txt
-		let hashMark:Character = "#"
-		for spec in specLines {
+		for (spec in specLines) {
 			// Ignore empty lines and line starting with #
-			if (!spec.isEmpty && spec[spec.startIndex] != hashMark) {
+			if (!spec.isEmpty() && (spec.first() != '#')) {
 				// Create the Books record for this Book
-				let bkStrs:[String] = spec.components(separatedBy: ", ")
-				let bkID = Int(bkStrs[0])!
-				let bibID = bib
-				let bkCode:String = bkStrs [1]
-				let bkName = bookNames [bkID]!
-				let chRCr = false
-				let numCh = 0
-				let currCh = 0
-				print("BookID = \(bkID), BibleID = \(bibID), Book Code = \(bkCode), BookName = \(bkName), ChapRecsCreated is \(chRCr), numChaps = \(numCh), CurrentChap = \(currCh)")
+				val bkStrs = spec.split(", ").toTypedArray()
+				val bkID = bkStrs[0].toInt()
+				val bibID = bID
+				val bkCode = bkStrs[1]
+				val bkN = bookNames[bkID]
+				var bkName: String
+				if (bkN != null) bkName = bkN else bkName = "Book"
+				val chRCr = false
+				val numCh = 0
+				val currCh = 0
+				println("BookID = $bkID, BibleID = $bibID, Book Code = $bkCode, BookName = $bkName, ChapRecsCreated is $chRCr, numChaps = $numCh, CurrentChap = $currCh")
 				// Write Books record to kdb.sqlite
-				if dao!.booksInsertRec (bkID, bibID, bkCode, bkName, chRCr, numCh, currCh) {
-					print("The Books record for \(bkName) was created")
+				if (dao.booksInsertRec(bkID, bibID, bkCode, bkName, chRCr, numCh, currCh)) {
+					println("The Books record for $bkName was created")
 				} else {
-					print("The Books record for \(bkName) was not created")
+					println("The Books record for $bkName was not created")
 				}
 			}
 		}
@@ -159,21 +153,22 @@ class Bible {
 		bkRCr = true
 
 		// Update the kdb.sqlite Bible record to note that Books recs have been created
-		if dao!.bibleUpdateRecsCreated() {
-			print("bookRecsCreated in the Bible rec was set to true")
+		if (dao.bibleUpdateRecsCreated()) {
+			println("bookRecsCreated in the Bible rec was set to true")
 		} else {
-			print("bookRecsCreated in the Bible rec was not set to true")
+			println("bookRecsCreated in the Bible rec was not set to true")
 		}
+
 	}
 
-// dao.readBooksRecs() calls appendBibBookToArray() for each row it reads from the kdb.sqlite database
+	// dao.readBooksRecs() calls appendBibBookToArray() for each row it reads from the kdb.sqlite database
 
-	func appendBibBookToArray (_ bkID:Int,_ bibID:Int, _ bkCode:String, _ bkName:String,
-							   _ chapRCr:Bool, _ numCh:Int, _ currChap:Int) {
-		let bkRec = BibBook(bkID, bibID, bkCode, bkName, chapRCr, numCh, currChap)
-		BibBooks.append(bkRec)
+	fun appendBibBookToArray (bkID:Int, bibID:Int, bkCode:String, bkName:String,
+							chapRCr:Boolean, numCh:Int, currChap:Int) {
+		val bkRec = BibBook(bkID, bibID, bkCode, bkName, chapRCr, numCh, currChap)
+		BibBooks.add(bkRec)
 	}
-
+/*
 // Deinitialise (delete) the instance of class Bible
 
 	deinit {
