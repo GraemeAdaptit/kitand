@@ -130,13 +130,13 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         cursor.close()
         return cv
     }
-	// The single record needs to be updated
+	// The single Bible record needs to be updated
 	//  * to set a new name for the Bible at the user's command
 	//	* to set the flag that indicates that the Books records have been created (on first launch)
 	//	* to change the current Book whenever the user selects a different Book to work on
 
 	// This function needs a String parameter for the revised Bible name
-	fun bibleUpdateName(bibName: String): Boolean {
+	fun bibleUpdateName(bibName:String): Boolean {
 		this.db = this.getWritableDatabase()
 		val cv = ContentValues()
 		cv.put(COL_BibleName, bibName)
@@ -146,7 +146,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 
 	// The bookRecsCreated flag starts as false and is changed to true during the first launch;
 	// it is never changed back to false, and so this function does not need any parameters.
-	fun bibleUpdateRecsCreated(): Boolean {
+	fun bibleUpdateRecsCreated():Boolean {
     	this.db = this.getWritableDatabase()
 		val cv = ContentValues()
 		cv.put(COL_BookRecsCr, true)
@@ -156,7 +156,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 
 
 	// This function needs an Integer parameter for the current Book
-	fun bibleUpdateCurrBook (currBk: Int):Boolean {
+	fun bibleUpdateCurrBook (currBk:Int): Boolean {
         this.db = this.getWritableDatabase()
         val cv = ContentValues()
         cv.put(COL_CurrentBook, currBk)
@@ -170,7 +170,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
     // The 66 records for the Books table need to be created and populated on the initial launch of the app
     // This function will be called 66 times by the KIT software
 
-    fun booksInsertRec (bkID: Int, bibID: Int, bkCode: String, bkName: String, chRCr: Boolean, numCh: Int, currCh: Int): Boolean {
+    fun booksInsertRec (bkID:Int, bibID:Int, bkCode:String, bkName:String, chRCr:Boolean, numCh:Int, currCh:Int): Boolean {
         this.db = this.getWritableDatabase()
         val cv = ContentValues()
         cv.put(COL_BookID, bkID)
@@ -208,7 +208,77 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         cursor.close()
     }
 
-    companion object {
+	// The Books record for the current Book needs to be updated
+	//	* to set the flag that indicates that the Chapter records have been created (on first edit of that Book)
+	//	* to set the number of Chapters in the Book (on first edit of that Book)
+	//	* to change the current Chapter when the user selects a different Chapter to work on
+
+	fun booksUpdateRec (bibID:Int, bkID:Int, chRCr:Boolean, numCh:Int, currCh:Int): Boolean {
+		this.db = this.getWritableDatabase()
+		val cv = ContentValues()
+		cv.put(COL_ChapRecsCr, chRCr)
+		cv.put(COL_NumChaps, numCh)
+		cv.put(COL_CurrentChap, currCh)
+        val whArray = arrayOf<String>(bkID.toString())
+		val rows = db.update(TAB_Books, cv, COL_BibleID + " = 1 AND " + COL_BookID + " = ?", whArray)
+        return (rows == 1)
+	}
+
+
+	//--------------------------------------------------------------------------------------------
+	//	Chapters data table
+
+	// The Chapters records for the current Book need to be created when the user first selects that
+    // Book to edit.
+	// This function will be called once by the KIT software for every Chapter in the current Book;
+    // it will be called before any VerseItem Records have been created for the Chapter.
+    // Each Chapters record has an INTEGER PRIMARY KEY, chapterID, that is assigned automatically
+    // by SQLite; this is not included in the insert record SQL.
+    // The field for USFM is left empty until the user taps the "Export" button after
+    // keyboarding enough to export.
+
+	fun chaptersInsertRec (bibID:Int, bkID:Int, chNum:Int, itRCr:Boolean, numVs:Int, numIt:Int, currIt:Int): Boolean {
+        this.db = this.getWritableDatabase()
+        val cv = ContentValues()
+        cv.put(COLF_ChBibID, bibID)
+        cv.put(COLF_BookID, bkID)
+        cv.put(COL_ChapNum, chNum)
+        cv.put(COL_ItemRecsCr, itRCr)
+        cv.put(COL_NumVerses, numVs)
+        cv.put(COL_NumItems, numIt)
+        cv.put(COL_CurrItem, currIt)
+        val insert = db.insert(TAB_Chapters, null, cv)
+        return (insert > 0L)
+	}
+
+	// The Chapters records for the currently selected Book need to be read to populate the array
+	// of Chapters for the Book bkInst that the user can choose from. The records need to be sorted
+	// in ascending order of chapterNumber
+
+	fun readChaptersRecs (bibID:Int, bkInst:Book) {
+        this.db = this.getReadableDatabase()
+        val sql1 = "SELECT chapterID, bibleID, bookID, chapterNumber, itemRecsCreated, numVerses, numItems, currItem FROM " + TAB_Chapters
+        val sql2 =  " WHERE " + COLF_ChBibID + " = ? AND " + COLF_BookID + " = ? ORDER BY " + COL_ChapNum
+        val sql = sql1 + sql2
+        val whArray = arrayOf<String>(bibID.toString(), bkInst.bkID.toString())
+        val cursor = db.rawQuery(sql, whArray)
+        cursor.moveToFirst()
+        do {
+            val chapID = cursor.getInt(0)
+            val biblID = cursor.getInt(1)
+            val bookID = cursor.getInt(2)
+            val chNum = cursor.getInt(3)
+            val itRCr = if (cursor.getInt(4) == 1) true else false
+            val numVs = cursor.getInt(5)
+            val numIt = cursor.getInt(6)
+            val curIt = cursor.getInt(7)
+            bkInst.appendChapterToArray(chapID, biblID, bookID, chNum, itRCr, numVs, numIt, curIt)
+        } while (cursor.moveToNext())
+        cursor.close()
+	}
+
+
+     companion object {
         const val TAB_Bibles = "Bibles"
         const val COL_BibleID = "bibleID"
         const val COL_BibleName = "name"

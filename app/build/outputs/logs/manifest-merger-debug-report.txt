@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-24:12
-INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-24:12
-INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-24:12
-INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-24:12
+ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-25:12
 MERGED from [androidx.databinding:viewbinding:4.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/b489210023b4e591650fd25144ad3624/jetified-viewbinding-4.0.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.core:core-ktx:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/8980d788014fcfbd6a5e16fdd30ae692/jetified-core-ktx-1.3.1/AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/43a917f9534cb05f0a20bd294163eceb/jetified-lifecycle-viewmodel-ktx-2.2.0/AndroidManifest.xml:17:1-24:12
@@ -33,27 +33,27 @@ MERGED from [androidx.savedstate:savedstate:1.0.0] /Users/graemecostin/.gradle/c
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ff664a25e1391f1156cfb2e2374c7147/lifecycle-viewmodel-2.2.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6118f679eabfffe3c12f082544a87853/versionedparcelable-1.1.0/AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6ba1de9be899b775fb2e622bcf9ee329/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
-INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-24:12
-INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-24:12
-INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-24:12
+INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-25:12
 	package
 		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:4:5-29
 		INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
 	android:versionName
 		INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
-		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-24:12
+		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-25:12
 		INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
 	android:versionCode
 		INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
-		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-24:12
+		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-25:12
 		INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
 	xmlns:android
 		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:11-69
 	android:name
 		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:3:5-27
 application
-ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:6:5-22:19
+ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:6:5-23:19
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/810bc0023f39274b6f9bc838d32f9df6/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/810bc0023f39274b6f9bc838d32f9df6/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
 MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ecbbc505c1ef8c2b1e510cce5e96bb37/lifecycle-extensions-2.2.0/AndroidManifest.xml:24:5-25:19
@@ -78,28 +78,32 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/grae
 		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:7:9-35
 	android:theme
 		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:12:9-40
+activity#com.ccs.kitand.ChooseChapterActivity
+ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:9-68
+	android:name
+		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:19-56
 activity#com.ccs.kitand.SplashActivity
-ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:9-19:20
+ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:14:9-20:20
 	android:name
-		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:19-49
+		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:14:19-49
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:14:13-18:29
+ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:15:13-19:29
 action#android.intent.action.MAIN
-ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:15:17-69
+ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:16:17-69
 	android:name
-		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:15:25-66
+		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:16:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:17:17-77
+ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:18:17-77
 	android:name
-		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:17:27-74
+		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:18:27-74
 activity#com.ccs.kitand.SetupActivity
-ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:20:9-51
+ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:21:9-51
 	android:name
-		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:20:19-48
+		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:21:19-48
 activity#com.ccs.kitand.ChooseBookActivity
-ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:21:9-56
+ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:22:9-56
 	android:name
-		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:21:19-53
+		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:22:19-53
 uses-sdk
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml

@@ -19,6 +19,7 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/AppTheme" >
+        <activity android:name="com.ccs.kitand.ChooseChapterActivity" />
         <activity android:name="com.ccs.kitand.SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

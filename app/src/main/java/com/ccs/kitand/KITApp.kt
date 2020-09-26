@@ -5,6 +5,17 @@ import android.content.Context
 import android.content.res.Resources
 import java.io.InputStream
 
+//  Created by Graeme Costin on 3JUL20.
+// The author disclaims copyright to this source code.  In place of
+// a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
+//
+// KITApp functions in a similar manner to the AppDelegate in kitios because it enables
+// some important class instances to be accessed from many parts of the app.
+
 class KITApp : Application() {
 
     override fun onCreate() {
@@ -18,9 +29,12 @@ class KITApp : Application() {
             private set
         var instance: KITApp? = null
             private set
-        lateinit var dao: KITDAO
+        lateinit var dao: KITDAO        // For access to kdb.sqlite
+        lateinit var bibInst: Bible     // For access to the single instance of Bible
+        lateinit var bkInst: Book       // For access to the instance of the currently selected Book
+        lateinit var chInst: Chapter    // For access to the instance of the currently selected Chapter
+
         lateinit var instr: InputStream
         lateinit var res: Resources
-        lateinit var bibInst: Bible
     }
 }

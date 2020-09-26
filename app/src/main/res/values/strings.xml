@@ -5,4 +5,5 @@
     <string name="startWork">Go</string>
     <string name="txt_splash">Key It helps you keyboard\nScripture for use with Adapt It</string>
     <string name="txt_bk_prompt">Choose Book</string>
+    <string name="txt_ch_prompt">Choose Chapter</string>
 </resources>

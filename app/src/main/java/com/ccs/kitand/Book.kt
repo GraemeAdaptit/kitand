@@ -1,6 +1,9 @@
 package com.ccs.kitand
 
-//  Created by Graeme Costin on 25/10/19.
+import android.content.res.Resources
+import java.io.BufferedReader
+
+//  Created by Graeme Costin on 24SEP20.
 // The author disclaims copyright to this source code.  In place of
 // a legal notice, here is a blessing:
 //
@@ -13,82 +16,52 @@ package com.ccs.kitand
 // will be terminated when the user selects a different Book to keyboard, at
 // which time a new Book instance will be created for the newly selected Book.
 
-
-class Book {
+class Book (val bkID: Int, val bibID: Int, val bkCode: String, val bkName: String, var chapRCr: Boolean, var numChap: Int, var currChap: Int) {
 
 	// The following variables and data structures have lifetimes of the Book object
 
 	// Access to the KITDAO instance for kdb.sqlite access
 	val dao = KITApp.dao
+	val bibInst = KITApp.bibInst	// access to the instance of Bible for updating BibBooks[]
 
-	// Properties of a Book instance (dummy values to avoid having optional variables)
-	var bkID: Int = 0			// bookID INTEGER
-	var bibID: Int = 1			// bibleID INTEGER - always 1 for KIT v1
-	var bkCode: String = "BCD"	// bookCode TEXT
-	var bkName: String = "Book"	// bookName TEXT
-	var chapRCr: Boolean = false	// chapRecsCreated INTEGER
-	var numChap: Int = 0		// numChaps INTEGER
-	var currChap: Int = 0		// currChapter INTEGER (the ID assigned by SQLite when the Chapter was created)
+	// Properties of a Book instance defined in the primary constructor
+//	var bkID: Int			bookID INTEGER
+//	var bibID: Int			bibleID INTEGER - always 1 for KIT v1
+//	var bkCode: String		bookCode TEXT
+//	var bkName: String		bookName TEXT
+//	var chapRCr: Boolean	chapRecsCreated INTEGER
+//	var numChap: Int		numChaps INTEGER
+//	var currChap: Int		currChapter INTEGER (the ID assigned by SQLite when the Chapter was created)
 
 	var currChapOfst: Int = 0	// offset to the current Chapter in BibChaps[] array
-/*
-	// TODO: Eliminate the need for bibInst by using a setter function in Bible?
-	var bibInst: Bible? 	// access to the instance of Bible for updating BibBooks[]
-	var chapInst: Chapter?	// instance in memory of the current Chapter
+	lateinit var chapInst: Chapter	// instance in memory of the current Chapter
 
-// This struct and the BibChaps array are used for letting the user select the
-// Chapter to keyboard in the current selected Book.
+	// BibChaps array (for listing the Chapters so the user can choose one)
 
-	struct BibChap {
-		var chID: Int		// chapterID INTEGER PRIMARY KEY assigned by SQLite when the Chapter was created
-		var bibID: Int		// bibleID INTEGER
-		var bkID: Int		// bookID INTEGER
-		var chNum: Int		// chapterNumber INTEGER
-		var itRCr: Bool		// itemRecsCreated INTEGER
-		var numVs: Int		// numVerses INTEGER
-		var numIt: Int		// numItems INTEGER
+	data class BibChap (
+		var chID: Int,		// chapterID INTEGER PRIMARY KEY assigned by SQLite when the Chapter was created
+		var bibID: Int,		// bibleID INTEGER
+		var bkID: Int,		// bookID INTEGER
+		var chNum: Int,		// chapterNumber INTEGER
+		var itRCr: Boolean,	// itemRecsCreated INTEGER
+		var numVs: Int,		// numVerses INTEGER
+		var numIt: Int,		// numItems INTEGER
 		var curIt: Int		// currItem INTEGER
-		init (_ chID:Int, _ bibID:Int, _ bkID:Int, _ chNum:Int, _ itRCr:Bool, _ numVs:Int, _ numIt:Int, _ curIt:Int) {
-			self.chID = chID
-			self.bibID = bibID
-			self.bkID = bkID
-			self.chNum = chNum
-			self.itRCr = itRCr
-			self.numVs = numVs
-			self.numIt = numIt
-			self.curIt = curIt
+		) {
+		override fun toString(): String {
+			val displayString = (if (bkID == 19) "Psalm " else "Chapter ") + chNum.toString()
+			return displayString
 		}
 	}
 
-var BibChaps: [BibChap] = []
+	val BibChaps = ArrayList<BibChap>()
 
-// When the instance of Bible creates the instance for the current Book it supplies the values for the
-// currently selected book from the BibBooks array
-	// Initialisation of an instance of class Book with an array of Chapters to select from
-	// But the array of Chapters cannot be produced until a current Book is chosen, so this
-	// action needs to be avoided until after there is a current Book. Thus Book.init() must
-	// not be called before a current Book is chosen or has been read from kdb.sqlite.
+	// When the instance of Bible creates the instance for the current Book it supplies the values for
+	// the currently selected book from the BibBooks array
 
-	init(_ bkID: Int, _ bibID: Int, _ bkCode: String, _ bkName: String, _ chapRCr: Bool, _ numChaps: Int, _ currChap: Int,
-		 _ bibInst:Bible, _ kitdao:KITDAO) {
-		super.init()
-		print("start of Book.init() for \(bkName)")
-
-		self.bkID = bkID			// bookID INTEGER
-		self.bibID = bibID			// bibleID INTEGER
-		self.bkCode = bkCode		// bookCode TEXT
-		self.bkName = bkName		// bookName TEXT
-		self.chapRCr = chapRCr		// chapRecsCreated INTEGER
-		self.numChap = numChaps		// numChaps INTEGER
-		self.currChap = currChap	// currChapter INTEGER
-
-		// Access to the instance of Bible for dealing with BibInst[]
-		self.bibInst = bibInst
-		// Access to the KITDAO instance for dealing with kdb.sqlite
-		dao = kitdao
-
-		// First time this Book has been selected the Chapter records must be created
-		if !chapRCr {
+	init {
+		// On the first time this Book has been selected the Chapter records must be created
+		if (!chapRCr) {
 			createChapterRecords(bkID, bibID, bkCode)
 		}
 
@@ -102,58 +75,54 @@ var BibChaps: [BibChap] = []
 		// a different Chapter to edit.
 		// Its life will end when the user chooses a different Book to edit.
 
-		dao!.readChaptersRecs (bibID, self)
+		dao.readChaptersRecs (bibID, this)
 		// calls readChaptersRecs() in KITDAO.swift to read the kdb.sqlite database Books table
 		// readChaptersRecs() calls appendChapterToArray() in this file for each ROW read from kdb.sqlite
-		print("Chapter records for \(bkName) have been read from kdb.sqlite")
+		print("Chapter records for $bkName have been read from kdb.sqlite")
 	}
 
-// When the user chooses a different Book, the in-memory instance of the previous current Book and
-// any instances owned by it need to be deleted
-	deinit {
-		// TODO: deinit any owned class instances - Chapters and VerseItems
-		print("Book deinit() The previous current Book and its Chapters and VerseItems have been deleted from memory")
-	}
+	fun createChapterRecords (book: Int, bib: Int, code: String) {
 
-	func createChapterRecords (_ book:Int, _ bib:Int, _ code:String) {
-
-		var specLines:[String] = []
-
-		// Open KIT_BooksSpec.txt and read its data
-		let booksSpec:URL = Bundle.main.url (forResource: "KIT_BooksSpec", withExtension: "txt")!
-		do {
-			let string = try String.init(contentsOf: booksSpec)
-			specLines = string.components(separatedBy: .newlines)
-		} catch  {
-			print(error);
+		// Open kit_bookspec and read its data
+		val res = KITApp.res
+		val specStr = res.openRawResource(R.raw.kit_bookspec)
+		val specRdr = BufferedReader(specStr.reader())
+		val specTxt: String
+		try {
+			specTxt = specRdr.readText()
+		} finally {
+			specRdr.close()
 		}
+
+		val specLines = specTxt.split("\n").toTypedArray()
+
 		// Find the line containing the String code
-		var i: Int = 0
-		while !specLines[i].contains(code) {
+		var i = 0
+		while (!specLines[i].contains(code)) {
 			i = i + 1
 		}
+
 		// Process that line to create the Chapter records for this Book
-		var elements:[String] = specLines[i].components(separatedBy: ", ")
-		elements.remove(at: 1)	// we already have the Book three letter code
-		elements.remove(at: 0)	// we already have the Book ID
-		numChap = elements.count
+		val bkStrs = specLines[i].split(", ").toTypedArray()
+		val bkMList = bkStrs.toMutableList()
+		bkMList.removeAt(1)	// we already have the Book three letter code
+		bkMList.removeAt(0)	// we already have the Book ID
+		numChap = bkMList.count()
 
 		// Create a Chapters record in kdb.sqlite for each Chapter in this Book
 		var chNum = 1	// Start at Chapter 1
-		let currIt = 0	// No current VerseItem yet
-		for elem in elements {
+		val currIt = 0	// No current VerseItem yet
+		for (elem in bkMList) {
 			var numIt = 0
 			var elemTr = elem		// for some Psalms a preceding "A" will be removed
-			if elem.prefix(1) == "A" {
+			if (elem.first() == 'A') {
 				numIt = 1	// 1 for the Psalm ascription
-				elemTr = String(elem.suffix(elem.count - 1))	// remove the "A"
+				elemTr = elem.drop(1)	// remove the "A"
 			}
-			let numVs = Int(elemTr)!
+			val numVs = elemTr.toInt()
 			numIt = numIt + numVs	// for some Psalms numIt will include the ascription VerseItem
-			if dao!.chaptersInsertRec (bib, book, chNum, false, numVs, numIt, currIt) {
-				print("Book:createChapterRecords Created Chapter record for \(String(describing: bkName)) chapter \(chNum)")
-			} else {
-				print("Book:createChapterRecords: Creating Chapter record failed for \(String(describing: bkName)) chapter \(chNum)")
+			if (dao.chaptersInsertRec (bib, book, chNum, false, numVs, numIt, currIt) ) {
+				println("Book:createChapterRecords Created Chapter record for $bkName, chapter $chNum")
 			}
 			chNum = chNum + 1
 		}
@@ -161,31 +130,26 @@ var BibChaps: [BibChap] = []
 		chapRCr = true
 		// numChap = numChap This was done when the count of elements in the chapters string was found
 
-		// Update the Book record with number of Chapters
-		if dao!.booksUpdateRec (bibID, bkID, chapRCr, numChap, currChap) {
+		// Update kdb.sqlite Books record of current Book to indicate that its Chapter records have been created,
+		// the number of Chapters has been found, but there is not yet a current Chapter
+		if (dao.booksUpdateRec (bibID, bkID, chapRCr, numChap, currChap) ) {
 			print("Book:createChapterRecords updated the record for this Book")
-		} else {
-			print("Book:createChapterRecords updating the record for this Book failed")
 		}
 
 		// Update the entry in BibBooks[] for the current Book to show that its Chapter records have been created
 		// and that its number of Chapters has been found
-		bibInst!.setBibBooksNumChap(numChap)
-
-		// Update kdb.sqlite Books record of current Book to indicate that its Chapter records have been created,
-		// the number of Chapters has been found, but there is not yet a current Chapter
-		if !dao!.booksUpdateRec (bib, book, chapRCr, numChap, currChap) {
-			print("Book:createChapterRecords: Updating current book record failed")
-		}
+		bibInst.setBibBooksNumChap(numChap)
 	}
 
-// dao.readChaptersRecs() calls appendChapterToArray() for each row it reads from the kdb.sqlite database
-	func appendChapterToArray(_ chapID:Int, _ bibID:Int, _ bookID:Int,
-							  _ chNum:Int, _ itRCr:Bool, _ numVs:Int, _ numIt:Int, _ curIt:Int) {
-		let chRec = BibChap(chapID, bibID, bookID, chNum, itRCr, numVs, numIt, curIt)
-		BibChaps.append(chRec)
+	// dao.readChaptersRecs() calls appendChapterToArray() for each row it reads from the kdb.sqlite database
+
+	fun appendChapterToArray(chapID:Int, bibID:Int, bookID:Int,
+							 chNum:Int, itRCr:Boolean, numVs:Int, numIt:Int, curIt:Int) {
+		val chRec = Book.BibChap(chapID, bibID, bookID, chNum, itRCr, numVs, numIt, curIt)
+		BibChaps.add(chRec)
 	}
 
+/*
 // Find the offset in BibChaps[] to the element having ChapterID withID.
 // If out of range returns offset zero (first item in the array).
 

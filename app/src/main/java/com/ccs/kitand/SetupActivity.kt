@@ -32,16 +32,17 @@ class SetupActivity : AppCompatActivity() {
         txt_bibname = findViewById(R.id.txt_bibname)
 
         btn_go.setOnClickListener(View.OnClickListener {
-            // Get the (possibly edited) Bible name from the EditText widget
-            val bibName: String = txt_bibname.text.toString()
-            // Save the Bible name into the Bible record in kdb.sqlite
-            KITApp.dao.bibleUpdateName(bibName)
-            // Create the instance of Bible
-            bibInst = Bible(bibID, bibName, bkRCr, currBook)
-            // Go to the ChooseBookActivity
-            val i = Intent(this, ChooseBookActivity::class.java)
-            startActivity(i)
-            finish()
+            goButtonAction()
+//            // Get the (possibly edited) Bible name from the EditText widget
+//            val bibName: String = txt_bibname.text.toString()
+//            // Save the Bible name into the Bible record in kdb.sqlite
+//            KITApp.dao.bibleUpdateName(bibName)
+//            // Create the instance of Bible
+//            bibInst = Bible(bibID, bibName, bkRCr, currBook)
+//            // Go to the ChooseBookActivity
+//            val i = Intent(this, ChooseBookActivity::class.java)
+//            startActivity(i)
+//            finish()
         })
         println("SetupActivity::onCreate()")
     }
@@ -62,5 +63,18 @@ class SetupActivity : AppCompatActivity() {
         currBook = cv.getAsInteger("4")
         // Put the bibleName into the EditText widget
         txt_bibname.setText(bibName)
+    }
+
+    fun goButtonAction () {
+        // Get the (possibly edited) Bible name from the EditText widget
+        val bibName: String = txt_bibname.text.toString()
+        // Save the Bible name into the Bible record in kdb.sqlite
+        KITApp.dao.bibleUpdateName(bibName)
+        // Create the instance of Bible
+        bibInst = Bible(bibID, bibName, bkRCr, currBook)
+        // Go to the ChooseBookActivity
+        val i = Intent(this, ChooseBookActivity::class.java)
+        startActivity(i)
+        finish()
     }
 }

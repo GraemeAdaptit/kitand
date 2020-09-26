@@ -984,6 +984,7 @@ id linear
 id listMode
 id list_item
 id lst_books
+id lst_chapters
 id message
 id middle
 id motion_base
@@ -1082,6 +1083,8 @@ id tv_splashmsg2
 id txt_bibname
 id txt_bk_bibname
 id txt_bk_prompt
+id txt_ch_bibname
+id txt_ch_prompt
 id unchecked
 id uniform
 id up
@@ -1132,6 +1135,7 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_choosebook
+layout activity_choosechapter
 layout activity_setup
 layout activity_splash
 layout custom_dialog
@@ -1184,6 +1188,7 @@ string search_menu_title
 string startWork
 string status_bar_notification_info_overflow
 string txt_bk_prompt
+string txt_ch_prompt
 string txt_splash
 style AlertDialog_AppCompat
 style AlertDialog_AppCompat_Light

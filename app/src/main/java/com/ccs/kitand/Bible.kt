@@ -5,7 +5,6 @@ import android.content.res.Resources
 import java.io.BufferedReader
 import java.io.InputStream
 
-
 //  Bible.kt
 //
 //  Created by Graeme Costin on 2/SEP/20.
@@ -25,33 +24,34 @@ import java.io.InputStream
 // 4. Do the other initialisations needed to build the partial in-memory data for the
 //    Bible -> curr Book -> curr Chapter -> curr VerseItem data structures.
 
-class Bible (bID: Int, bName: String, bkRecCr: Boolean, currBk: Int) {
+class Bible (val bibID: Int, var bibName: String, var bkRCr: Boolean, var currBk: Int) {
 
 	// The following variables and data structures have lifetimes of the Bible object
 	// which is also the lifetime of this run of the app
 
+	// Properties of a Bible instance defined in the primary constructor
+//	val bibID: Int			BibleID
+//	val bibName: String		Bible Name
+//	var bkRCr: Boolean		Book Records Created
+//	var currBk: Int			Current Book
+
+	// Additional properties of the Bible instance
+
 	// Access to the KITDAO instance for kdb.sqlite access
 	val dao = KITApp.dao
 
-	// MARK: Properties
-
-	var bibID: Int = bID			// Bible ID - always 1 for KIT v1
-	var bibName: String = bName		// Bible name
-	var bkRCr: Boolean = bkRecCr	// true if the Books records for this Bible have been created
-	var currBook: Int = currBk		// current Book ID (defined by the Bible Societies 1 to 39 OT and 41 to 67 NT)
-
-	var currBookOfst = -1			// Offset in BibBooks[] to the current book 0 to 38 (OT) 39 to 65 (NT)
-	lateinit var bookInst: Book		// instance in memory of the current Book
+	var currBookOfst = - 1 			// Offset in BibBooks[] to the current book 0 to 38 (OT) 39 to 65 (NT)
+	var bookInst: Book?	= null		// instance in memory of the current Book
 
 	// BibBooks array (for listing the Books so the user can choose one)
-	data class BibBook(
-		var bkID: Int,            // bookID INTEGER
-		var bibID: Int,            // bibleID INTEGER
-		var bkCode: String,        // bookCode TEXT
-		var bkName: String,        // bookName TEXT
-		var chapRCr: Boolean,    // chapRecsCreated INTEGER
-		var numCh: Int,            // numChaps INTEGER
-		var currChap: Int        // currChapter INTEGER
+	data class BibBook (
+		var bkID: Int,			// bookID INTEGER
+		var bibID: Int,			// bibleID INTEGER
+		var bkCode: String,		// bookCode TEXT
+		var bkName: String,		// bookName TEXT
+		var chapRCr: Boolean,	// chapRecsCreated INTEGER
+		var numCh: Int,			// numChaps INTEGER
+		var currChap: Int		// currChapter INTEGER
 
 	)	{
 		override fun toString(): String {
@@ -62,14 +62,14 @@ class Bible (bID: Int, bName: String, bkRecCr: Boolean, currBk: Int) {
 
 	val BibBooks = ArrayList<BibBook>()
 
-	// Initialisation of the single instance of class Bible with an array of Books to select from
-	//	???	appendBibBookToArray()  - called by dao.readBooksRecs()
+	// When SetupActivity creates the instance of Bible it supplies the values
+	// from the Bible record of kdb.sqlite
 
 	init {
-		currBookOfst = if (currBook > 39) (currBook - 2) else (currBook - 1)
+		currBookOfst = if (currBk > 39) (currBk - 2) else (currBk - 1)
 		if (!bkRCr) {
 			// Create the 66 Book records for this Bible
-			createBooksRecords(bID)
+			createBooksRecords(bibID)
 		}
 		// Every launch: the Books records will have been created at this point,
 		// so set up the array BibBooks by reading the 66 Books records from kdb.sqlite.
@@ -82,6 +82,7 @@ class Bible (bID: Int, bName: String, bkRecCr: Boolean, currBk: Int) {
 		// and calls appendBibBookToArray() in this file for each ROW read from kdb.sqlite
 		// appendBibBookToArray() builds the array BibBooks
 		dao.readBooksRecs (this)
+		// Put a reference to this Bible instance into KITApp
 		KITApp.bibInst = this
 	}
 
@@ -168,69 +169,49 @@ class Bible (bID: Int, bName: String, bkRecCr: Boolean, currBk: Int) {
 		val bkRec = BibBook(bkID, bibID, bkCode, bkName, chapRCr, numCh, currChap)
 		BibBooks.add(bkRec)
 	}
-/*
-// Deinitialise (delete) the instance of class Bible
 
-	deinit {
-		// Also delete the instance of the SQLite data access object
-		dao = nil
-		print("Bible instance has been deleted")
-	}
+	// If there is a current Book (as read from kdb.sqlite) then instantiate that Book.
+	fun goCurrentBook () {
+		val book = BibBooks[currBookOfst]
 
-// Refresh display of the Bible Books table on return to foreground
-
-	func refreshUIAfterReturnToForeground () {
-		// TODO: Check whether there anything to do here?
-		print ("KIT user interface has been refreshed.")
-	}
-
-// If there is a current Book (as read from kdb.sqlite) then instantiate that Book.
-	func goCurrentBook () {
-		let book = BibBooks[currBookOfst]
-		print("Going to \(book.bkName) as the current Book")
-
-		// delete any previous in-memory instance of Book
-		bookInst = nil
+		// allow any previous in-memory instance of Book to be garbage collected
+		bookInst = null
 
 		// create a Book instance for the currently selected book
-		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.currChap, self, dao!)
-		// Keep a reference in the AppDelegate
-		appDelegate.bookInst = self.bookInst
-		print("KIT has created an instance of class Book for the old current Book \(book.bkName)")
+		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.currChap)
+		// Keep a reference in KITApp
+		KITApp.bkInst = bookInst as Book
 	}
 
-// When the user selects a book from the UITableView of books it needs to be recorded as the
-// current book and initialisation of data structures in a new Book instance must happen.
-	func setupCurrentBook(_ book: BibBook) {
-		print("Making \(book.bkName) the current Book")
-		currBook = book.bkID
-		currBookOfst = (currBook > 39 ? currBook - 2 : currBook - 1 )
+	// When the user selects a book from the ListView of books it needs to be recorded as the
+	// current book and initialisation of data structures in a new Book instance must happen.
+	fun setupCurrentBook(book: BibBook) {
+		currBk = book.bkID
+		currBookOfst = if (currBk > 39) currBk - 2 else currBk - 1
 		// update Bible record in kdb.sqlite to show this current book
-		if dao!.bibleUpdateCurrBook(currBook) {
-			print("The currBook in kdb.sqlite was updated to \(currBook)")
-		} else {
-			print("The currBook in kdb.sqlite was not updated to \(currBook)")
+		if (KITApp.dao.bibleUpdateCurrBook(currBk) ) {
+			print("The currBook in kdb.sqlite was updated to $currBk)")
 		}
 
-		// delete any previous in-memory instance of Book
-		bookInst = nil
+		// allow any previous in-memory instance of Book to be garbage collected
+		bookInst = null
 
 		// create a Book instance for the currently selected book
-		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.currChap, self, dao!)
-		// Keep a reference in the AppDelegate
-		appDelegate.bookInst = self.bookInst
-		print("KIT has created an instance of class Book for the new current Book \(book.bkName)")
+		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.currChap)
+		// Keep a reference in KITApp
+		KITApp.bkInst = bookInst as Book
+		print("KIT has created an instance of class Book for the new current Book $book.bkName)")
 
 	}
 
-// When the Chapter records have been created for the current Book, the entry for that Book in
-// the Bible's BibBooks[] array must be updated. Once chapRCr is set true it will never go back to false
-// (the kdb.sqlite records are not going to be deleted) so no parameter is needed for that,
-// but a parameter is needed for the number of Chapters in the Book.
+	// When the Chapter records have been created for the current Book, the entry for that Book in
+	// the Bible's BibBooks[] array must be updated. Once chapRCr is set true it will never go back to false
+	// (the kdb.sqlite records are not going to be deleted) so no parameter is needed for that,
+	// but a parameter is needed for the number of Chapters in the Book.
+	// This function is called from the current Book instance, createChapterRecords()
 
-	func setBibBooksNumChap(_ numChap: Int) {
+	fun setBibBooksNumChap(numChap: Int) {
 		BibBooks[currBookOfst].chapRCr = true
 		BibBooks[currBookOfst].numCh = numChap
 	}
-*/
 }
