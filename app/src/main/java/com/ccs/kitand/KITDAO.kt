@@ -92,7 +92,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         cv.put(COL_BibleName, "Bible")
         cv.put(COL_BookRecsCr, false)
         cv.put(COL_CurrentBook, 0)
-        val insert = db.insert(TAB_Bibles, null, cv)
+        db.insert(TAB_Bibles, null, cv)
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -219,8 +219,8 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 		cv.put(COL_ChapRecsCr, chRCr)
 		cv.put(COL_NumChaps, numCh)
 		cv.put(COL_CurrentChap, currCh)
-        val whArray = arrayOf<String>(bkID.toString())
-		val rows = db.update(TAB_Books, cv, COL_BibleID + " = 1 AND " + COL_BookID + " = ?", whArray)
+        val whArray = arrayOf<String>(bibID.toString(), bkID.toString())
+		val rows = db.update(TAB_Books, cv, COL_BibleID + " = ? AND " + COL_BookID + " = ?", whArray)
         return (rows == 1)
 	}
 
@@ -272,11 +272,105 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
             val numVs = cursor.getInt(5)
             val numIt = cursor.getInt(6)
             val curIt = cursor.getInt(7)
-            bkInst.appendChapterToArray(chapID, biblID, bookID, chNum, itRCr, numVs, numIt, curIt)
+            KITApp.bkInst.appendChapterToArray(chapID, biblID, bookID, chNum, itRCr, numVs, numIt, curIt)
         } while (cursor.moveToNext())
         cursor.close()
 	}
 
+	// The Chapters record for the current Chapter needs to be updated
+	//	* to set the flag that indicates that the VerseItem records have been created (on first edit of that Chapter)
+    //  * to change the number of Items as publication VerseItems are created or deleted
+    //	* to change the current VerseItem when the user selects a different VerseItem to work on
+
+	fun chaptersUpdateRec (chID:Int, itRCr:Boolean, numIt:Int, currIt:Int) : Boolean {
+		this.db = this.getWritableDatabase()
+		val cv = ContentValues()
+		cv.put(COL_ItemRecsCr, itRCr)
+		cv.put(COL_NumItems, numIt)
+		cv.put(COL_CurrItem, currIt)
+        val whArray = arrayOf<String>(chID.toString())
+		val rows = db.update(TAB_Chapters, cv, COL_ChapterID + " = ?", whArray)
+        return (rows == 1)
+	}
+
+	//--------------------------------------------------------------------------------------------
+	//	VerseItems data table
+
+	// The VerseItems records for the current Chapter need to be created when the user first selects that Chapter
+	// This function will be called once by the KIT software for every VerseItem in the current Chapter
+	// It will also be called
+	//	* when the user chooses to insert a publication VerseItem
+	//	* when the user chooses to undo a verse bridge
+
+	fun verseItemsInsertRec (chID:Int, vsNum:Int, itTyp:String, itOrd:Int, itText:String, intSeq:Int, isBrid:Boolean, lstVsBrid:Int) : Boolean {
+        this.db = this.getWritableDatabase()
+        val cv = ContentValues()
+        cv.put(COLF_ChapID, chID)
+        cv.put(COL_VerseNum, vsNum)
+        cv.put(COL_ItemType, itTyp)
+        cv.put(COL_ItemOrder, itOrd)
+        cv.put(COL_ItemText, itText)
+        cv.put(COL_IntSeq, intSeq)
+        cv.put(COL_IsBridge, isBrid)
+        cv.put(COL_LastVsBridge, lstVsBrid)
+        val insert = db.insert(TAB_VerseItems, null, cv)
+        return (insert > 0L)
+		}
+
+	// The VerseItems records for the current Chapter need to be read in order to set up the scrolling display of
+	// VerseItem records that the user interacts with. These records need to be sorted in ascending order of itemOrder.
+
+	fun readVerseItemsRecs (chap:Chapter) {
+        this.db = this.getReadableDatabase()
+        val sql1 = "SELECT itemID, chapterID, verseNumber, itemType, itemOrder, itemText, intSeq, isBridge, lastVsBridge FROM " + TAB_VerseItems
+        val sql2 =  " WHERE " + COLF_ChapID + " = ? ORDER BY " + COL_ItemOrder
+        val sql = sql1 + sql2
+        val whArray = arrayOf<String>(chap.chID.toString())
+        val cursor = db.rawQuery(sql, whArray)
+        if (cursor.moveToFirst())
+            do {
+                val itemID = cursor.getInt(0)
+                val chapID = cursor.getInt(1)
+                val vsNum = cursor.getInt(2)
+                val itTyp = cursor.getString(3)
+                val itOrd = cursor.getInt(4)
+                val itTxt = cursor.getString(5)
+                val intSeq = cursor.getInt(6)
+                val isBrg = if (cursor.getInt(7) == 1) true else false
+                val lvBrg = cursor.getInt(7)
+                KITApp.chInst.appendItemToArray(itemID, chapID, vsNum, itTyp, itOrd, itTxt, intSeq, isBrg, lvBrg)
+            } while (cursor.moveToNext())
+        cursor.close()
+	}
+/*
+	// The text of a VerseItem record in the UITableView needs to be updated
+	//	* when the user selects a different VerseItem to work on
+	//	* when the VerseItem cell scrolls outside the visible range
+
+	func itemsUpdateRecText (_ itID:Int, _ itTxt:String) -> Bool {
+		var sqlite3_stmt:OpaquePointer?=nil
+		let sql:String = "UPDATE VerseItems SET itemText = ?2 WHERE itemID = ?1;"
+		let nByte:Int32 = Int32(sql.utf8.count)
+
+		sqlite3_prepare_v2(db, sql, nByte, &sqlite3_stmt, nil)
+		sqlite3_bind_int(sqlite3_stmt, 1, Int32(itID))
+		sqlite3_bind_text(sqlite3_stmt, 2, itTxt.cString(using:String.Encoding.utf8)!, -1, SQLITE_TRANSIENT)
+		sqlite3_step(sqlite3_stmt)
+		let result = sqlite3_finalize(sqlite3_stmt)
+		return (result == 0)
+	}
+
+	// The VerseItem record for a publication VerseItem needs to be deleted when the user chooses to delete a publication item
+	// This function will also be called when the user chooses to bridge two verses (the contents of the second verse is
+	//	appended to the first verse, the second verse text is put into a new BridgeItem, and then the second VerseItem is
+	//	deleted. Unbridging follows the reverse procedure and the original second verse is re-created and the BridgeItem
+	//	is deleted
+
+	func itemsDeleteRec () -> Bool {
+		return true
+	}
+
+     */
 
      companion object {
         const val TAB_Bibles = "Bibles"

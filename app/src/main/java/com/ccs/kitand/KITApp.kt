@@ -24,7 +24,6 @@ class KITApp : Application() {
     }
 
     companion object {
-        var greeting = "Hello from KITApp"
         var context: Context? = null
             private set
         var instance: KITApp? = null

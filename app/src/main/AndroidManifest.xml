@@ -10,6 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".EditChapterActivity"></activity>
         <activity android:name=".ChooseChapterActivity"></activity>
         <activity android:name=".SplashActivity">
             <intent-filter>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/verseitemlayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="#B0B0B0">
+
+    <Button
+        android:id="@+id/btn_popover"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="#FFFFFF"
+        android:padding="0dp"
+        android:text="Popover"
+        android:textAlignment="viewStart"
+        android:textAllCaps="false"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/txt_verseitem"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top"
+        android:backgroundTint="#FFFFFF"
+        android:clickable="true"
+        android:cursorVisible="true"
+        android:inputType="textMultiLine"
+        android:isScrollContainer="true"
+        android:maxLines="10"
+        android:minLines="1"
+        android:padding="2sp"
+        android:singleLine="false"
+        android:text="verseitem"
+        android:textAllCaps="false"
+        android:textIsSelectable="true"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_popover" />
+</androidx.constraintlayout.widget.ConstraintLayout>

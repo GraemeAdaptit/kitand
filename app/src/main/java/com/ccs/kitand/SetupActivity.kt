@@ -33,28 +33,11 @@ class SetupActivity : AppCompatActivity() {
 
         btn_go.setOnClickListener(View.OnClickListener {
             goButtonAction()
-//            // Get the (possibly edited) Bible name from the EditText widget
-//            val bibName: String = txt_bibname.text.toString()
-//            // Save the Bible name into the Bible record in kdb.sqlite
-//            KITApp.dao.bibleUpdateName(bibName)
-//            // Create the instance of Bible
-//            bibInst = Bible(bibID, bibName, bkRCr, currBook)
-//            // Go to the ChooseBookActivity
-//            val i = Intent(this, ChooseBookActivity::class.java)
-//            startActivity(i)
-//            finish()
         })
-        println("SetupActivity::onCreate()")
-    }
-
-    override fun onStart() {
-        super.onStart()
-		println("SetupActivity::onStart()")
     }
 
     override fun onResume() {
         super.onResume()
-        println("SetupActivity::onResume()")
         // Read the single Bibles record from kdb.sqlite
         val cv = KITApp.dao.bibleGetRec()
         bibID = cv.getAsInteger("1")
@@ -72,6 +55,8 @@ class SetupActivity : AppCompatActivity() {
         KITApp.dao.bibleUpdateName(bibName)
         // Create the instance of Bible
         bibInst = Bible(bibID, bibName, bkRCr, currBook)
+        // Ensure rest of app has access to the Bible instance
+        KITApp.bibInst = bibInst
         // Go to the ChooseBookActivity
         val i = Intent(this, ChooseBookActivity::class.java)
         startActivity(i)
