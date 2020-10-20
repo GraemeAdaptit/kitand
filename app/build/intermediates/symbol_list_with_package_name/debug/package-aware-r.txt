@@ -1090,8 +1090,6 @@ id txt_bk_bibname
 id txt_bk_prompt
 id txt_ch_bibname
 id txt_ch_prompt
-id txt_edbibname
-id txt_edprompt
 id txt_verseitem
 id unchecked
 id uniform

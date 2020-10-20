@@ -342,24 +342,20 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
             } while (cursor.moveToNext())
         cursor.close()
 	}
-/*
-	// The text of a VerseItem record in the UITableView needs to be updated
+
+	// The text of a VerseItem record in the EditChapterActivity needs to be saved to kdb.sqlite
 	//	* when the user selects a different VerseItem to work on
 	//	* when the VerseItem cell scrolls outside the visible range
 
-	func itemsUpdateRecText (_ itID:Int, _ itTxt:String) -> Bool {
-		var sqlite3_stmt:OpaquePointer?=nil
-		let sql:String = "UPDATE VerseItems SET itemText = ?2 WHERE itemID = ?1;"
-		let nByte:Int32 = Int32(sql.utf8.count)
-
-		sqlite3_prepare_v2(db, sql, nByte, &sqlite3_stmt, nil)
-		sqlite3_bind_int(sqlite3_stmt, 1, Int32(itID))
-		sqlite3_bind_text(sqlite3_stmt, 2, itTxt.cString(using:String.Encoding.utf8)!, -1, SQLITE_TRANSIENT)
-		sqlite3_step(sqlite3_stmt)
-		let result = sqlite3_finalize(sqlite3_stmt)
-		return (result == 0)
+	fun itemsUpdateRecText (itID:Int, itTxt:String) : Boolean {
+		this.db = this.getWritableDatabase()
+		val cv = ContentValues()
+		cv.put(COL_ItemText, itTxt)
+        val whArray = arrayOf<String>(itID.toString())
+		val rows = db.update(TAB_VerseItems, cv, COL_ItemID + " = ?", whArray)
+        return (rows == 1)
 	}
-
+/*
 	// The VerseItem record for a publication VerseItem needs to be deleted when the user chooses to delete a publication item
 	// This function will also be called when the user chooses to bridge two verses (the contents of the second verse is
 	//	appended to the first verse, the second verse text is put into a new BridgeItem, and then the second VerseItem is
@@ -369,8 +365,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 	func itemsDeleteRec () -> Bool {
 		return true
 	}
-
-     */
+*/
 
      companion object {
         const val TAB_Bibles = "Bibles"

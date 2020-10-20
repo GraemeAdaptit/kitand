@@ -12,7 +12,7 @@
 10-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
 11
 12    <application
-12-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:6:5-24:19
+12-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:6:5-30:19
 13        android:allowBackup="true"
 13-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:7:9-35
 14        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
@@ -29,43 +29,53 @@
 20        android:testOnly="true"
 21        android:theme="@style/AppTheme" >
 21-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:12:9-40
-22        <activity android:name="com.ccs.kitand.EditChapterActivity" />
-22-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:9-66
-22-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:19-54
-23        <activity android:name="com.ccs.kitand.ChooseChapterActivity" />
-23-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:14:9-68
-23-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:14:19-56
-24        <activity android:name="com.ccs.kitand.SplashActivity" >
-24-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:15:9-21:20
-24-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:15:19-49
-25            <intent-filter>
-25-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:16:13-20:29
-26                <action android:name="android.intent.action.MAIN" />
-26-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:17:17-69
-26-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:17:25-66
-27
-28                <category android:name="android.intent.category.LAUNCHER" />
-28-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:19:17-77
-28-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:19:27-74
-29            </intent-filter>
+22        <activity android:name="com.ccs.kitand.SplashActivity" >
+22-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:14:9-19:20
+22-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:14:19-49
+23            <intent-filter>
+23-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:15:13-18:29
+24                <action android:name="android.intent.action.MAIN" />
+24-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:16:17-69
+24-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:16:25-66
+25
+26                <category android:name="android.intent.category.LAUNCHER" />
+26-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:17:17-77
+26-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:17:27-74
+27            </intent-filter>
+28        </activity>
+29        <activity android:name="com.ccs.kitand.SetupActivity" >
+29-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:20:9-21:20
+29-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:20:19-48
 30        </activity>
-31        <activity android:name="com.ccs.kitand.SetupActivity" />
-31-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:22:9-51
-31-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:22:19-48
-32        <activity android:name="com.ccs.kitand.ChooseBookActivity" />
-32-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:23:9-56
-32-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:23:19-53
-33
-34        <provider
-34-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:25:9-29:43
-35            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-35-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:26:13-79
-36            android:authorities="com.ccs.kitand.lifecycle-process"
-36-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:27:13-69
-37            android:exported="false"
-37-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:28:13-37
-38            android:multiprocess="true" />
-38-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:29:13-40
-39    </application>
-40
-41</manifest>
+31        <activity android:name="com.ccs.kitand.ChooseBookActivity" >
+31-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:22:9-23:20
+31-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:22:19-53
+32        </activity>
+33        <activity
+33-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:24:9-26:20
+34            android:name="com.ccs.kitand.ChooseChapterActivity"
+34-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:24:19-56
+35            android:parentActivityName="com.ccs.kitand.ChooseBookActivity" >
+35-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:25:13-63
+36        </activity>
+37        <activity
+37-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:27:9-29:20
+38            android:name="com.ccs.kitand.EditChapterActivity"
+38-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:27:19-54
+39            android:parentActivityName="com.ccs.kitand.ChooseChapterActivity" >
+39-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:28:13-65
+40        </activity>
+41
+42        <provider
+42-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:25:9-29:43
+43            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+43-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:26:13-79
+44            android:authorities="com.ccs.kitand.lifecycle-process"
+44-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:27:13-69
+45            android:exported="false"
+45-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:28:13-37
+46            android:multiprocess="true" />
+46-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:29:13-40
+47    </application>
+48
+49</manifest>

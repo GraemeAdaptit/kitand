@@ -20,8 +20,6 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/AppTheme" >
-        <activity android:name="com.ccs.kitand.EditChapterActivity" />
-        <activity android:name="com.ccs.kitand.ChooseChapterActivity" />
         <activity android:name="com.ccs.kitand.SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,8 +27,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ccs.kitand.SetupActivity" />
-        <activity android:name="com.ccs.kitand.ChooseBookActivity" />
+        <activity android:name="com.ccs.kitand.SetupActivity" >
+        </activity>
+        <activity android:name="com.ccs.kitand.ChooseBookActivity" >
+        </activity>
+        <activity
+            android:name="com.ccs.kitand.ChooseChapterActivity"
+            android:parentActivityName="com.ccs.kitand.ChooseBookActivity" >
+        </activity>
+        <activity
+            android:name="com.ccs.kitand.EditChapterActivity"
+            android:parentActivityName="com.ccs.kitand.ChooseChapterActivity" >
+        </activity>
 
         <provider
             android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"

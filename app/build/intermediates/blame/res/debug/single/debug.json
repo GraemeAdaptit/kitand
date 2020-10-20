@@ -96,11 +96,11 @@
         "source": "/Users/graemecostin/kitand/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/mipmap-hdpi_ic_launcher_foreground.png.flat",
-        "source": "/Users/graemecostin/kitand/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png"
-    },
-    {
         "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/layout_layout_item.xml.flat",
         "source": "/Users/graemecostin/kitand/app/src/main/res/layout/layout_item.xml"
+    },
+    {
+        "merged": "/Users/graemecostin/kitand/app/build/intermediates/res/merged/debug/mipmap-hdpi_ic_launcher_foreground.png.flat",
+        "source": "/Users/graemecostin/kitand/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png"
     }
 ]

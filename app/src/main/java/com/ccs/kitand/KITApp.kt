@@ -3,6 +3,7 @@ package com.ccs.kitand
 import android.app.Application
 import android.content.Context
 import android.content.res.Resources
+import androidx.recyclerview.widget.RecyclerView
 import java.io.InputStream
 
 //  Created by Graeme Costin on 3JUL20.
@@ -28,12 +29,14 @@ class KITApp : Application() {
             private set
         var instance: KITApp? = null
             private set
+
+        lateinit var res: Resources
         lateinit var dao: KITDAO        // For access to kdb.sqlite
         lateinit var bibInst: Bible     // For access to the single instance of Bible
         lateinit var bkInst: Book       // For access to the instance of the currently selected Book
         lateinit var chInst: Chapter    // For access to the instance of the currently selected Chapter
-
-        lateinit var instr: InputStream
-        lateinit var res: Resources
+        // TODO: Is vItAda really necessary? Remove it if possible
+        lateinit var vItAda: VerseItemAdapter   // For access to the instance of the VerseItemAdapter
+        lateinit var recycV: RecyclerView       // For access to the RecyclerView of EditChapterActivity
     }
 }

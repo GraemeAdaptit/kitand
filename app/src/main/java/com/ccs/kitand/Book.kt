@@ -2,7 +2,7 @@ package com.ccs.kitand
 
 import android.R
 import java.io.BufferedReader
-
+import kotlin.properties.Delegates
 
 //  Created by Graeme Costin on 24SEP20.
 // The author disclaims copyright to this source code.  In place of
@@ -18,13 +18,13 @@ import java.io.BufferedReader
 // which time a new Book instance will be created for the newly selected Book.
 
 class Book(
-	val bkID: Int,
-	val bibID: Int,
-	val bkCode: String,
-	val bkName: String,
-	var chapRCr: Boolean,
-	var numChap: Int,
-	var currChap: Int
+	val bkID: Int,			// bookID INTEGER
+	val bibID: Int,			// bibleID INTEGER - always 1 for KIT v1
+	val bkCode: String,		// bookCode TEXT
+	val bkName: String,		// bookName TEXT
+	var chapRCr: Boolean,	// chapRecsCreated INTEGER
+	var numChap: Int,		// numChaps INTEGER
+	var currChap: Int		// currChapter INTEGER (the ID assigned by SQLite when the Chapter was created)
 ) {
 
 	// The following variables and data structures have lifetimes of the Book object
@@ -33,29 +33,26 @@ class Book(
 	val dao = KITApp.dao
 	val bibInst = KITApp.bibInst	// access to the instance of Bible for updating BibBooks[]
 
-	// Properties of a Book instance defined in the primary constructor
-//	var bkID: Int			bookID INTEGER
-//	var bibID: Int			bibleID INTEGER - always 1 for KIT v1
-//	var bkCode: String		bookCode TEXT
-//	var bkName: String		bookName TEXT
-//	var chapRCr: Boolean	chapRecsCreated INTEGER
-//	var numChap: Int		numChaps INTEGER
-//	var currChap: Int		currChapter INTEGER (the ID assigned by SQLite when the Chapter was created)
+	// When an instance of a Book is created, the ChooseChapterActivity should go straight to
+	// the current Chapter recorded in kdb.sqlite.
+	// But if the user comes back to ChooseChapterActivity after keyboarding VerseItems in a
+	// Chapter, the user should be allowed to choose a different Chapter of the same Book.
+	var canChooseAnotherChapter = false		// true if the user is allowed to choose another Chapter
 
-	var currChapOfst: Int = 0	// offset to the current Chapter in BibChaps[] array
+	var currChapOfst: Int = -1	// offset to the current Chapter in BibChaps[] array
 	var chapInst: Chapter? = null	// instance in memory of the current Chapter
 
 	// BibChaps array (for listing the Chapters so the user can choose one)
 
 	data class BibChap(
-		var chID: Int,        // chapterID INTEGER PRIMARY KEY assigned by SQLite when the Chapter was created
-		var bibID: Int,        // bibleID INTEGER
-		var bkID: Int,        // bookID INTEGER
-		var chNum: Int,        // chapterNumber INTEGER
-		var itRCr: Boolean,    // itemRecsCreated INTEGER
-		var numVs: Int,        // numVerses INTEGER
-		var numIt: Int,        // numItems INTEGER
-		var curIt: Int        // currItem INTEGER
+		var chID: Int,			// chapterID INTEGER PRIMARY KEY assigned by SQLite when the Chapter was created
+		var bibID: Int,			// bibleID INTEGER
+		var bkID: Int,			// bookID INTEGER
+		var chNum: Int,			// chapterNumber INTEGER
+		var itRCr: Boolean,		// itemRecsCreated INTEGER
+		var numVs: Int,			// numVerses INTEGER
+		var numIt: Int,			// numItems INTEGER
+		var curIt: Int			// currItem INTEGER
 	) {
 		override fun toString(): String {
 			val ch_name = KITApp.res.getString(com.ccs.kitand.R.string.nm_chapter)
@@ -94,7 +91,7 @@ class Book(
 		dao.readChaptersRecs(bibID, this)
 		// calls readChaptersRecs() in KITDAO.swift to read the kdb.sqlite database Books table
 		// readChaptersRecs() calls appendChapterToArray() in this file for each ROW read from kdb.sqlite
-		print("Chapter records for $bkName have been read from kdb.sqlite")
+//		println("Chapter records for $bkName have been read from kdb.sqlite")
 	}
 
 	fun createChapterRecords(book: Int, bib: Int, code: String) {
@@ -138,18 +135,18 @@ class Book(
 			val numVs = elemTr.toInt()
 			numIt = numIt + numVs	// for some Psalms numIt will include the ascription VerseItem
 			if (dao.chaptersInsertRec(bib, book, chNum, false, numVs, numIt, currIt) ) {
-				println("Book:createChapterRecords Created Chapter record for $bkName, chapter $chNum")
+//				println("Book:createChapterRecords Created Chapter record for $bkName, chapter $chNum")
 			}
 			chNum = chNum + 1
 		}
 		// Update in-memory record of current Book to indicate that its Chapter records have been created
 		chapRCr = true
-		// numChap = numChap This was done when the count of elements in the chapters string was found
+		// numChap was set when the count of elements in the chapters string was found
 
 		// Update kdb.sqlite Books record of current Book to indicate that its Chapter records have been created,
 		// the number of Chapters has been found, but there is not yet a current Chapter
 		if (dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, currChap) ) {
-			print("Book:createChapterRecords updated the record for this Book")
+//			println("Book:createChapterRecords updated the record for this Book")
 		}
 
 		// Update the entry in BibBooks[] for the current Book to show that its Chapter records have been created
@@ -167,7 +164,6 @@ class Book(
 		BibChaps.add(chRec)
 	}
 
-
 	// Find the offset in BibChaps[] to the element having ChapterID withID.
 	// If out of range returns offset zero (first item in the array).
 
@@ -180,7 +176,6 @@ class Book(
 		return 0
 	}
 
-	// If, from kdb.sqlite, there is already a current Chapter for the current Book then go to it
 	// Go to the current BibChap
 	// This function is called by the ChooseChaptersActivity to find out which Chapter
 	// in the current Book is the current Chapter, and to make the Book instance and
@@ -206,7 +201,7 @@ class Book(
 		currChapOfst = chapOfst
 		// update Book record in kdb.sqlite to show this current Chapter
 		if (dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, currChap) ) {
-			println("The currChap for $bkName in kdb.sqlite was updated to $chap.chNum")
+//			println("The currChap for $bkName in kdb.sqlite was updated to $chap.chNum")
 			}
 
 		// allow any previous in-memory instance of Chapter to be garbage collected
@@ -219,7 +214,7 @@ class Book(
 
 	// When the VerseItem records have been created for the current Chapter, the entry for that Chapter in
 	// the Book's BibChaps[] array must be updated. Once itRCr is set true it will never go back to false
-	// (the kdb.sqlite records are not going to be deleted) so no parameter is needed for that,
+	// (the kdb.sqlite Chapter records are not going to be deleted) so no parameter is needed for that,
 	// but parameters are needed for the number of Verses and number of Items in the Chapter.
 	// This function is called from the current Chapter instance, createItemRecords()
 
