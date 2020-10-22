@@ -916,7 +916,6 @@ id btn_books
 id btn_go
 id btn_popover
 id btn_setup
-id btn_tochapters
 id buttonPanel
 id center
 id center_vertical

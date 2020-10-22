@@ -2,18 +2,16 @@ package com.ccs.kitand
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class EditChapterActivity : AppCompatActivity() {
-	private lateinit var btn_toChaps: Button
-//	private lateinit var txt_ed_bibname: TextView
-//	private lateinit var txt_ed_prompt: TextView
+
 	private lateinit var ch_name:String
 	private lateinit var ps_name:String
 	private lateinit var recyclerView: RecyclerView
@@ -36,20 +34,10 @@ class EditChapterActivity : AppCompatActivity() {
 
 		// Get access to the SupportActionBar
 		suppActionBar = getSupportActionBar()
-//		if (suppActionBar != null) {
-//			suppActionBar?.setDisplayHomeAsUpEnabled(true)
-//		}
 
 		// Get references to layout widgets
-		btn_toChaps = findViewById(R.id.btn_tochapters)
-//		txt_ed_bibname = findViewById(R.id.txt_edbibname)
-//		txt_ed_prompt = findViewById(R.id.txt_edprompt)
 		ch_name = KITApp.res.getString(R.string.nm_chapter)
 		ps_name = KITApp.res.getString(R.string.nm_psalm)
-
-		btn_toChaps.setOnClickListener(View.OnClickListener {
-			goToChapters()
-		})
 
 		val result = KITApp.chInst.goCurrentItem()
 		this.currItOfst = result
@@ -69,15 +57,6 @@ class EditChapterActivity : AppCompatActivity() {
 		KITApp.recycV = recyclerView
 	}
 
-	private fun goToChapters() {
-		// Save the current VerseItem text if necessary
-		saveCurrentItemText()
-		// Go to the ChooseChapterActivity
-		val i = Intent(this, ChooseChapterActivity::class.java)
-		startActivity(i)
-		finish()	// If user returns to EditChapterActivity it will be to a new instance of the activity
-	}
-
 	override fun onStart() {
 		super.onStart()
 //		txt_ed_bibname.setText(KITApp.bibInst.bibName)
@@ -91,23 +70,33 @@ class EditChapterActivity : AppCompatActivity() {
 			suppActionBar?.setDisplayShowTitleEnabled(true)
 			suppActionBar?.setTitle(actionBarTitle)
 		}
-//		txt_ed_prompt.setText(prompt)
-//		val result = KITApp.chInst.goCurrentItem()
-//		this.currItOfst = result
-		// Tell the RecyclerView to got to this row
 	}
 
 	override fun onResume() {
 		super.onResume()
-//		currItOfst = KITApp.chInst.goCurrentItem()
-//		// Tell the RecyclerView to got to this row
-
+		val result = KITApp.chInst.goCurrentItem()
+		this.currItOfst = result
+		// Tell the RecyclerView to got to this row
 	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		when (item.getItemId()) {
+			android.R.id.home -> onBackPressed()
+		}
+		return true
+	}
+
 	override fun onBackPressed() {
-//remove super.onBackPressed() and you can handle intent to mainActivity or
-//any other activity
+		goToChapters()
+	}
+
+	private fun goToChapters() {
+		// Save the current VerseItem text if necessary
+		saveCurrentItemText()
+		// Go to the ChooseChapterActivity
 		val i = Intent(this, ChooseChapterActivity::class.java)
 		startActivity(i)
+		finish()	// If user returns to EditChapterActivity it will be to a new instance of the activity
 	}
 
 	// Called by the custom VerseItem cell when the user taps inside the cell's editable text
@@ -147,12 +136,5 @@ class EditChapterActivity : AppCompatActivity() {
 	// before making another VerseItem the current one
 	fun saveCurrentItemText () {
 		viewAdapter.saveCurrentItemText()
-//		val currCell = tableView.cellForRow(at: IndexPath(row: currItOfst, section: 0)) as! UIVerseItemCell?
-//		if currCell != nil {
-//			if currCell.dirty {
-//				val textSrc = currCell.itText.text as String
-//				KITApp.chInst.copyAndSaveVItem(currItOfst, textSrc)
-//				currCell!.dirty = false
-//		}
 	}
 }
