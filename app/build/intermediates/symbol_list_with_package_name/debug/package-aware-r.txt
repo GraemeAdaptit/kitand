@@ -893,7 +893,8 @@ id action_mode_close_button
 id action_text
 id actions
 id activity_chooser_view_content
-id activity_main
+id activity_setup
+id activity_splash
 id add
 id alertTitle
 id aligned
@@ -1041,7 +1042,6 @@ id showHome
 id showTitle
 id sin
 id spacer
-id splashscreen
 id spline
 id split_action_bar
 id spread

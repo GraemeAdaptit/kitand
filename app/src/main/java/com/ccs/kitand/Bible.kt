@@ -42,6 +42,12 @@ class Bible (
 
 	// Additional properties of the Bible instance
 
+	// When an instance of a Bible is created, the ChooseBookActivity should go straight to
+	// the current Book recorded in kdb.sqlite.
+	// But if the user comes back to ChooseBookActivity from the ChooseChapterActivity,
+	// the user should be allowed to choose a different Book of the same Bible.
+	var canChooseAnotherBook = false		// true if the user is allowed to choose another Book
+
 	// Access to the KITDAO instance for kdb.sqlite access
 	val dao = KITApp.dao
 

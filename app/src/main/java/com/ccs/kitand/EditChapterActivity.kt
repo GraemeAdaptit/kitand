@@ -59,7 +59,6 @@ class EditChapterActivity : AppCompatActivity() {
 
 	override fun onStart() {
 		super.onStart()
-//		txt_ed_bibname.setText(KITApp.bibInst.bibName)
 		val bibName = KITApp.bibInst.bibName
 		val chNumStr = KITApp.chInst.chNum.toString()
 		val prompt = if (KITApp.bkInst.bkID == 19)
@@ -77,6 +76,7 @@ class EditChapterActivity : AppCompatActivity() {
 		val result = KITApp.chInst.goCurrentItem()
 		this.currItOfst = result
 		// Tell the RecyclerView to got to this row
+//		viewManager.scrollToPositionWithOffset(currItOfst, 0)
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {

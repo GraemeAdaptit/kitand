@@ -1,7 +1,6 @@
 package com.ccs.kitand
 
 import android.text.Editable
-import android.text.InputType.TYPE_CLASS_TEXT
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -69,11 +68,9 @@ class VerseItemAdapter(
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 //				TODO("Not yet implemented")
 			}
-
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 //				TODO("Not yet implemented")
 			}
-
 			override fun afterTextChanged(s: Editable) {
 				// Set dirty flag for this VerseItem text
 				holder.dirty = true
@@ -91,6 +88,14 @@ class VerseItemAdapter(
 		return numItems
 	}
 
+	// onViewRecycled() is called by the LayoutManager just before clearing data from a ListCell
+	// such as when the recyclerView is scrolled and some cells go out of view.
+	override fun onViewRecycled(holder: ListCell): Unit {
+		val pos = holder.getAdapterPosition()
+		// Save VerseItem text from cell at pos
+		val textSrc = holder.verseItemTxt.getText().toString()
+		KITApp.chInst.copyAndSaveVItem(pos, textSrc)
+	}
 	// Called when the current view holder is being changed to another one; it is necessary to save
 	// the text in whichever is the current view holder
 	fun saveCurrentItemText () {
@@ -110,7 +115,10 @@ class VerseItemAdapter(
 		saveCurrentItemText()
 		// Disable the current cell in the VerseItemAdapter
 		val oldCurrCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst) as ListCell
-		oldCurrCell.verseItemTxt.isFocusable = false
+		if (oldCurrCell != null) {
+			// If the old current cell is still accessible then set its text to non-focussable
+			oldCurrCell.verseItemTxt.isFocusable = false
+		}
 		// make the ListCell just tapped the current one
 		currCellOfst = newPos
 		KITApp.chInst.setupCurrentItemFromRecyclerRow(currCellOfst)
@@ -120,6 +128,7 @@ class VerseItemAdapter(
 		newCurrCell.verseItemTxt.setFocusableInTouchMode(true)
 		newCurrCell.verseItemTxt.requestFocus()	// To set insertion point at end of text
 	}
+
 	// RecyclerView.Adapter has a function notifyItemChanged(position) which can be used
 	// if a ListCell contents needs to be changed
 

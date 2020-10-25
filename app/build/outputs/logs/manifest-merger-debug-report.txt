@@ -4,35 +4,35 @@ ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-32:12
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-32:12
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-32:12
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-32:12
-MERGED from [androidx.databinding:viewbinding:4.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/b489210023b4e591650fd25144ad3624/jetified-viewbinding-4.0.1/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.core:core-ktx:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/8980d788014fcfbd6a5e16fdd30ae692/jetified-core-ktx-1.3.1/AndroidManifest.xml:2:1-9:12
-MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/43a917f9534cb05f0a20bd294163eceb/jetified-lifecycle-viewmodel-ktx-2.2.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/810bc0023f39274b6f9bc838d32f9df6/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
-MERGED from [androidx.appcompat:appcompat:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/4e039017508058e03141616af225b4eb/appcompat-1.2.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.recyclerview:recyclerview:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/17f3264973adbc27bc15b903e97c2276/recyclerview-1.1.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ecbbc505c1ef8c2b1e510cce5e96bb37/lifecycle-extensions-2.2.0/AndroidManifest.xml:17:1-27:12
-MERGED from [androidx.appcompat:appcompat-resources:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/b5466dcfe12488b715be006750d7ab23/jetified-appcompat-resources-1.2.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2a612bd4c425dcfbfc1a3a304e287881/drawerlayout-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.fragment:fragment:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2c69121978482ab3b49af0c68d46e0b8/fragment-1.2.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/c12747f68fadffbb0e0ad871896b687f/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.customview:customview:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a30017872b14105a400314921d5cb62e/customview-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/4641752ec657f9b4a42d6a06f25d7d22/vectordrawable-animated-1.1.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/4105de63edbfe1f7a89f44426cee4e60/vectordrawable-1.1.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.loader:loader:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6f621cac338d61e4657df2851636b5fa/loader-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.activity:activity:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/07fffc4e66e9051edb002e23eddf3cce/jetified-activity-1.1.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/3fad7ea4f0b845c6f6667debb95e1494/core-1.3.1/AndroidManifest.xml:17:1-26:12
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/22f084678c0c8123034752ff82b9a006/cursoradapter-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:17:1-32:12
-MERGED from [androidx.lifecycle:lifecycle-service:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2cfe5f060ac9f62571b78a610b8cc5b5/jetified-lifecycle-service-2.2.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/7d6e7d8b4768dffce85856eb040e0ba1/lifecycle-runtime-2.2.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/adab60b679fd605dc0fe365f8feea7d6/lifecycle-livedata-2.2.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a5d8218f222afd1356a654be097d36f3/jetified-lifecycle-viewmodel-savedstate-1.0.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/31435e025cdccb9fb8afecf6a35971cd/lifecycle-livedata-core-2.2.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ca6f5dc978f1f081f1b8afbaed8e2aeb/core-runtime-2.1.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.savedstate:savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/aa817d39ca4f9f9f764e5a0b70163814/jetified-savedstate-1.0.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ff664a25e1391f1156cfb2e2374c7147/lifecycle-viewmodel-2.2.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6118f679eabfffe3c12f082544a87853/versionedparcelable-1.1.0/AndroidManifest.xml:17:1-27:12
-MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6ba1de9be899b775fb2e622bcf9ee329/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.databinding:viewbinding:4.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/5ea2f0412ed25fc56dc03edea470930c/jetified-viewbinding-4.1.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core-ktx:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a8c6808ed5c0c4b06e3730ef98b98b7a/jetified-core-ktx-1.3.1/AndroidManifest.xml:2:1-9:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/0e888426572a89697f671489623c0f40/jetified-lifecycle-viewmodel-ktx-2.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/89fceb9da472abf5577ba35fe8ce33b0/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.appcompat:appcompat:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/7bf486935e2cf6581998971bedac1c6d/appcompat-1.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/8df487e4928c56bf5f81c1495ece00af/recyclerview-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/e250fc4e64318a09714cde80904d2b58/lifecycle-extensions-2.2.0/AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.appcompat:appcompat-resources:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6374ca097572e95b746a19ae66f229c4/jetified-appcompat-resources-1.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/728ee46f721db6c9ef3b9b1f559e7cac/drawerlayout-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.fragment:fragment:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/f88a1a6b6b5a7349075c209ae4b14d78/fragment-1.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/5737a15cf189586314c8f0c0018abbd8/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/921dbf2e6014e952f42cb7702026b609/customview-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/c5b3e2466260255aa521604206c50ae9/vectordrawable-animated-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/e6247819d72e13f42304acf6ba3312ca/vectordrawable-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.loader:loader:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/8d6fe3339db0bf783d2a6313c75c93d1/loader-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.activity:activity:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/88aac62338dac801d5a314ee407fa6ed/jetified-activity-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2b83affeb89c55eaab08fda25d8b4584/core-1.3.1/AndroidManifest.xml:17:1-26:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/62a91f25b348591cc15acc99c60df661/cursoradapter-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ed08cffbfcc447d2cf5008f1ed9cc123/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:17:1-32:12
+MERGED from [androidx.lifecycle:lifecycle-service:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/45fcc6ba00cdbb7b2010482bb62a2409/jetified-lifecycle-service-2.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/9acff1b0f8ae55692334b7d6b76f0380/lifecycle-runtime-2.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/11b3e5b5e1beed29c403764772d17b7b/lifecycle-livedata-2.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/3d88d6ff8f5d1c89fe1fb74160301f88/jetified-lifecycle-viewmodel-savedstate-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/f7cee7dd8b7e70d7b7ebdc5833f64703/lifecycle-livedata-core-2.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ee163a923db7e7893a440ece432ec242/core-runtime-2.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.savedstate:savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/729b94392575afa626f22b9098f2b277/jetified-savedstate-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/eebf391fca65251329e05262594bcbb5/lifecycle-viewmodel-2.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/34fb924ef230ace9a77101a5f0eb4e8d/versionedparcelable-1.1.0/AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a01e2fff2aadb18c0a70f529ad1dd9cc/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-32:12
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-32:12
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-32:12
@@ -54,18 +54,18 @@ INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:2:1-32
 		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:3:5-27
 application
 ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:6:5-30:19
-MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/810bc0023f39274b6f9bc838d32f9df6/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
-MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/810bc0023f39274b6f9bc838d32f9df6/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
-MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ecbbc505c1ef8c2b1e510cce5e96bb37/lifecycle-extensions-2.2.0/AndroidManifest.xml:24:5-25:19
-MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ecbbc505c1ef8c2b1e510cce5e96bb37/lifecycle-extensions-2.2.0/AndroidManifest.xml:24:5-25:19
-MERGED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/3fad7ea4f0b845c6f6667debb95e1494/core-1.3.1/AndroidManifest.xml:24:5-89
-MERGED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/3fad7ea4f0b845c6f6667debb95e1494/core-1.3.1/AndroidManifest.xml:24:5-89
-MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:24:5-30:19
-MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:24:5-30:19
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6118f679eabfffe3c12f082544a87853/versionedparcelable-1.1.0/AndroidManifest.xml:24:5-25:19
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6118f679eabfffe3c12f082544a87853/versionedparcelable-1.1.0/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/89fceb9da472abf5577ba35fe8ce33b0/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/89fceb9da472abf5577ba35fe8ce33b0/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/e250fc4e64318a09714cde80904d2b58/lifecycle-extensions-2.2.0/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/e250fc4e64318a09714cde80904d2b58/lifecycle-extensions-2.2.0/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2b83affeb89c55eaab08fda25d8b4584/core-1.3.1/AndroidManifest.xml:24:5-89
+MERGED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2b83affeb89c55eaab08fda25d8b4584/core-1.3.1/AndroidManifest.xml:24:5-89
+MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ed08cffbfcc447d2cf5008f1ed9cc123/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:24:5-30:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ed08cffbfcc447d2cf5008f1ed9cc123/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:24:5-30:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/34fb924ef230ace9a77101a5f0eb4e8d/versionedparcelable-1.1.0/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/34fb924ef230ace9a77101a5f0eb4e8d/versionedparcelable-1.1.0/AndroidManifest.xml:24:5-25:19
 	android:appComponentFactory
-		ADDED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/3fad7ea4f0b845c6f6667debb95e1494/core-1.3.1/AndroidManifest.xml:24:18-86
+		ADDED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2b83affeb89c55eaab08fda25d8b4584/core-1.3.1/AndroidManifest.xml:24:18-86
 	android:supportsRtl
 		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:11:9-35
 	android:label
@@ -116,64 +116,64 @@ uses-sdk
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
-MERGED from [androidx.databinding:viewbinding:4.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/b489210023b4e591650fd25144ad3624/jetified-viewbinding-4.0.1/AndroidManifest.xml:20:5-44
-MERGED from [androidx.databinding:viewbinding:4.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/b489210023b4e591650fd25144ad3624/jetified-viewbinding-4.0.1/AndroidManifest.xml:20:5-44
-MERGED from [androidx.core:core-ktx:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/8980d788014fcfbd6a5e16fdd30ae692/jetified-core-ktx-1.3.1/AndroidManifest.xml:5:5-7:41
-MERGED from [androidx.core:core-ktx:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/8980d788014fcfbd6a5e16fdd30ae692/jetified-core-ktx-1.3.1/AndroidManifest.xml:5:5-7:41
-MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/43a917f9534cb05f0a20bd294163eceb/jetified-lifecycle-viewmodel-ktx-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/43a917f9534cb05f0a20bd294163eceb/jetified-lifecycle-viewmodel-ktx-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/810bc0023f39274b6f9bc838d32f9df6/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
-MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/810bc0023f39274b6f9bc838d32f9df6/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
-MERGED from [androidx.appcompat:appcompat:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/4e039017508058e03141616af225b4eb/appcompat-1.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.appcompat:appcompat:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/4e039017508058e03141616af225b4eb/appcompat-1.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.recyclerview:recyclerview:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/17f3264973adbc27bc15b903e97c2276/recyclerview-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.recyclerview:recyclerview:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/17f3264973adbc27bc15b903e97c2276/recyclerview-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ecbbc505c1ef8c2b1e510cce5e96bb37/lifecycle-extensions-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ecbbc505c1ef8c2b1e510cce5e96bb37/lifecycle-extensions-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.appcompat:appcompat-resources:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/b5466dcfe12488b715be006750d7ab23/jetified-appcompat-resources-1.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.appcompat:appcompat-resources:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/b5466dcfe12488b715be006750d7ab23/jetified-appcompat-resources-1.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2a612bd4c425dcfbfc1a3a304e287881/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2a612bd4c425dcfbfc1a3a304e287881/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.fragment:fragment:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2c69121978482ab3b49af0c68d46e0b8/fragment-1.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.fragment:fragment:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2c69121978482ab3b49af0c68d46e0b8/fragment-1.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/c12747f68fadffbb0e0ad871896b687f/viewpager-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/c12747f68fadffbb0e0ad871896b687f/viewpager-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.customview:customview:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a30017872b14105a400314921d5cb62e/customview-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.customview:customview:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a30017872b14105a400314921d5cb62e/customview-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/4641752ec657f9b4a42d6a06f25d7d22/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/4641752ec657f9b4a42d6a06f25d7d22/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/4105de63edbfe1f7a89f44426cee4e60/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/4105de63edbfe1f7a89f44426cee4e60/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.loader:loader:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6f621cac338d61e4657df2851636b5fa/loader-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.loader:loader:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6f621cac338d61e4657df2851636b5fa/loader-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.activity:activity:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/07fffc4e66e9051edb002e23eddf3cce/jetified-activity-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.activity:activity:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/07fffc4e66e9051edb002e23eddf3cce/jetified-activity-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/3fad7ea4f0b845c6f6667debb95e1494/core-1.3.1/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/3fad7ea4f0b845c6f6667debb95e1494/core-1.3.1/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/22f084678c0c8123034752ff82b9a006/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/22f084678c0c8123034752ff82b9a006/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-service:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2cfe5f060ac9f62571b78a610b8cc5b5/jetified-lifecycle-service-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-service:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2cfe5f060ac9f62571b78a610b8cc5b5/jetified-lifecycle-service-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/7d6e7d8b4768dffce85856eb040e0ba1/lifecycle-runtime-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/7d6e7d8b4768dffce85856eb040e0ba1/lifecycle-runtime-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/adab60b679fd605dc0fe365f8feea7d6/lifecycle-livedata-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/adab60b679fd605dc0fe365f8feea7d6/lifecycle-livedata-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a5d8218f222afd1356a654be097d36f3/jetified-lifecycle-viewmodel-savedstate-1.0.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a5d8218f222afd1356a654be097d36f3/jetified-lifecycle-viewmodel-savedstate-1.0.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/31435e025cdccb9fb8afecf6a35971cd/lifecycle-livedata-core-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/31435e025cdccb9fb8afecf6a35971cd/lifecycle-livedata-core-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ca6f5dc978f1f081f1b8afbaed8e2aeb/core-runtime-2.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ca6f5dc978f1f081f1b8afbaed8e2aeb/core-runtime-2.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.savedstate:savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/aa817d39ca4f9f9f764e5a0b70163814/jetified-savedstate-1.0.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.savedstate:savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/aa817d39ca4f9f9f764e5a0b70163814/jetified-savedstate-1.0.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ff664a25e1391f1156cfb2e2374c7147/lifecycle-viewmodel-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ff664a25e1391f1156cfb2e2374c7147/lifecycle-viewmodel-2.2.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6118f679eabfffe3c12f082544a87853/versionedparcelable-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6118f679eabfffe3c12f082544a87853/versionedparcelable-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6ba1de9be899b775fb2e622bcf9ee329/interpolator-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6ba1de9be899b775fb2e622bcf9ee329/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.databinding:viewbinding:4.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/5ea2f0412ed25fc56dc03edea470930c/jetified-viewbinding-4.1.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.databinding:viewbinding:4.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/5ea2f0412ed25fc56dc03edea470930c/jetified-viewbinding-4.1.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core-ktx:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a8c6808ed5c0c4b06e3730ef98b98b7a/jetified-core-ktx-1.3.1/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.core:core-ktx:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a8c6808ed5c0c4b06e3730ef98b98b7a/jetified-core-ktx-1.3.1/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/0e888426572a89697f671489623c0f40/jetified-lifecycle-viewmodel-ktx-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/0e888426572a89697f671489623c0f40/jetified-lifecycle-viewmodel-ktx-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/89fceb9da472abf5577ba35fe8ce33b0/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/89fceb9da472abf5577ba35fe8ce33b0/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.appcompat:appcompat:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/7bf486935e2cf6581998971bedac1c6d/appcompat-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/7bf486935e2cf6581998971bedac1c6d/appcompat-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/8df487e4928c56bf5f81c1495ece00af/recyclerview-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/8df487e4928c56bf5f81c1495ece00af/recyclerview-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/e250fc4e64318a09714cde80904d2b58/lifecycle-extensions-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/e250fc4e64318a09714cde80904d2b58/lifecycle-extensions-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6374ca097572e95b746a19ae66f229c4/jetified-appcompat-resources-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/6374ca097572e95b746a19ae66f229c4/jetified-appcompat-resources-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/728ee46f721db6c9ef3b9b1f559e7cac/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/728ee46f721db6c9ef3b9b1f559e7cac/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/f88a1a6b6b5a7349075c209ae4b14d78/fragment-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/f88a1a6b6b5a7349075c209ae4b14d78/fragment-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/5737a15cf189586314c8f0c0018abbd8/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/5737a15cf189586314c8f0c0018abbd8/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/921dbf2e6014e952f42cb7702026b609/customview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/921dbf2e6014e952f42cb7702026b609/customview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/c5b3e2466260255aa521604206c50ae9/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/c5b3e2466260255aa521604206c50ae9/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/e6247819d72e13f42304acf6ba3312ca/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/e6247819d72e13f42304acf6ba3312ca/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.loader:loader:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/8d6fe3339db0bf783d2a6313c75c93d1/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/8d6fe3339db0bf783d2a6313c75c93d1/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/88aac62338dac801d5a314ee407fa6ed/jetified-activity-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/88aac62338dac801d5a314ee407fa6ed/jetified-activity-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2b83affeb89c55eaab08fda25d8b4584/core-1.3.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/2b83affeb89c55eaab08fda25d8b4584/core-1.3.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/62a91f25b348591cc15acc99c60df661/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/62a91f25b348591cc15acc99c60df661/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ed08cffbfcc447d2cf5008f1ed9cc123/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ed08cffbfcc447d2cf5008f1ed9cc123/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-service:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/45fcc6ba00cdbb7b2010482bb62a2409/jetified-lifecycle-service-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-service:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/45fcc6ba00cdbb7b2010482bb62a2409/jetified-lifecycle-service-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/9acff1b0f8ae55692334b7d6b76f0380/lifecycle-runtime-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/9acff1b0f8ae55692334b7d6b76f0380/lifecycle-runtime-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/11b3e5b5e1beed29c403764772d17b7b/lifecycle-livedata-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/11b3e5b5e1beed29c403764772d17b7b/lifecycle-livedata-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/3d88d6ff8f5d1c89fe1fb74160301f88/jetified-lifecycle-viewmodel-savedstate-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/3d88d6ff8f5d1c89fe1fb74160301f88/jetified-lifecycle-viewmodel-savedstate-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/f7cee7dd8b7e70d7b7ebdc5833f64703/lifecycle-livedata-core-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/f7cee7dd8b7e70d7b7ebdc5833f64703/lifecycle-livedata-core-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ee163a923db7e7893a440ece432ec242/core-runtime-2.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ee163a923db7e7893a440ece432ec242/core-runtime-2.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/729b94392575afa626f22b9098f2b277/jetified-savedstate-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/729b94392575afa626f22b9098f2b277/jetified-savedstate-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/eebf391fca65251329e05262594bcbb5/lifecycle-viewmodel-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/eebf391fca65251329e05262594bcbb5/lifecycle-viewmodel-2.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/34fb924ef230ace9a77101a5f0eb4e8d/versionedparcelable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/34fb924ef230ace9a77101a5f0eb4e8d/versionedparcelable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a01e2fff2aadb18c0a70f529ad1dd9cc/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a01e2fff2aadb18c0a70f529ad1dd9cc/interpolator-1.0.0/AndroidManifest.xml:20:5-44
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
 INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
 	android:targetSdkVersion
@@ -185,12 +185,12 @@ INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
 		ADDED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/graemecostin/kitand/app/src/main/AndroidManifest.xml
 provider#androidx.lifecycle.ProcessLifecycleOwnerInitializer
-ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:25:9-29:43
+ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ed08cffbfcc447d2cf5008f1ed9cc123/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:25:9-29:43
 	android:authorities
-		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:27:13-69
+		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ed08cffbfcc447d2cf5008f1ed9cc123/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:27:13-69
 	android:multiprocess
-		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:29:13-40
+		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ed08cffbfcc447d2cf5008f1ed9cc123/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:29:13-40
 	android:exported
-		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:28:13-37
+		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ed08cffbfcc447d2cf5008f1ed9cc123/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:28:13-37
 	android:name
-		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/66682bac27f64bb463b438dc006b709f/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:26:13-79
+		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/ed08cffbfcc447d2cf5008f1ed9cc123/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:26:13-79
