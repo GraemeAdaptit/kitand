@@ -6,10 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".EditChapterActivity">
 
+    <TextView
+        android:id="@+id/txt_ched_prompt"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/txt_ch_prompt"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lv_verseitemlist"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="#F5F5F5"
         android:clickable="true"
         android:clipToPadding="false"
@@ -18,5 +33,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_ched_prompt" />
 </androidx.constraintlayout.widget.ConstraintLayout>

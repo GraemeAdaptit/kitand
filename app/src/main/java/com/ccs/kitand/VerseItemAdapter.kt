@@ -1,12 +1,15 @@
 package com.ccs.kitand
 
+import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -47,30 +50,29 @@ class VerseItemAdapter(
 		holder.verseItemTxt.setText(KITApp.chInst.BibItems[position].itTxt)
 		if (this.currCellOfst == position) {
 			// If this is the current VerseItem turn on EditText for editing
-			holder.verseItemTxt.setFocusable(true)
-//			holder.verseItemTxt.isFocusable = true
-			holder.verseItemTxt.setFocusableInTouchMode(true)
-			holder.verseItemTxt.setEnabled(true)
+			holder.setSelected(true)
 		} else {
 			// Otherwise disable editing of the EditText field
-			holder.verseItemTxt.isFocusable = false
+			holder.setSelected(false)
 		}
 
 		// Listeners go in here
-		// VerseItem text editing started
+		// Listener for VerseItem text editing started
 		holder.verseItemTxt.setOnClickListener(View.OnClickListener() {
-			// A cell has been tapped
+			// A VerseItem EditText has been tapped
 			val newPos = holder.getAdapterPosition()
 			moveCurrCellToClickedCell(newPos)
 		})
-		// VerseItem text is changing
+		// Listener for VerseItem text is changing
 		holder.verseItemTxt.addTextChangedListener(object : TextWatcher {
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 //				TODO("Not yet implemented")
 			}
+
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 //				TODO("Not yet implemented")
 			}
+
 			override fun afterTextChanged(s: Editable) {
 				// Set dirty flag for this VerseItem text
 				holder.dirty = true
@@ -82,6 +84,37 @@ class VerseItemAdapter(
 		})
 	}
 
+/*	This approach  was recommended by soemone on the Internet but it doesn't seem to work for KIT
+	override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+		super.onAttachedToRecyclerView(recyclerView)
+		val manager = recyclerView.layoutManager
+		if (manager is LinearLayoutManager && itemCount > 0) {
+			val llm = manager
+			recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+				override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+					super.onScrollStateChanged(recyclerView, newState)
+				}
+
+				override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+					super.onScrolled(recyclerView, dx, dy)
+					if (dy > 0 ) {	// Do not evaluate the following code unless there has been a real vertical scroll.
+						val visPosFirst = llm.findFirstCompletelyVisibleItemPosition()
+						val visPosLast = llm.findLastCompletelyVisibleItemPosition()
+						if (currCellOfst >= visPosFirst && currCellOfst <= visPosLast) {
+							val v = llm.findViewByPosition(currCellOfst)
+//							v!!.setBackgroundColor(Color.parseColor("#777777"))
+							v!!.setSelected(true)
+						}
+					} else if (dy == 0 && currCellOfst != -1) {
+						// Check and adjust scrolling to put the current VerseItem in view
+						llm.scrollToPosition(currCellOfst)
+//						llm.scrollToPositionWithOffset(currCellOfst, 200)
+					}
+				}
+			})
+		}
+	}
+*/
 	// Return the size of your dataset (invoked by the layout manager)
 	override fun getItemCount() : Int {
 		val numItems = KITApp.chInst.BibItems.size
@@ -106,27 +139,39 @@ class VerseItemAdapter(
 				val textSrc = curCell.verseItemTxt.getText().toString()
 				KITApp.chInst.copyAndSaveVItem(currCellOfst, textSrc)
 				curCell.dirty = false
+				curCell.setSelected(false)
+//				curCell.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))
 			}
 		}
 	}
 
-	fun moveCurrCellToClickedCell (newPos: Int) {
+	fun moveCurrCellToClickedCell(newPos: Int) {
 		// If the current cell has been edited it must be saved
 		saveCurrentItemText()
 		// Disable the current cell in the VerseItemAdapter
-		val oldCurrCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst) as ListCell
-		if (oldCurrCell != null) {
+		val oldCuCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst)
+		if (oldCuCell != null) {
+			val oldCurrCell = oldCuCell	as ListCell
 			// If the old current cell is still accessible then set its text to non-focussable
-			oldCurrCell.verseItemTxt.isFocusable = false
+			oldCurrCell.setSelected(false)
 		}
 		// make the ListCell just tapped the current one
 		currCellOfst = newPos
-		KITApp.chInst.setupCurrentItemFromRecyclerRow(currCellOfst)
+		KITApp.chInst.setupCurrentItemFromRecyclerRow(newPos)
 		// Enable the new current cell
 		val newCurrCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst) as ListCell
-		newCurrCell.verseItemTxt.setEnabled(true)
-		newCurrCell.verseItemTxt.setFocusableInTouchMode(true)
-		newCurrCell.verseItemTxt.requestFocus()	// To set insertion point at end of text
+		newCurrCell.setSelected(true)
+	}
+
+	// Member function of VerseItemAdapter for showing the current VerseItem as selected
+	// If the current VerseItem is outside the RecyclerView (i.e. invisible) then nothing is done;
+	// when the current VerseItem is scrolled into view onBindViewHolder() will show it as the current one.
+	fun selectCurrItem(position: Int) {
+		val verItCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst)
+		if (verItCell != null) {
+			val verseItemCell = verItCell as ListCell
+			verseItemCell.setSelected(true)
+		}
 	}
 
 	// RecyclerView.Adapter has a function notifyItemChanged(position) which can be used
@@ -137,8 +182,22 @@ class VerseItemAdapter(
 	inner class ListCell(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		var popoverButton: Button = itemView.findViewById(R.id.btn_popover)
 		var verseItemTxt: EditText = itemView.findViewById(R.id.txt_verseitem)
+
 		// No editing has been done yet, so dirty = false
 		var dirty = false
-	}
 
+		fun setSelected(state: Boolean) {
+			if (state == true) {
+				itemView.setBackgroundColor(Color.parseColor("#777777"))
+				verseItemTxt.setEnabled(true)
+				verseItemTxt.setFocusable(true)
+				verseItemTxt.setFocusableInTouchMode(true)
+				verseItemTxt.requestFocus()
+				verseItemTxt.setSelection(verseItemTxt.length())
+			} else {
+				itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))
+				verseItemTxt.setFocusableInTouchMode(false)
+			}
+		}
+	}
 }

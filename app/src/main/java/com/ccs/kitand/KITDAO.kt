@@ -293,6 +293,16 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         return (rows == 1)
 	}
 
+	// Set the value of the field USFMText when the Export scene is used
+	fun updateUSFMText (chID:Int, text:String) : Boolean {
+		this.db = this.getWritableDatabase()
+		val cv = ContentValues()
+		cv.put(COL_USFMText, text)
+		val whArray = arrayOf<String>(chID.toString())
+		val rows = db.update(TAB_Chapters, cv, COL_ChapterID + " = ?", whArray)
+		return (rows == 1)
+	}
+
 	//--------------------------------------------------------------------------------------------
 	//	VerseItems data table
 

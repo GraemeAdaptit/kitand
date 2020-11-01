@@ -10,23 +10,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SetupActivity">
-        </activity>
-        <activity android:name=".ChooseBookActivity">
-        </activity>
-        <activity android:name=".ChooseChapterActivity"
-            android:parentActivityName = ".ChooseBookActivity">
-        </activity>
-        <activity android:name=".EditChapterActivity"
-            android:parentActivityName = "ChooseChapterActivity">
-        </activity>
+        <activity android:name=".SetupActivity"></activity>
+        <activity android:name=".ChooseBookActivity"></activity>
+        <activity
+            android:name=".ChooseChapterActivity"
+            android:parentActivityName=".ChooseBookActivity"></activity>
+        <activity
+            android:name=".EditChapterActivity"
+            android:parentActivityName=".ChooseChapterActivity"></activity>
+        <activity
+            android:name=".ExportChapterActivity"
+            android:parentActivityName=".EditChapterActivity"></activity>
     </application>
 
 </manifest>

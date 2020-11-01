@@ -913,10 +913,8 @@ id beginning
 id blocking
 id bottom
 id bounce
-id btn_books
 id btn_go
 id btn_popover
-id btn_setup
 id buttonPanel
 id center
 id center_vertical
@@ -942,6 +940,9 @@ id direct
 id disableHome
 id disablePostScroll
 id disableScroll
+id divider
+id divider2
+id divider3
 id dragDown
 id dragEnd
 id dragLeft
@@ -955,6 +956,7 @@ id edit_query
 id end
 id expand_activities_button
 id expanded_menu
+id export
 id flip
 id forever
 id fragment_container_view_tag
@@ -1085,10 +1087,10 @@ id triangle
 id tv_splashmsg
 id tv_splashmsg2
 id txt_bibname
-id txt_bk_bibname
 id txt_bk_prompt
-id txt_ch_bibname
 id txt_ch_prompt
+id txt_ched_prompt
+id txt_usfm
 id txt_verseitem
 id unchecked
 id uniform
@@ -1143,6 +1145,7 @@ layout abc_tooltip
 layout activity_choosebook
 layout activity_choosechapter
 layout activity_edit_chapter
+layout activity_exportchapter
 layout activity_setup
 layout activity_splash
 layout custom_dialog
@@ -1157,6 +1160,7 @@ layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
+menu editchaptermenu
 mipmap ic_launcher
 mipmap ic_launcher_foreground
 mipmap ic_launcher_round
@@ -1194,6 +1198,7 @@ string app_name
 string btn_books_txt
 string btn_setup_txt
 string btn_tochapters
+string export_usfm_menuitem
 string hintBibleName
 string nm_chapter
 string nm_psalm
@@ -1204,6 +1209,7 @@ string txt_bk_prompt
 string txt_ch_prompt
 string txt_ed_prompt
 string txt_splash
+string txt_usfm
 style AlertDialog_AppCompat
 style AlertDialog_AppCompat_Light
 style Animation_AppCompat_Dialog

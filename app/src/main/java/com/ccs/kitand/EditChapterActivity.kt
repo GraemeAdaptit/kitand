@@ -2,16 +2,21 @@ package com.ccs.kitand
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
+import android.view.ViewTreeObserver.OnPreDrawListener
+import android.view.WindowManager
+import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+
 class EditChapterActivity : AppCompatActivity() {
 
+	private lateinit var txt_ched_prompt: TextView
 	private lateinit var ch_name:String
 	private lateinit var ps_name:String
 	private lateinit var recyclerView: RecyclerView
@@ -35,7 +40,8 @@ class EditChapterActivity : AppCompatActivity() {
 		// Get access to the SupportActionBar
 		suppActionBar = getSupportActionBar()
 
-		// Get references to layout widgets
+		// Get widget and names for prompt string
+		txt_ched_prompt = findViewById(R.id.txt_ched_prompt)
 		ch_name = KITApp.res.getString(R.string.nm_chapter)
 		ps_name = KITApp.res.getString(R.string.nm_psalm)
 
@@ -55,6 +61,16 @@ class EditChapterActivity : AppCompatActivity() {
 			adapter = viewAdapter
 		}
 		KITApp.recycV = recyclerView
+
+//		// Ensure that the soft keyboard will appear
+		// TODO: Find a better way - this doesn't work
+//		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu): Boolean {
+		val inflater: MenuInflater = menuInflater
+		inflater.inflate(R.menu.editchaptermenu, menu)
+		return true
 	}
 
 	override fun onStart() {
@@ -62,9 +78,10 @@ class EditChapterActivity : AppCompatActivity() {
 		val bibName = KITApp.bibInst.bibName
 		val chNumStr = KITApp.chInst.chNum.toString()
 		val prompt = if (KITApp.bkInst.bkID == 19)
-			" " + ps_name + " " + chNumStr else
-			" " + ch_name + " " + chNumStr + " of " + KITApp.bkInst.bkName
-		val actionBarTitle = bibName + prompt
+			"Edit " + ps_name + " " + chNumStr else
+			"Edit " + ch_name + " " + chNumStr + " of " + KITApp.bkInst.bkName
+		txt_ched_prompt.setText(prompt)
+		val actionBarTitle = "Key It  -  " + bibName
 		if (suppActionBar != null) {
 			suppActionBar?.setDisplayShowTitleEnabled(true)
 			suppActionBar?.setTitle(actionBarTitle)
@@ -73,15 +90,35 @@ class EditChapterActivity : AppCompatActivity() {
 
 	override fun onResume() {
 		super.onResume()
-		val result = KITApp.chInst.goCurrentItem()
-		this.currItOfst = result
-		// Tell the RecyclerView to got to this row
-//		viewManager.scrollToPositionWithOffset(currItOfst, 0)
+		val posn = KITApp.chInst.goCurrentItem()
+		this.currItOfst = posn
+		// NOTE: at the time that onResume() is called, the RecyclerView has not been fully set up
+		// so attempting to show the correct VerseItem as selected will not work (and may crash).
+		// Setting a listener for the point when RecyclerView is fully set up is an OK approach.
+		recyclerView.getViewTreeObserver().addOnPreDrawListener(object : OnPreDrawListener {
+			override fun onPreDraw(): Boolean {
+				if (recyclerView.getChildCount() > 0) {
+					// Remove the listener to avoid continually triggering this code - once is enough.
+					recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
+					recyclerView.layoutManager?.scrollToPosition(posn)
+					viewAdapter.selectCurrItem(posn)
+					return true
+				}
+				return false
+			}
+		})
 	}
 
+	// The Android system calls this function when KIT is going into the background
+	override fun onStop() {
+		saveCurrentItemText()
+		super.onStop()
+	}
+	// The Android system's Action Bar calls this function when the user taps the Back button
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		when (item.getItemId()) {
 			android.R.id.home -> onBackPressed()
+			R.id.export -> goToExport()
 		}
 		return true
 	}
@@ -99,42 +136,18 @@ class EditChapterActivity : AppCompatActivity() {
 		finish()	// If user returns to EditChapterActivity it will be to a new instance of the activity
 	}
 
-	// Called by the custom VerseItem cell when the user taps inside the cell's editable text
-	fun userTappedInTextOfCell(position: Int) {
-		tableRowSelectedAt(position)
-//		tableView(self.tableView, didSelectRowAt: IndexPath(row: tableRow, section: 0))
+	// Go to the ExportChapterActivity
+	private fun goToExport() {
+		// Save the current VerseItem text if necessary
+		saveCurrentItemText()
+		// Go to the ChooseChapterActivity
+		val i = Intent(this, ExportChapterActivity::class.java)
+		startActivity(i)
 	}
-
-	// NOT YET Called by RecyclerView when the user selects a row of the view
-	fun tableRowSelectedAt(position: Int) {
-		val chInst = KITApp.chInst
-		// Save the text in the current BibItem before changing to the new one
-//		chInst.saveCurrentBibItemText()
-
-		// Go to the newly selected VerseItem
-		val bibItem = chInst.getBibItem(position)
-
-		// Set up the selected Item as the current VerseItem
-		chInst.setupCurrentItem(bibItem.itID)
-//		currIt = bibItem.itID
-//		currItOfst = indexPath.row
-		// Scroll to make this VerseItem visible
-//		tableView.selectRow(at: IndexPath(row: currItOfst, section: 0), animated: true, scrollPosition: UITableView.ScrollPosition.middle)
-//		let cell = tableView.cellForRow(at: IndexPath(row: currItOfst, section: 0)) as! UIVerseItemCell
-//		cell.itText.becomeFirstResponder()
-	}
-
-	// Called by ??? when the RecyclerView wants to reuse the cell for another VerseItem
-	// Save itText before actual reuse unless there are no changes to itText
-	// TODO: check whether we need to implement a test of whether the text has been changed.
-
-//	fun saveCellText(position:Int, textSrc:String) {
-//		KITApp.chInst.copyAndSaveVItem(position, textSrc)
-//	}
 
 	// Called when another VerseItem cell is selected in order to save the current VerseItem text
 	// before making another VerseItem the current one
-	fun saveCurrentItemText () {
+	private fun saveCurrentItemText() {
 		viewAdapter.saveCurrentItemText()
 	}
 }

@@ -26,18 +26,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ccs.kitand.SetupActivity" >
-        </activity>
-        <activity android:name="com.ccs.kitand.ChooseBookActivity" >
-        </activity>
+        <activity android:name="com.ccs.kitand.SetupActivity" />
+        <activity android:name="com.ccs.kitand.ChooseBookActivity" />
         <activity
             android:name="com.ccs.kitand.ChooseChapterActivity"
-            android:parentActivityName="com.ccs.kitand.ChooseBookActivity" >
-        </activity>
+            android:parentActivityName="com.ccs.kitand.ChooseBookActivity" />
         <activity
             android:name="com.ccs.kitand.EditChapterActivity"
-            android:parentActivityName="com.ccs.kitand.ChooseChapterActivity" >
-        </activity>
+            android:parentActivityName="com.ccs.kitand.ChooseChapterActivity" />
+        <activity
+            android:name="com.ccs.kitand.ExportChapterActivity"
+            android:parentActivityName="com.ccs.kitand.EditChapterActivity" />
 
         <provider
             android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"

@@ -10,7 +10,7 @@
     <Button
         android:id="@+id/btn_popover"
         android:layout_width="150dp"
-        android:layout_height="30dp"
+        android:layout_height="33dp"
         android:layout_margin="0dp"
         android:layout_marginStart="8dp"
         android:backgroundTint="#FFFFFF"
@@ -26,8 +26,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="left|top"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:background="#FFFFFF"
         android:clickable="true"
         android:cursorVisible="true"
@@ -40,10 +40,19 @@
         android:singleLine="false"
         android:text="verseitem"
         android:textAllCaps="false"
+        android:textColor="#000000"
         android:textIsSelectable="true"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_popover" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@+id/txt_verseitem" />
 </androidx.constraintlayout.widget.ConstraintLayout>
