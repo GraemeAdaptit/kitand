@@ -1015,6 +1015,7 @@ id position
 id postLayout
 id progress_circular
 id progress_horizontal
+id pubit
 id radio
 id ratio
 id rectangles
@@ -1202,6 +1203,7 @@ string export_usfm_menuitem
 string hintBibleName
 string nm_chapter
 string nm_psalm
+string publication_menuitem
 string search_menu_title
 string startWork
 string status_bar_notification_info_overflow

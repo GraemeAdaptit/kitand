@@ -44,8 +44,22 @@ class SetupActivity : AppCompatActivity() {
         bibName = cv.getAsString("2")
         bkRCr = cv.getAsBoolean("3")
         currBook = cv.getAsInteger("4")
-        // Put the bibleName into the EditText widget
-        txt_bibname.setText(bibName)
+
+        //	Once the user has dealt with the Setup scene, subsequent launches skip this step.
+        //	Any future editing of the name of the Bible will be done in a separate scene.
+		if (bkRCr) {
+            // Create the instance of Bible
+            bibInst = Bible(bibID, bibName, bkRCr, currBook)
+            // Ensure rest of app has access to the Bible instance
+            KITApp.bibInst = bibInst
+            // Go to the ChooseBookActivity
+            val i = Intent(this, ChooseBookActivity::class.java)
+            startActivity(i)
+            finish()
+        } else {
+    			// Initialise the text field and wait for user to edit Bible name
+                txt_bibname.setText(bibName)
+		}
     }
 
     fun goButtonAction () {
