@@ -1,6 +1,7 @@
 package com.ccs.kitand
 
 import android.graphics.Color
+import android.graphics.Rect
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -80,42 +81,17 @@ class VerseItemAdapter(
 		})
 		// Listener for popover button
 		holder.popoverButton.setOnClickListener(View.OnClickListener() {
+//			val btnName = holder.popoverButton.getText()
+//			var locations = IntArray(2)
+//			var dimensions:Rect?
+//			holder.popoverButton.getLocationInWindow(locations)
+//			var btnLayout = holder.popoverButton.layout
 			println("Popover button tapped")
+			showPopoverMenu(it)
 		})
 	}
 
-/*	This approach  was recommended by soemone on the Internet but it doesn't seem to work for KIT
-	override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-		super.onAttachedToRecyclerView(recyclerView)
-		val manager = recyclerView.layoutManager
-		if (manager is LinearLayoutManager && itemCount > 0) {
-			val llm = manager
-			recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-				override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-					super.onScrollStateChanged(recyclerView, newState)
-				}
-
-				override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-					super.onScrolled(recyclerView, dx, dy)
-					if (dy > 0 ) {	// Do not evaluate the following code unless there has been a real vertical scroll.
-						val visPosFirst = llm.findFirstCompletelyVisibleItemPosition()
-						val visPosLast = llm.findLastCompletelyVisibleItemPosition()
-						if (currCellOfst >= visPosFirst && currCellOfst <= visPosLast) {
-							val v = llm.findViewByPosition(currCellOfst)
-//							v!!.setBackgroundColor(Color.parseColor("#777777"))
-							v!!.setSelected(true)
-						}
-					} else if (dy == 0 && currCellOfst != -1) {
-						// Check and adjust scrolling to put the current VerseItem in view
-						llm.scrollToPosition(currCellOfst)
-//						llm.scrollToPositionWithOffset(currCellOfst, 200)
-					}
-				}
-			})
-		}
-	}
-*/
-	// Return the size of your dataset (invoked by the layout manager)
+	// Return the size of your data set (invoked by the layout manager)
 	override fun getItemCount() : Int {
 		val numItems = KITApp.chInst.BibItems.size
 		return numItems
@@ -145,6 +121,8 @@ class VerseItemAdapter(
 		}
 	}
 
+	// Member function of VerseItemAdapter for making the clicked cell the current cell
+	// Called by the onClickListener for verseItemTxt
 	fun moveCurrCellToClickedCell(newPos: Int) {
 		// If the current cell has been edited it must be saved
 		saveCurrentItemText()
@@ -163,7 +141,21 @@ class VerseItemAdapter(
 		newCurrCell.setSelected(true)
 	}
 
-	// Member function of VerseItemAdapter for showing the current VerseItem as selected
+	// Member function of VerseItemAdapter for showing the popup window for the tapped VerseItem
+	// Called by the onClickListener for popoverButton
+	fun showPopoverMenu(it: View) {
+		println("About to show popover menu")
+		val btn_popovr = it as Button
+		val btnName = btn_popovr.getText()
+		var locations = IntArray(2)
+		var dimensions:Rect?
+		btn_popovr.getLocationInWindow(locations)
+		var btnLayout = btn_popovr.layout
+		// If the current cell has been edited it must be saved
+		saveCurrentItemText()
+//		KITApp.vItAda.showPopoverMenu(it)
+	}
+
 	// If the current VerseItem is outside the RecyclerView (i.e. invisible) then nothing is done;
 	// when the current VerseItem is scrolled into view onBindViewHolder() will show it as the current one.
 	fun selectCurrItem(position: Int) {

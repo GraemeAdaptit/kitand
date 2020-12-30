@@ -195,21 +195,33 @@ class Book(
 	// When the user selects a Chapter from the list of Chapters it needs to be recorded as the
 	// current Chapter and initialisation of data structures in a new Chapter instance must happen.
 
-	fun setupCurrentChapter(chapOfst: Int) {
+	fun setupCurrentChapter(chapOfst: Int, diffChap: Boolean) {
 		val chap = BibChaps[chapOfst]
 		currChap = chap.chID
 		currChapOfst = chapOfst
 		// update Book record in kdb.sqlite to show this current Chapter
-		if (dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, currChap) ) {
+		if (dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, currChap)) {
 //			println("The currChap for $bkName in kdb.sqlite was updated to $chap.chNum")
-			}
+		}
 
-		// allow any previous in-memory instance of Chapter to be garbage collected
-		chapInst = null
+		// If a different chapter is being selected allow any previous in-memory instance of Chapter
+		// to be garbage collected and create a new Chapter instance.
+		if (diffChap) {
+			chapInst = null
 
-		// create a Chapter instance for the current Chapter of the current Book
-		// The initialisation of the instance of Chapter stores a reference in KITApp
-		chapInst = Chapter(chap.chID, chap.bibID, chap.bkID, chap.chNum, chap.itRCr, chap.numVs, chap.numIt, chap.curIt)
+			// create a Chapter instance for the current Chapter of the current Book
+			// The initialisation of the instance of Chapter stores a reference in KITApp
+			chapInst = Chapter(
+				chap.chID,
+				chap.bibID,
+				chap.bkID,
+				chap.chNum,
+				chap.itRCr,
+				chap.numVs,
+				chap.numIt,
+				chap.curIt
+			)
+		}
 	}
 
 	// When the VerseItem records have been created for the current Chapter, the entry for that Chapter in

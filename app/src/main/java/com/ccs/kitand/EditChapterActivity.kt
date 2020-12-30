@@ -1,12 +1,11 @@
 package com.ccs.kitand
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
+import android.view.*
 import android.view.ViewTreeObserver.OnPreDrawListener
-import android.view.WindowManager
+import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -143,6 +142,19 @@ class EditChapterActivity : AppCompatActivity() {
 		// Go to the ChooseChapterActivity
 		val i = Intent(this, ExportChapterActivity::class.java)
 		startActivity(i)
+	}
+
+	// Show popover menu; called from ???
+	fun showPopOverMenu() {
+		val inflater: LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+		val view = inflater.inflate(R.layout.popover_menu,null)
+		val popupWindow = PopupWindow(view, 125, 125)
+		popupWindow.showAtLocation(
+			KITApp.recycV, // Location to display popup window
+			Gravity.CENTER, // Exact position of layout to display popup
+			0, // X offset
+			0 // Y offset
+		)
 	}
 
 	// Called when another VerseItem cell is selected in order to save the current VerseItem text

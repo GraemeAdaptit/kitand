@@ -107,8 +107,11 @@ class ChooseChapterActivity : AppCompatActivity() {
 	}
 
 	fun chooseChapterAction(position:Int) {
+		val chRowNew = position
+		val diffChap = chRowNew != chRow
+		chRow = chRowNew
 		// Set up the selected Chapter as the current Chapter
-		bkInst.setupCurrentChapter(position)
+		bkInst.setupCurrentChapter(position, diffChap)
 
 		// If the user comes back to the Choose Chapter scene we need to let him choose again
 		bkInst.canChooseAnotherChapter = true
