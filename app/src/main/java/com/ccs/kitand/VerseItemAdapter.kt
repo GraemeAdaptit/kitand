@@ -1,15 +1,15 @@
 package com.ccs.kitand
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.widget.Button
 import android.widget.EditText
+import android.widget.PopupWindow
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -153,7 +153,7 @@ class VerseItemAdapter(
 		var btnLayout = btn_popovr.layout
 		// If the current cell has been edited it must be saved
 		saveCurrentItemText()
-//		KITApp.vItAda.showPopoverMenu(it)
+		KITApp.edChAct.showPopOverMenu(btn_popovr)
 	}
 
 	// If the current VerseItem is outside the RecyclerView (i.e. invisible) then nothing is done;

@@ -2,9 +2,12 @@ package com.ccs.kitand
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.*
 import android.view.ViewTreeObserver.OnPreDrawListener
+import android.widget.Button
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
@@ -60,7 +63,7 @@ class EditChapterActivity : AppCompatActivity() {
 			adapter = viewAdapter
 		}
 		KITApp.recycV = recyclerView
-
+		KITApp.edChAct = this
 //		// Ensure that the soft keyboard will appear
 		// TODO: Find a better way - this doesn't work
 //		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -144,16 +147,27 @@ class EditChapterActivity : AppCompatActivity() {
 		startActivity(i)
 	}
 
-	// Show popover menu; called from ???
-	fun showPopOverMenu() {
+	// Show popover menu; called from showPopoverMenu() in VerseItemAdapter
+	fun showPopOverMenu(butn: Button) {
 		val inflater: LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-		val view = inflater.inflate(R.layout.popover_menu,null)
-		val popupWindow = PopupWindow(view, 125, 125)
-		popupWindow.showAtLocation(
+		val view = inflater.inflate(R.layout.popover_menu, null)
+		val display = windowManager.defaultDisplay
+		val size = Point()
+		display.getSize(size)
+		val dispW: Int = size.x
+		val dispH: Int = size.y
+		var locations = IntArray(2)
+		butn.getLocationInWindow(locations)
+		val butW = butn.getWidth()
+		val butH = butn.getHeight()
+		val popupWin = PopupWindow(view, dispW - butW, 512)
+		popupWin.setOutsideTouchable(true)
+//		popupWin.set//setCanceledOnTouchOutside(true)
+		popupWin.showAtLocation(
 			KITApp.recycV, // Location to display popup window
-			Gravity.CENTER, // Exact position of layout to display popup
-			0, // X offset
-			0 // Y offset
+			Gravity.NO_GRAVITY, // Exact position of layout to display popup
+			butW, // X offset
+			locations[1] // Y offset
 		)
 	}
 

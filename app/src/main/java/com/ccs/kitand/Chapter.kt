@@ -1,6 +1,5 @@
 package com.ccs.kitand
 
-
 //  Created by Graeme Costin on 25SEP20.
 // The author disclaims copyright to this source code.  In place of
 // a legal notice, here is a blessing:
@@ -57,6 +56,11 @@ class Chapter(
 	)
 
 	val BibItems = ArrayList<BibItem>()
+
+	// Properties of the Chapter instance related to popover menus
+	lateinit var curPoMenu: VIMenu	// instance in memory of the current popover menu
+	var hasAscription = false		// true if the Psalm has an Ascription
+	var hasTitle = false			// true if Chapter 1 has a Book Title
 
 	// When the instance of current Book creates the instance for the current Chapter it supplies
 	// the values for the currently selected Chapter from the BibChaps array
@@ -130,6 +134,8 @@ class Chapter(
 	fun appendItemToArray(itID:Int, chID:Int, vsNum:Int, itTyp:String, itOrd:Int, itTxt:String, intSeq:Int, isBrg:Boolean, lvBrg:Int) {
 		val itRec = BibItem(itID, chID, vsNum, itTyp, itOrd, itTxt, intSeq, isBrg, lvBrg)
 		BibItems.add(itRec)
+		if (itTyp == "Ascription") {hasAscription = true}
+		if (itTyp == "Title") {hasTitle = true}
 	}
 
 //	// Return the BibItem at an index (i.e. offset in BibItems or in VerseItemAdapter

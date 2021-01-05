@@ -37,6 +37,7 @@ class KITApp : Application() {
         lateinit var chInst: Chapter    // For access to the instance of the currently selected Chapter
         // TODO: Is vItAda really necessary? Remove it if possible
         lateinit var vItAda: VerseItemAdapter   // For access to the instance of the VerseItemAdapter
+        lateinit var edChAct: EditChapterActivity   // For access from VerseItemAdapter to show popover menus
         lateinit var recycV: RecyclerView       // For access to the RecyclerView of EditChapterActivity
     }
 }
