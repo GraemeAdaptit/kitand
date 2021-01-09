@@ -6,7 +6,6 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import com.ccs.kitand.Bible.BibBook
@@ -22,7 +21,7 @@ class ChooseBookActivity : AppCompatActivity()  {
 	lateinit var lst_booklist: ListView
 
 	// tableRow of the selected Book
-	var bkRow = 0		// Is this needed here?
+	var bkRow = 0		// Is this needed here? Remove if never used.
 
 	var suppActionBar: ActionBar? = null
 

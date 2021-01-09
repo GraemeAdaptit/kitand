@@ -35,6 +35,10 @@
             android:name="com.ccs.kitand.EditChapterActivity"
             android:parentActivityName="com.ccs.kitand.ChooseChapterActivity" />
         <activity
+            android:name="com.ccs.kitand.PopmenuActivity"
+            android:theme="@style/AppTheme.PopoverTheme" >
+        </activity>
+        <activity
             android:name="com.ccs.kitand.ExportChapterActivity"
             android:parentActivityName="com.ccs.kitand.EditChapterActivity" />
 

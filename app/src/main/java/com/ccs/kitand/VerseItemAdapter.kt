@@ -1,6 +1,7 @@
 package com.ccs.kitand
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
 import android.text.Editable
@@ -10,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.PopupWindow
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -81,13 +83,13 @@ class VerseItemAdapter(
 		})
 		// Listener for popover button
 		holder.popoverButton.setOnClickListener(View.OnClickListener() {
-//			val btnName = holder.popoverButton.getText()
-//			var locations = IntArray(2)
-//			var dimensions:Rect?
-//			holder.popoverButton.getLocationInWindow(locations)
-//			var btnLayout = holder.popoverButton.layout
 			println("Popover button tapped")
-			showPopoverMenu(it)
+			// If the button is not on the current VerseItem then change the current VerseItem to this one
+			val newPos = holder.getAdapterPosition()
+//			if (newPos != currCellOfst) {
+				moveCurrCellToClickedCell(newPos)
+				showPopoverMenu(it)
+//			}
 		})
 	}
 
@@ -116,7 +118,6 @@ class VerseItemAdapter(
 				KITApp.chInst.copyAndSaveVItem(currCellOfst, textSrc)
 				curCell.dirty = false
 				curCell.setSelected(false)
-//				curCell.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))
 			}
 		}
 	}
@@ -148,9 +149,7 @@ class VerseItemAdapter(
 		val btn_popovr = it as Button
 		val btnName = btn_popovr.getText()
 		var locations = IntArray(2)
-		var dimensions:Rect?
 		btn_popovr.getLocationInWindow(locations)
-		var btnLayout = btn_popovr.layout
 		// If the current cell has been edited it must be saved
 		saveCurrentItemText()
 		KITApp.edChAct.showPopOverMenu(btn_popovr)

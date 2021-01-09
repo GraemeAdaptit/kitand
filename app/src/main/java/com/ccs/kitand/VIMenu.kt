@@ -18,18 +18,29 @@ package com.ccs.kitand
 //	taps the VerseItem label. The action of tapping a VerseItem label makes that VerseItem
 //	the current one even if it were not before the user tapped its label.
 
-class VIMenuItem  (
-	var VIMenuLabel : String,	// Menu label displayed to users
-	var VIMenuAction : String,	// Menu action to be done if chosen by user
-	var VIMenuHLight : String	// Highlight colour B = blue (for normal), R = Red (for delete/dangerous)
-) {
-}
+//data class VIMenuItem  (
+//	var VIMenuLabel : String,	// Menu label displayed to users
+//	var VIMenuAction : String,	// Menu action to be done if chosen by user
+//	var VIMenuHLight : String	// Highlight colour B = blue (for normal), R = Red (for delete/dangerous)
+//)
 
 class VIMenu (curItOfst: Int)
 {
 	// Properties of a VIMenu instance (dummy values to avoid having optional variables)
 	var VIType = "Verse"						// the type of the VerseItem this menu is for
 	var numRows: Int = 0						// number of rows needed for the popover menu
+
+	data class VIMenuItem  (
+		var VIMenuLabel : String,	// Menu label displayed to users
+		var VIMenuAction : String,	// Menu action to be done if chosen by user
+		var VIMenuHLight : String	// Highlight colour B = blue (for normal), R = Red (for delete/dangerous)
+	) {
+		override fun toString(): String {
+			val displayStr = VIMenuLabel
+			return  displayStr
+		}
+	}
+
 	val VIMenuItems = ArrayList<VIMenuItem>()	// array of the menu items
 
 //	let appDelegate = UIApplication.shared.delegate as! AppDelegate

@@ -35,7 +35,7 @@
         android:isScrollContainer="true"
         android:maxLines="10"
         android:minLines="1"
-        android:padding="2sp"
+        android:padding="1dp"
         android:scrollbars="vertical"
         android:singleLine="false"
         android:text="verseitem"
@@ -54,5 +54,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="4dp"
         android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_verseitem" />
 </androidx.constraintlayout.widget.ConstraintLayout>

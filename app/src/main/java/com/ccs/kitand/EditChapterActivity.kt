@@ -3,18 +3,16 @@ package com.ccs.kitand
 import android.content.Context
 import android.content.Intent
 import android.graphics.Point
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.*
 import android.view.ViewTreeObserver.OnPreDrawListener
-import android.widget.Button
-import android.widget.PopupWindow
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 
 class EditChapterActivity : AppCompatActivity() {
 
@@ -150,7 +148,7 @@ class EditChapterActivity : AppCompatActivity() {
 	// Show popover menu; called from showPopoverMenu() in VerseItemAdapter
 	fun showPopOverMenu(butn: Button) {
 		val inflater: LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-		val view = inflater.inflate(R.layout.popover_menu, null)
+		val popupView = inflater.inflate(R.layout.activity_popmenu, null)
 		val display = windowManager.defaultDisplay
 		val size = Point()
 		display.getSize(size)
@@ -160,15 +158,30 @@ class EditChapterActivity : AppCompatActivity() {
 		butn.getLocationInWindow(locations)
 		val butW = butn.getWidth()
 		val butH = butn.getHeight()
-		val popupWin = PopupWindow(view, dispW - butW, 512)
+// No longer needed
+//		// Go to the PopmenuActivity
+//		val i = Intent(this, PopmenuActivity::class.java)
+//		startActivity(i)
+		val numRows = KITApp.chInst.curPoMenu?.numRows as Int
+		val popupHeight = numRows * 180
+		val popupWin = PopupWindow(popupView, dispW - butW + 10, popupHeight)
 		popupWin.setOutsideTouchable(true)
-//		popupWin.set//setCanceledOnTouchOutside(true)
-		popupWin.showAtLocation(
+
+		val lst_popmenu = popupView.findViewById(R.id.lst_popmenu) as ListView
+
+		popupWin.showAtLocation (
 			KITApp.recycV, // Location to display popup window
-			Gravity.NO_GRAVITY, // Exact position of layout to display popup
-			butW, // X offset
+			Gravity.NO_GRAVITY, // Position of layout to display popup
+			butW - 10, // X offset
 			locations[1] // Y offset
 		)
+
+		val popMenuArrayAdapter = ArrayAdapter<VIMenu.VIMenuItem>(
+				this,
+				android.R.layout.simple_selectable_list_item,
+				KITApp.chInst.curPoMenu!!.VIMenuItems
+		)
+		lst_popmenu.setAdapter(popMenuArrayAdapter)
 	}
 
 	// Called when another VerseItem cell is selected in order to save the current VerseItem text

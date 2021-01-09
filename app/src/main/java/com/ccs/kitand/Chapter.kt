@@ -38,7 +38,25 @@ class Chapter(
 	val bkInst = KITApp.bkInst		// access to the instance for the current Book
 
 	var USFMText:String = ""	// Property to hold the USFM text exported
+
+	// currItOfst has custom getter and setter in order to ensure that a VIMenu is created for the
+	// current VerseItem whenever the VerseItem is selected. This avoids putting the logic in the
+	// setter is several places throughout the source code.
+	//
+	// The initial value of -1 means that there is not yet a current VerseItem
+	// (the offsets for all actual VerseItems are >= zero)
 	var currItOfst: Int = -1	// offset to current item in BibItems[] and row in the TableView
+		get() = field
+		set (ofst) {
+			if (curPoMenu == null) {
+				curPoMenu = VIMenu(ofst)
+			} else if (ofst != currItOfst) {
+				// Delete previous popover menu
+				curPoMenu = null
+				curPoMenu = VIMenu(ofst)
+			}
+			field = ofst
+		}
 
 	// This struct and the BibItems array are used for letting the user select the
 	// VerseItem to edit in the current Chapter of the current Book.
@@ -58,7 +76,7 @@ class Chapter(
 	val BibItems = ArrayList<BibItem>()
 
 	// Properties of the Chapter instance related to popover menus
-	lateinit var curPoMenu: VIMenu	// instance in memory of the current popover menu
+	var curPoMenu: VIMenu? = null	// instance in memory of the current popover menu
 	var hasAscription = false		// true if the Psalm has an Ascription
 	var hasTitle = false			// true if Chapter 1 has a Book Title
 
@@ -172,10 +190,12 @@ class Chapter(
 			currItOfst = 0		// Take first item in BibItems[] array
 			currIt = BibItems[currItOfst].itID	// Get its itemID
 		} else {
-			// Already have the itemID of the current item so need to get
-			// the offset into the BibItems[] array
+			// Already have the itemID of the current item so need to get the offset into the
+			// BibItems[] array
 			currItOfst = offsetToBibItem(currIt)
+			// Setting currItOfst ensures that there is a VIMenu for the current VerseItem
 		}
+//		createPopoverMenu (currItOfst)
 		// Update the database Chapter record
 		if (dao.chaptersUpdateRec (chID, itRCr, numIt, currIt) ) {
 			println("Chapter:goCurrentItem updated $bkInst.bkName $chNum Chapter record")
@@ -187,9 +207,10 @@ class Chapter(
 	// (as assigned by SQLite when the database's VerseItem record was created)
 	// TODO: This function is not yet used - delete it?
 	fun setupCurrentItemFromID(curIt:Int) {
-		this.currIt = curIt
-		this.currItOfst = offsetToBibItem(curIt)
-
+		currIt = curIt
+		currItOfst = offsetToBibItem(curIt)
+		// Setting currItOfst ensures that there is a VIMenu for the current VerseItem
+//		createPopoverMenu (currItOfst)
 		// Update the database Chapter record
 		if (dao.chaptersUpdateRec (chID, itRCr, numIt, currIt) ) {
 //			println("Chapter:setupCurrentItem updated $bkInst.bkName) $chNum) Chapter record")
@@ -198,6 +219,7 @@ class Chapter(
 
 	fun setupCurrentItemFromRecyclerRow(pos: Int) {
 		currItOfst = pos
+		// Setting currItOfst ensures that there is a VIMenu for the current VerseItem
 		currIt = BibItems[pos].itID
 		// Update the database Chapter record
 		if (dao.chaptersUpdateRec (chID, itRCr, numIt, currIt) ) {
@@ -215,6 +237,19 @@ class Chapter(
 		}
 //		chDirty = true	// An item in this chapter has been edited (No longer used in UI)
 	}
+
+	// If necessary, create the popover menu for the VerseItem at currOfst
+//	fun createPopoverMenu (currOfst: Int) {
+//		if (curPoMenu == null) {
+//			currItOfst = currOfst
+//			curPoMenu = VIMenu(currOfst)
+//		} else if (currOfst != currItOfst) {
+//			// Delete previous popover menu
+//			curPoMenu = null
+//			currItOfst = currOfst
+//			curPoMenu = VIMenu(currOfst)
+//		}
+//	}
 
 	fun calcUSFMExportText() : String {
 		var USFM = "\\id " + bkInst.bkCode + " " + bibInst.bibName + "\n\\c " + chNum.toString()
