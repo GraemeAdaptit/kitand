@@ -133,10 +133,12 @@ class VIMenu (curItOfst: Int)
 				val viMI5 = VIMenuItem("Create Paragraph In", "crParaCont", "B")
 				VIMenuItems.add(viMI5)
 			}
-			val isNxtVs = (chInst.BibItems[curItOfst + 1].itTyp == "Verse")
-			if ((bibItem.vsNum != chInst.numVs) && isNxtVs) {
-				val viMI6 = VIMenuItem("Bridge Next Verse", "brid", "R")
-				VIMenuItems.add(viMI6)
+			if (bibItem.vsNum != chInst.numVs) {
+				val isNxtVs = (chInst.BibItems[curItOfst + 1].itTyp == "Verse")
+				if (isNxtVs) {
+					val viMI6 = VIMenuItem("Bridge Next Verse", "brid", "R")
+					VIMenuItems.add(viMI6)
+				}
 			}
 			if (bibItem.isBrg) {
 				val viMI7 = VIMenuItem("Unbridge Last Verse", "unBrid", "R")

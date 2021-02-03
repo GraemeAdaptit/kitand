@@ -33,14 +33,16 @@
             android:parentActivityName="com.ccs.kitand.ChooseBookActivity" />
         <activity
             android:name="com.ccs.kitand.EditChapterActivity"
-            android:parentActivityName="com.ccs.kitand.ChooseChapterActivity" />
+            android:parentActivityName="com.ccs.kitand.ChooseChapterActivity"
+            android:screenOrientation="sensor" />
         <activity
             android:name="com.ccs.kitand.PopmenuActivity"
             android:theme="@style/AppTheme.PopoverTheme" >
         </activity>
         <activity
             android:name="com.ccs.kitand.ExportChapterActivity"
-            android:parentActivityName="com.ccs.kitand.EditChapterActivity" />
+            android:parentActivityName="com.ccs.kitand.EditChapterActivity"
+            android:screenOrientation="sensor" />
 
         <provider
             android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"

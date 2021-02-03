@@ -33,6 +33,10 @@ class EditChapterActivity : AppCompatActivity() {
 
 	var suppActionBar: ActionBar? = null
 
+	// Properties of the EditChapterActivity instance related to popover menus
+	var curPoMenu: VIMenu? = null	// instance in memory of the current popover menu
+	var popupWin: PopupWindow? = null
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_edit_chapter)
@@ -158,18 +162,19 @@ class EditChapterActivity : AppCompatActivity() {
 		butn.getLocationInWindow(locations)
 		val butW = butn.getWidth()
 		val butH = butn.getHeight()
-// No longer needed
-//		// Go to the PopmenuActivity
-//		val i = Intent(this, PopmenuActivity::class.java)
-//		startActivity(i)
-		val numRows = KITApp.chInst.curPoMenu?.numRows as Int
+		curPoMenu = KITApp.chInst.curPoMenu
+		val numRows = curPoMenu?.numRows as Int
 		val popupHeight = numRows * 180
-		val popupWin = PopupWindow(popupView, dispW - butW + 10, popupHeight)
-		popupWin.setOutsideTouchable(true)
+		popupWin = PopupWindow(popupView, dispW - butW + 10, popupHeight)
+		assert(popupWin != null) { "LINE 170 PopupWindow could not be created" }
+		popupWin!!.setOutsideTouchable(true)
 
 		val lst_popmenu = popupView.findViewById(R.id.lst_popmenu) as ListView
+		lst_popmenu.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
+			popMenuAction(position)
+		})
 
-		popupWin.showAtLocation (
+		popupWin!!.showAtLocation (
 			KITApp.recycV, // Location to display popup window
 			Gravity.NO_GRAVITY, // Position of layout to display popup
 			butW - 10, // X offset
@@ -182,6 +187,28 @@ class EditChapterActivity : AppCompatActivity() {
 				KITApp.chInst.curPoMenu!!.VIMenuItems
 		)
 		lst_popmenu.setAdapter(popMenuArrayAdapter)
+		lst_popmenu.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
+			popMenuAction(position)
+		})
+	}
+
+	fun popMenuAction (pos:Int) {
+		val popMenuAction = curPoMenu!!.VIMenuItems[pos].VIMenuAction
+		KITApp.chInst.popMenuAction(popMenuAction)
+		popupWin!!. dismiss()
+		// Refresh the RecyclerView of VerseItems
+		// Replacing the content of the RecyclerView causes its current contents to be saved to the database,
+		// but the database has already been updated correctly (for example, with an Ascription deleted) and
+		// so every VerseItem that is at present in the RecyclerView is saved to its preceding VerseItem in
+		// the database -- Verse 2 text goes to Verse 1, etc.!!
+		// This Boolean is a hack to prevent this; but there must be a better way!
+		KITApp.vItAda.setIsRefreshingRecyclerView(true)
+		recyclerView.setAdapter(null);
+		recyclerView.setLayoutManager(null);
+		recyclerView.setAdapter(viewAdapter);
+		recyclerView.setLayoutManager(viewManager);
+		viewAdapter.notifyDataSetChanged()
+		KITApp.vItAda.setIsRefreshingRecyclerView(false)
 	}
 
 	// Called when another VerseItem cell is selected in order to save the current VerseItem text

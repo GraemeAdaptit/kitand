@@ -24,13 +24,15 @@
             android:parentActivityName=".ChooseBookActivity" />
         <activity
             android:name=".EditChapterActivity"
-            android:parentActivityName=".ChooseChapterActivity" />
+            android:parentActivityName=".ChooseChapterActivity"
+            android:screenOrientation="sensor" />
         <activity android:name=".PopmenuActivity"
             android:theme="@style/AppTheme.PopoverTheme">
         </activity>
         <activity
             android:name=".ExportChapterActivity"
-            android:parentActivityName=".EditChapterActivity" />
+            android:parentActivityName=".EditChapterActivity"
+            android:screenOrientation="sensor" />
     </application>
 
 </manifest>

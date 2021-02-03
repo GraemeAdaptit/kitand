@@ -16,7 +16,9 @@ class ChooseChapterActivity : AppCompatActivity() {
 	var letUserChooseChapter = false	// Will be set from bkInst.canChooseAnotherChapter
 
 	// tableRow of the selected Chapter
-	var chRow = 0	// Is this needed here?
+	// chRow = -1 means that no Chapter has been selected yet
+	// chRow is used when determining whether the user had chosen a different Chapter from before
+	var chRow = -1
 
 //	lateinit var txt_bibname: TextView
 	lateinit var txt_ch_prompt: TextView

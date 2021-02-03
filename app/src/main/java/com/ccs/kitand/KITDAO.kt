@@ -293,6 +293,20 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         return (rows == 1)
 	}
 
+	// The Chapters record for the current Chapter needs to be updated after changes to the publication items:
+	//	* to change the number of VerseItems
+	//	* to change the current VerseItem after one has been deleted or inserted.
+
+	fun chaptersUpdateRecPub (chID:Int, numIt:Int, currIt:Int) : Boolean {
+		this.db = this.getWritableDatabase()
+		val cv = ContentValues()
+		cv.put(COL_NumItems, numIt)
+		cv.put(COL_CurrItem, currIt)
+		val whArray = arrayOf<String>(chID.toString())
+		val rows = db.update(TAB_Chapters, cv, COL_ChapterID + " = ?", whArray)
+		return (rows == 1)
+	}
+
 	// Set the value of the field USFMText when the Export scene is used
 	fun updateUSFMText (chID:Int, text:String) : Boolean {
 		this.db = this.getWritableDatabase()
@@ -311,8 +325,9 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 	// It will also be called
 	//	* when the user chooses to insert a publication VerseItem
 	//	* when the user chooses to undo a verse bridge
+	// This function returns the rowID of the newly inserted record or -1 if the insert fails
 
-	fun verseItemsInsertRec (chID:Int, vsNum:Int, itTyp:String, itOrd:Int, itText:String, intSeq:Int, isBrid:Boolean, lstVsBrid:Int) : Boolean {
+	fun verseItemsInsertRec (chID:Int, vsNum:Int, itTyp:String, itOrd:Int, itText:String, intSeq:Int, isBrid:Boolean, lstVsBrid:Int) : Long {
         this.db = this.getWritableDatabase()
         val cv = ContentValues()
         cv.put(COLF_ChapID, chID)
@@ -323,8 +338,8 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         cv.put(COL_IntSeq, intSeq)
         cv.put(COL_IsBridge, isBrid)
         cv.put(COL_LastVsBridge, lstVsBrid)
-        val insert = db.insert(TAB_VerseItems, null, cv)
-        return (insert > 0L)
+        val insID = db.insert(TAB_VerseItems, null, cv)
+		return insID
 		}
 
 	// The VerseItems records for the current Chapter need to be read in order to set up the scrolling display of
@@ -356,6 +371,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 	// The text of a VerseItem record in the EditChapterActivity needs to be saved to kdb.sqlite
 	//	* when the user selects a different VerseItem to work on
 	//	* when the VerseItem cell scrolls outside the visible range
+	// returns true if successful
 
 	fun itemsUpdateRecText (itID:Int, itTxt:String) : Boolean {
 		this.db = this.getWritableDatabase()
@@ -365,17 +381,24 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 		val rows = db.update(TAB_VerseItems, cv, COL_ItemID + " = ?", whArray)
         return (rows == 1)
 	}
-/*
-	// The VerseItem record for a publication VerseItem needs to be deleted when the user chooses to delete a publication item
-	// This function will also be called when the user chooses to bridge two verses (the contents of the second verse is
-	//	appended to the first verse, the second verse text is put into a new BridgeItem, and then the second VerseItem is
-	//	deleted. Unbridging follows the reverse procedure and the original second verse is re-created and the BridgeItem
-	//	is deleted
 
-	func itemsDeleteRec () -> Bool {
-		return true
+	// The VerseItem record for a publication VerseItem needs to be deleted when the user
+	//	chooses to delete a publication item.
+	// This function will also be called when the user chooses to bridge two verses
+	//	(the contents of the second verse is appended to the first verse, the second verse
+	//	text is put into a new BridgeItem, and then the second VerseItem is deleted.
+	//	Unbridging follows the reverse procedure and the original second verse is
+	//	re-created and the BridgeItem is deleted.
+	// This function will also be called when the user deletes a Psalm Ascription because
+	//	the translation being keyboarded does not include Ascriptions.
+	// returns true if successful
+
+	fun itemsDeleteRec (itID:Int) : Boolean {
+		this.db = this.getWritableDatabase()
+		val whArray = arrayOf<String>(itID.toString())
+		val result = db.delete(TAB_VerseItems, COL_ItemID + " = ?", whArray)
+		return (result > 0)
 	}
-*/
 
      companion object {
         const val TAB_Bibles = "Bibles"

@@ -1,4 +1,5 @@
 package com.ccs.kitand
+// TODO:
 // No longer needed -- delete when lessons from it need no more reminders!!!
 // Also then delete activity_popmenu.xml
 import android.os.Bundle

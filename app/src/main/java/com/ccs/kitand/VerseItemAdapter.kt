@@ -1,5 +1,6 @@
 package com.ccs.kitand
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -14,6 +15,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.properties.Delegates
 
 
 class VerseItemAdapter(
@@ -61,7 +63,7 @@ class VerseItemAdapter(
 
 		// Listeners go in here
 		// Listener for VerseItem text editing started
-		holder.verseItemTxt.setOnClickListener(View.OnClickListener() {
+		holder.verseItemTxt.setOnClickListener(View.OnClickListener {
 			// A VerseItem EditText has been tapped
 			val newPos = holder.getAdapterPosition()
 			moveCurrCellToClickedCell(newPos)
@@ -71,11 +73,9 @@ class VerseItemAdapter(
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 //				TODO("Not yet implemented")
 			}
-
 			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 //				TODO("Not yet implemented")
 			}
-
 			override fun afterTextChanged(s: Editable) {
 				// Set dirty flag for this VerseItem text
 				holder.dirty = true
@@ -99,13 +99,25 @@ class VerseItemAdapter(
 		return numItems
 	}
 
+	// Replacing the content of the RecyclerView causes its current contents to be saved to the database,
+	// but the database has already been updated correctly (for example, with an Ascription deleted) and
+	// so every VerseItem that is at present in the RecyclerView is saved to its preceding VerseItem in
+	// the database -- Verse 2 text goes to Verse 1, etc.!!
+	// This Boolean is a hack to prevent this; but there must be a better way!
+	var isRefreshingRecyclerView: Boolean = false
+
+	fun setIsRefreshingRecyclerView(flag: Boolean) {
+		isRefreshingRecyclerView = flag
+	}
 	// onViewRecycled() is called by the LayoutManager just before clearing data from a ListCell
 	// such as when the recyclerView is scrolled and some cells go out of view.
 	override fun onViewRecycled(holder: ListCell): Unit {
-		val pos = holder.getAdapterPosition()
-		// Save VerseItem text from cell at pos
-		val textSrc = holder.verseItemTxt.getText().toString()
-		KITApp.chInst.copyAndSaveVItem(pos, textSrc)
+		if (!isRefreshingRecyclerView) {
+			val pos = holder.getAdapterPosition()
+			// Save VerseItem text from cell at pos
+			val textSrc = holder.verseItemTxt.getText().toString()
+			KITApp.chInst.copyAndSaveVItem(pos, textSrc)
+		}
 	}
 	// Called when the current view holder is being changed to another one; it is necessary to save
 	// the text in whichever is the current view holder
@@ -122,24 +134,54 @@ class VerseItemAdapter(
 		}
 	}
 
+
+	// Returns from the text of the current cell, the cursor position, the text before the cursor
+	// and the text after the cursor.
+	fun currTextSplit() : ContentValues {
+		val cv = ContentValues()
+		var cursPos = 0
+		var textBefore = ""
+		var textAfter = ""
+		val currCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst) as ListCell
+		assert (currCell != null)
+		if (currCell != null) {
+			val edText = currCell.verseItemTxt
+			val txtChars = edText.getText().toString()
+			cursPos = edText.getSelectionStart()
+			if (cursPos >= 0 && cursPos < txtChars.length )  {
+					textBefore = txtChars.subSequence(0, cursPos) as String
+					textAfter = txtChars.subSequence(cursPos, txtChars.length) as String
+				} else {
+					cursPos = 0
+					textBefore = ""
+					textAfter = ""
+				}
+			} else {
+				cursPos = 0
+				textBefore = ""
+				textAfter = ""
+			}
+		cv.put("1", cursPos)
+		cv.put("2", textBefore)
+		cv.put("3", textAfter)
+		return cv
+	}
+
 	// Member function of VerseItemAdapter for making the clicked cell the current cell
 	// Called by the onClickListener for verseItemTxt
 	fun moveCurrCellToClickedCell(newPos: Int) {
-		// If the current cell has been edited it must be saved
+		// Get start of selection in the new clicked cell
+		val newCurrCell = KITApp.recycV.findViewHolderForAdapterPosition(newPos) as ListCell
+		val edText = newCurrCell.verseItemTxt
+		val cursPos = edText.getSelectionStart()
+		// Save the current cell if necessary
 		saveCurrentItemText()
-		// Disable the current cell in the VerseItemAdapter
-		val oldCuCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst)
-		if (oldCuCell != null) {
-			val oldCurrCell = oldCuCell	as ListCell
-			// If the old current cell is still accessible then set its text to non-focussable
-			oldCurrCell.setSelected(false)
-		}
 		// make the ListCell just tapped the current one
 		currCellOfst = newPos
 		KITApp.chInst.setupCurrentItemFromRecyclerRow(newPos)
 		// Enable the new current cell
-		val newCurrCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst) as ListCell
 		newCurrCell.setSelected(true)
+		edText.setSelection(cursPos)
 	}
 
 	// Member function of VerseItemAdapter for showing the popup window for the tapped VerseItem
@@ -173,6 +215,7 @@ class VerseItemAdapter(
 	inner class ListCell(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		var popoverButton: Button = itemView.findViewById(R.id.btn_popover)
 		var verseItemTxt: EditText = itemView.findViewById(R.id.txt_verseitem)
+//		var selPos: Int = 0
 
 		// No editing has been done yet, so dirty = false
 		var dirty = false
@@ -184,7 +227,7 @@ class VerseItemAdapter(
 				verseItemTxt.setFocusable(true)
 				verseItemTxt.setFocusableInTouchMode(true)
 				verseItemTxt.requestFocus()
-				verseItemTxt.setSelection(verseItemTxt.length())
+//				verseItemTxt.setSelection(verseItemTxt.length())
 			} else {
 				itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))
 				verseItemTxt.setFocusableInTouchMode(false)

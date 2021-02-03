@@ -32,7 +32,6 @@ class Chapter(
 	var currIt:Int		// currItem INTEGER (the ID assigned by SQLite when the VerseItem was created)
 ) {
 	// The following variables and data structures also have lifetimes of the Chapter instance
-
 	val dao = KITApp.dao			// Access to the KITDAO instance for kdb.sqlite access
 	val bibInst = KITApp.bibInst	// access to the instance of Bible for updating BibBooks[] (not needed?)
 	val bkInst = KITApp.bkInst		// access to the instance for the current Book
@@ -50,12 +49,13 @@ class Chapter(
 		set (ofst) {
 			if (curPoMenu == null) {
 				curPoMenu = VIMenu(ofst)
-			} else if (ofst != currItOfst) {
+			} else if ((ofst != currItOfst) || (BibItems[ofst].itID != currIt)) {
 				// Delete previous popover menu
 				curPoMenu = null
 				curPoMenu = VIMenu(ofst)
 			}
 			field = ofst
+			currIt = BibItems[ofst].itID
 		}
 
 	// This struct and the BibItems array are used for letting the user select the
@@ -122,7 +122,8 @@ class Chapter(
 			val intSeq = 0
 			val isBrid = false
 			val lstVsBrid = 0
-			if (dao.verseItemsInsertRec (chID, vsNum, itTyp, itOrd, itText, intSeq, isBrid, lstVsBrid) ) {
+			val newRecID: Long = dao.verseItemsInsertRec (chID, vsNum, itTyp, itOrd, itText, intSeq, isBrid, lstVsBrid)
+			if (newRecID > 0 ) {
 				println("Chapter:createItemRecords Created Verse record for chap $chNum vs $vsNum")
 			}
 		}
@@ -133,7 +134,8 @@ class Chapter(
 			val intSeq = 0
 			val isBrid = false
 			val lstVsBrid = 0
-			if (dao.verseItemsInsertRec (chID, vsNum, itTyp, itOrd, itText, intSeq, isBrid, lstVsBrid) ) {
+			val newRecID = dao.verseItemsInsertRec (chID, vsNum, itTyp, itOrd, itText, intSeq, isBrid, lstVsBrid)
+			if (newRecID > 0) {
 				println("Chapter:createItemRecords Created Verse record for chap $chNum vs $vsNum")
 			}
 		}
@@ -195,7 +197,6 @@ class Chapter(
 			currItOfst = offsetToBibItem(currIt)
 			// Setting currItOfst ensures that there is a VIMenu for the current VerseItem
 		}
-//		createPopoverMenu (currItOfst)
 		// Update the database Chapter record
 		if (dao.chaptersUpdateRec (chID, itRCr, numIt, currIt) ) {
 			println("Chapter:goCurrentItem updated $bkInst.bkName $chNum Chapter record")
@@ -210,7 +211,6 @@ class Chapter(
 		currIt = curIt
 		currItOfst = offsetToBibItem(curIt)
 		// Setting currItOfst ensures that there is a VIMenu for the current VerseItem
-//		createPopoverMenu (currItOfst)
 		// Update the database Chapter record
 		if (dao.chaptersUpdateRec (chID, itRCr, numIt, currIt) ) {
 //			println("Chapter:setupCurrentItem updated $bkInst.bkName) $chNum) Chapter record")
@@ -238,18 +238,215 @@ class Chapter(
 //		chDirty = true	// An item in this chapter has been edited (No longer used in UI)
 	}
 
-	// If necessary, create the popover menu for the VerseItem at currOfst
-//	fun createPopoverMenu (currOfst: Int) {
-//		if (curPoMenu == null) {
-//			currItOfst = currOfst
-//			curPoMenu = VIMenu(currOfst)
-//		} else if (currOfst != currItOfst) {
-//			// Delete previous popover menu
-//			curPoMenu = null
-//			currItOfst = currOfst
-//			curPoMenu = VIMenu(currOfst)
-//		}
-//	}
+	// Function to carry out on the data model the actions required for the popover menu items
+	// All of the possible actions change the BibItems[] array so, after carrying out the
+	// specific action, this function clears BibItems[] and reloads it from the database;
+	// following this the VersesTableViewController needs to reload the TableView.
+	fun popMenuAction(act: String) {
+		when (act) {
+		"crAsc" -> createAscription()
+		"delAsc" -> deleteAscription()
+		"crTitle" -> createTitle()
+		"delTitle" -> deleteTitle()
+		"crParaBef" -> createParagraphBefore()
+		"delPara" -> deleteParagraphBefore()
+		"crParaCont" -> createParagraphCont()
+		"delPCon" -> deleteParagraphCont()
+//		"brid" -> bridgeNextVerse()
+//		"unBrid" -> unbridgeLastVerse()
+		else -> println("BUG! Unknown action code")
+		}
+
+		// GDLC 12JAN21 BUG10 The logic in the setter for currItOfst works for moving from one VerseItem
+		// to another but it fails in some situations where a new VerseItem is created or deleted
+		// (on creation because the new VerseItem may have the same offset as the one whose menu action
+		// was used). So destroying the current popover menu once an action from it has been used
+		// ensures that a new popover menu will be created.
+		//
+		// Delete the popover menu now that it has been used
+		curPoMenu = null
+		// Clear the current BibItems[] array
+		BibItems.clear()
+		// Reload the BibItems[] array of VerseItems
+		dao.readVerseItemsRecs (this)
+	}
+
+	// Can be called when the current VerseItem is Verse 1 of a Psalm
+	fun createAscription () {
+		val newItemID = dao.verseItemsInsertRec (chID, 1, "Ascription", 70, "", 0, false, 0)
+		if (newItemID > 0) {
+			println ("Ascription created")
+			// Note that the Psalm now has an Ascription
+			hasAscription = true
+			// Increment number of items
+			numIt = numIt + 1
+			// Make the new Ascription the current VerseItem
+			currIt = newItemID.toInt()
+			// Update the database Chapter record so that the new Ascription item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, newItemID.toInt()) ) {
+//				println ("Chapter:createAscription updated \(bkInst!.bkName) \(chNum) Chapter record")
+			} else {
+				println ("Chapter:createAscription ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		} else {
+			println ("Chapter:createAscription ERROR inserting into database")
+		}
+	}
+
+	// Can be called when the current VerseItem is an Ascription
+	fun deleteAscription () {
+		if (dao.itemsDeleteRec(currIt) ) {
+			println("Ascription deleted")
+			// Note that the Psalm no longer has an Ascription
+			hasAscription = false
+			// Decrement number of items
+			numIt = numIt - 1
+			// Make the next VerseItem the current one
+			currIt = BibItems[currItOfst + 1].itID
+			// Update the database Chapter record so that the following item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+//				println ("Chapter:deleteAscription updated \(bkInst!.bkName) \(chNum) Chapter record")
+			} else {
+				println ("Chapter:deleteAscription ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		}
+	}
+
+	// Create Book title
+	fun createTitle() {
+		val newitemID = dao.verseItemsInsertRec (chID, 1, "Title", 10, "", 0, false, 0)
+		if (newitemID > 0) {
+			println ("Title for Book created")
+			// Note that the Book now has a Title
+			hasTitle = true
+			// Increment number of items
+			numIt = numIt + 1
+			// Make the new Title the current VerseItem
+			currIt = newitemID.toInt()
+			// Update the database Chapter record so that the new Title item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+//				println ("Chapter:createTitle updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:createTitle ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		} else {
+			println ("Chapter:createTitle ERROR inserting into database")
+		}
+	}
+
+	// Can be called when the current VerseItem is a Title
+	fun deleteTitle () {
+		if (dao.itemsDeleteRec(currIt) ) {
+			println("Title deleted")
+			// Note that the Book no longer has a Title
+			hasTitle = false
+			// Decrement number of items
+			numIt = numIt - 1
+			// Make the next VerseItem the current one
+			currIt = BibItems[currItOfst + 1].itID
+			// Update the database Chapter record so that the following item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+//				println ("Chapter:deleteTitle updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:deleteTitle ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		}
+	}
+
+
+	// Create a paragraph break before a verse.
+	fun createParagraphBefore () {
+		val vsNum = BibItems[currItOfst].vsNum
+		val newitemID = dao.verseItemsInsertRec (chID, vsNum, "Para", vsNum * 100 - 10, "", 0, false, 0)
+		if (newitemID > 0) {
+			println ("Para Before created")
+			// Increment number of items
+			numIt = numIt + 1
+			// Leave the Verse as the current VerseItem (there is nothing to keyboard in the Para record)
+			// but increment the number of VerseItems
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+//				println ("Chapter:createParagraphBefore updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:createParagraphBefore ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		} else {
+			println ("Chapter:createParagraphBefore ERROR inserting into database")
+		}
+	}
+
+	// Can be called when the current VerseItem is a Para
+	fun deleteParagraphBefore () {
+		if (dao.itemsDeleteRec(currIt) ) {
+			println("Para deleted")
+			// Decrement number of items
+			numIt = numIt - 1
+			// Make the next VerseItem the current one
+			currIt = BibItems[currItOfst + 1].itID
+			// Update the database Chapter record so that the following item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+//				println ("Chapter:deleteParagraphBefore updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:deleteParagraphBefore ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		}
+	}
+
+	// Create a paragraph break inside a verse
+	fun createParagraphCont() {
+		val cv = KITApp.vItAda.currTextSplit()
+        val cursPos = cv.getAsInteger("1")
+        val txtBef = cv.getAsString("2")
+        val txtAft = cv.getAsString("3")
+		val vsNum = BibItems[currItOfst].vsNum
+		// Remove text after cursor from Verse
+		dao.itemsUpdateRecText(BibItems[currItOfst].itID, txtBef)
+		// Create the ParaCont record
+		val newPContID = dao.verseItemsInsertRec (chID, vsNum, "ParaCont", vsNum * 100 + 10, "", 0, false, 0)
+		if (newPContID > 0) {
+			println ("ParaCont created")
+			// Increment number of items
+			numIt = numIt + 1
+		} else {
+			println ("Chapter:createParagraphCont ERROR inserting ParaCont into database")
+		}
+		// Create the VerseCont record and insert the txtAft from the original Verse
+		val newVContID = dao.verseItemsInsertRec (chID, vsNum, "VerseCont", vsNum * 100 + 20, txtAft, 0, false, 0)
+		if (newVContID > 0) {
+			println ("VerseCont created")
+			// Increment number of items
+			numIt = numIt + 1
+			// Update the database Chapter record so that the new VerseCont becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, newVContID.toInt()) ) {
+//				println ("Chapter:createParagraphCont updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:createParagraphCont ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		} else {
+			println ("Chapter:createParagraphCont ERROR inserting VerseCont into database")
+		}
+	}
+
+	fun deleteParagraphCont() {
+		val prevItem = BibItems[currItOfst - 1]
+		val nextItem = BibItems[currItOfst + 1]
+		val prevItID = prevItem.itID
+		// Delete ParaCont record
+		dao.itemsDeleteRec(currIt)
+		numIt = numIt - 1
+		// Append continuation text to original Verse
+		val txtBef = prevItem.itTxt
+		val txtAft = nextItem.itTxt
+		dao.itemsUpdateRecText(prevItem.itID, txtBef + txtAft)
+		// Delete VerseCont record
+		dao.itemsDeleteRec(nextItem.itID)
+		numIt = numIt - 1
+		// Update the database Chapter record so that the original VerseItem becomes the current item
+		if (dao.chaptersUpdateRecPub (chID, numIt, prevItID) ) {
+//				println ("Chapter:deleteParagraphCont updated $bkInst.bkName $chNum Chapter record")
+		} else {
+			println ("Chapter:deleteParagraphCont ERROR updating $bkInst.bkName $chNum Chapter record")
+		}
+	}
 
 	fun calcUSFMExportText() : String {
 		var USFM = "\\id " + bkInst.bkCode + " " + bibInst.bibName + "\n\\c " + chNum.toString()
