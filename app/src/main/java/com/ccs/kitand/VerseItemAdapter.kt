@@ -50,9 +50,28 @@ class VerseItemAdapter(
 		val BibItem = KITApp.chInst.BibItems[position]
 		val itemType = BibItem.itTyp
 		val verseNo = BibItem.vsNum
-		val buttonText = if (itemType == "Verse") itemType + " " + verseNo.toString() else itemType
+		// Customise the popover button title
+		var buttonText = ""
+		when (itemType) {
+		"Title" -> buttonText = "Main Title"
+		"Para", "ParaCont" -> buttonText = "Paragraph"
+		"ParlRef" -> buttonText = "Parallel Ref"
+		"VerseCont" -> buttonText = "Verse " + verseNo.toString() + " (cont)"
+		"Verse" -> {
+			if (BibItem.isBrg) {
+				buttonText = "Verses " + verseNo.toString() + "-" + BibItem.lvBrg.toString()
+			} else {
+				buttonText = "Verse " + verseNo.toString()
+			}
+		}
+		"InTitle" -> buttonText = "Intro Title"
+		"InSubj" -> buttonText = "Intro Heading"
+		"InPara" -> buttonText = "Intro Paragraph"
+		else -> buttonText = itemType
+		}
 		holder.popoverButton.setText(buttonText)
-		holder.verseItemTxt.setText(KITApp.chInst.BibItems[position].itTxt)
+		// Set the VerseItem text into the cell
+		holder.verseItemTxt.setText(BibItem.itTxt)
 		if (this.currCellOfst == position) {
 			// If this is the current VerseItem turn on EditText for editing
 			holder.setSelected(true)
@@ -215,7 +234,6 @@ class VerseItemAdapter(
 	inner class ListCell(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		var popoverButton: Button = itemView.findViewById(R.id.btn_popover)
 		var verseItemTxt: EditText = itemView.findViewById(R.id.txt_verseitem)
-//		var selPos: Int = 0
 
 		// No editing has been done yet, so dirty = false
 		var dirty = false
@@ -227,7 +245,6 @@ class VerseItemAdapter(
 				verseItemTxt.setFocusable(true)
 				verseItemTxt.setFocusableInTouchMode(true)
 				verseItemTxt.requestFocus()
-//				verseItemTxt.setSelection(verseItemTxt.length())
 			} else {
 				itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))
 				verseItemTxt.setFocusableInTouchMode(false)

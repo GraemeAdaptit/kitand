@@ -14,10 +14,11 @@
         android:layout_margin="0dp"
         android:layout_marginStart="8dp"
         android:backgroundTint="#FFFFFF"
+        android:padding="2sp"
         android:text="Popover"
         android:textAlignment="viewStart"
         android:textAllCaps="false"
-        android:textSize="10sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

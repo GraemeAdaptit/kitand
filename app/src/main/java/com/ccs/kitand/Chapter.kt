@@ -79,6 +79,9 @@ class Chapter(
 	var curPoMenu: VIMenu? = null	// instance in memory of the current popover menu
 	var hasAscription = false		// true if the Psalm has an Ascription
 	var hasTitle = false			// true if Chapter 1 has a Book Title
+	var hasInTitle = false			// true if Chapter 1 has an introductory matter Title
+	var nextIntSeq = 1				// next value to be used for an IntSeq field. Starts at 1 because
+									// InTitle is in effect IntSeq = 0
 
 	// When the instance of current Book creates the instance for the current Chapter it supplies
 	// the values for the currently selected Chapter from the BibChaps array
@@ -252,8 +255,19 @@ class Chapter(
 		"delPara" -> deleteParagraphBefore()
 		"crParaCont" -> createParagraphCont()
 		"delPCon" -> deleteParagraphCont()
-//		"brid" -> bridgeNextVerse()
-//		"unBrid" -> unbridgeLastVerse()
+		"delVCon" -> deleteVerseCont()
+		"crHdBef" -> createSubjHeading()
+		"delHead" -> deleteSubjHeading()
+		"crPalRef" -> createParallelRef()
+		"delPalRef" -> deleteParallelRef()
+		"brid" -> bridgeNextVerse()
+		"unBrid" -> unbridgeLastVerse()
+		"crInTit" -> createIntroTitle()
+		"delInTit" -> deleteIntroTitle()
+		"crInHed" -> createIntroHeading()
+		"delInSubj" -> deleteIntroHeading()
+		"crInPar" -> createIntroPara()
+		"delInPar" -> deleteIntroPara()
 		else -> println("BUG! Unknown action code")
 		}
 
@@ -448,6 +462,309 @@ class Chapter(
 		}
 	}
 
+	fun deleteVerseCont() {
+		val prevItem = BibItems[currItOfst - 2]	// step back over the ParaCont to the previous Verse
+		val contItem = BibItems[currItOfst]	// get the continuation of the Verse
+		val prevVersID = prevItem.itID
+		val txtBef = prevItem.itTxt
+		val txtAft = contItem.itTxt
+		// Append continuation text to original Verse
+		dao.itemsUpdateRecText(prevItem.itID, txtBef + txtAft)
+		// Delete VerseCont record
+		dao.itemsDeleteRec(currIt)
+		numIt = numIt - 1
+		// Delete ParaCont record
+		val paraContItem = BibItems[currItOfst - 1]
+		dao.itemsDeleteRec(paraContItem.itID)
+		numIt = numIt - 1
+		// Update currIt and the database Chapter record so that the original VerseItem becomes the current item
+		currIt = prevVersID
+		if (dao.chaptersUpdateRecPub (chID, numIt, prevVersID) ) {
+//				println ("Chapter:deleteVerseCont updated $bkInst.bkName $chNum Chapter record")
+		} else {
+			println ("Chapter:deleteVerseCont ERROR updating $bkInst.bkName $chNum Chapter record")
+		}
+	}
+
+	fun createSubjHeading() {
+		val vsNum = BibItems[currItOfst].vsNum
+		val newitemID = dao.verseItemsInsertRec (chID, vsNum, "Heading", vsNum * 100 - 20, "", 0, false, 0)
+		if (newitemID > 0) {
+			println ("Subject Heading created")
+			// Increment number of items
+			numIt = numIt + 1
+			// Make the new Subject Heading the current VerseItem
+			currIt = newitemID.toInt()
+			// Update the database Chapter record so that the new Subject Heading item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt()) ) {
+//				println ("Chapter:createSubjHeading updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:createSubjHeading ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		} else {
+			println ("Chapter:createSubjHeading ERROR inserting into database")
+		}
+	}
+
+	// Can be called when the current VerseItem is a Subject Heading
+	fun deleteSubjHeading() {
+		if (dao.itemsDeleteRec(currIt) ) {
+			println("Subj Heading deleted")
+			// Decrement number of items
+			numIt = numIt - 1
+			// Make the next VerseItem the current one
+			currIt = BibItems[currItOfst + 1].itID
+			// Update the database Chapter record so that the following item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+//				println ("Chapter:deleteSubjHeading updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:deleteSubjHeading ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		}
+	}
+
+	// Creates a Parallel Ref before a Verse or after a Title
+	fun createParallelRef() {
+		val vsNum = BibItems[currItOfst].vsNum
+		val newitemID = dao.verseItemsInsertRec (chID, vsNum, "ParlRef", vsNum * 100 - 15, "", 0, false, 0)
+		if (newitemID > 0) {
+			println ("Parallel Ref created")
+			// Increment number of items
+			numIt = numIt + 1
+			// Make the new Parallel Ref the current VerseItem
+			currIt = newitemID.toInt()
+			// Update the database Chapter record so that the new Parallel Ref item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt()) ) {
+//				println ("Chapter:createParallelRef updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:createParallelRef ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		} else {
+			println ("Chapter:createParallelRef ERROR inserting into database")
+		}
+	}
+
+		// Can be called when the current VerseItem is a Parallel Ref
+		fun deleteParallelRef () {
+			if (dao.itemsDeleteRec(currIt) ) {
+				println("Parallel Ref deleted")
+				// Decrement number of items
+				numIt = numIt - 1
+				// Make the next VerseItem the current one
+				currIt = BibItems[currItOfst + 1].itID
+				// Update the database Chapter record so that the following item becomes the current item
+				if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+	//				println ("Chapter:deleteParallelRef updated $bkInst.bkName $chNum Chapter record")
+				} else {
+					println ("Chapter:deleteParallelRef ERROR updating $bkInst.bkName $chNum Chapter record")
+				}
+			}
+		}
+
+	// This function uses the current values in BibItems[] but makes changes in
+	// the database via KITDAO. After the database changes have been made,
+	//  BibItems[] will be refreshed from KITDAO.
+	fun bridgeNextVerse() {
+		// Get the vsNum and itTxt from  the verse to be added to the bridge
+		val nexVsNum = BibItems[currItOfst + 1].vsNum
+		val nexVsTxt = BibItems[currItOfst + 1].itTxt
+		// Delete the verse record being added to the bridge
+		dao.itemsDeleteRec(BibItems[currItOfst + 1].itID)
+		numIt = numIt - 1
+		// Create related BridgeItems record
+		val curVsItID = BibItems[currItOfst].itID
+		val curVsTxt = BibItems[currItOfst].itTxt
+		val bridID = dao.bridgeInsertRec(curVsItID, curVsTxt, nexVsTxt)
+		// Copy text of next verse into the bridge head verse
+		val newBridHdTxt = curVsTxt + " " + nexVsTxt
+		dao.itemsUpdateForBridge(curVsItID, newBridHdTxt, true, nexVsNum)
+		// Update the database Chapter record so that the bridge head VerseItem remains the current item
+		// and the number of items is updated
+		if (dao.chaptersUpdateRecPub (chID, numIt, curVsItID) ) {
+//				println ("Chapter:bridgeNextVerse updated $bkInst.bkName $chNum Chapter record")
+		} else {
+			println ("Chapter:bridgeNextVerse ERROR updating $bkInst.bkName $chNum Chapter record")
+		}
+	}
+
+		data class BridItem (
+			var BridgeID: Int,			// ID of the BridgeItems record
+			var textCurrBridge: String,	// text of current Verse or bridge
+			var textExtraVerse: String	// text of extra verse added to bridge
+	)
+
+		val BridItems = ArrayList<BridItem>()
+
+		// dao.bridgeGetRecs() calls appendItemToBridArray() for each row it reads from
+		// the BridgeItems table in the kdb.sqlite database
+
+	fun appendItemToBridArray(BridgeID:Int, textCurrBridge:String, textExtraVerse:String) {
+			val bridRec = BridItem(BridgeID, textCurrBridge, textExtraVerse)
+			BridItems.add(bridRec)
+	}
+
+		// This function uses the current values in BibItems[] but makes changes in
+		// the database via KITDAO. After the database changes have been made,
+		//  BibItems[] will be refreshed from KITDAO.
+	fun unbridgeLastVerse() {
+		// Get the most recent BridgeItems record for this verse
+		val result = dao.bridgeGetRecs(BibItems[currItOfst].itID, this)
+		if (result) {
+			println("BridgeItems records for verse $BibItems[currItOfst].vsNum have been read from kdb.sqlite")
+		} else {
+			println("ERROR: BridgeItems records for verse $BibItems[currItOfst].vsNum have not been read from kdb.sqlite")
+		}
+		// The most recent bridge item will be the last in the list
+		val curBridItem = BridItems.last()
+		// Create the verse record being removed from the bridge
+		val nextVsNum = BibItems[currItOfst].lvBrg
+		if (dao.verseItemsInsertRec (chID, nextVsNum, "Verse", 100 * nextVsNum, curBridItem.textExtraVerse, 0, false, 0) > 0 ) {
+//				println("Chapter:createItemRecords Created Verse record for chap $chNum vs $nextVsNum")
+		} else {
+			println("ERROR: Book:createItemRecords: Creating Verse record failed for chap $chNum vs $nextVsNum")
+		}
+		numIt = numIt + 1
+		// Copy text of the previous bridge head into the new bridge head
+		var isBrid: Boolean// = false
+		var lastVsBr = BibItems[currItOfst].lvBrg - 1
+		if (lastVsBr == BibItems[currItOfst].vsNum) {
+			// The head of the bridge will become a normal verse
+			isBrid = false; lastVsBr = 0
+		} else {
+			// The head of the bridge will still be a bridge head
+			isBrid = true
+		}
+		dao.itemsUpdateForBridge(BibItems[currItOfst].itID, curBridItem.textCurrBridge, isBrid, lastVsBr)
+		// Delete this BridgeItems record
+		dao.bridgeDeleteRec(curBridItem.BridgeID)
+		// Update the database Chapter record so that the bridge head VerseItem remains the current item
+		// and the number of items is updated
+		if (dao.chaptersUpdateRecPub (chID, numIt, BibItems[currItOfst].itID) ) {
+//				println ("Chapter:unbridgeLastVerse updated $bkInst.bkName $chNum Chapter record")
+		} else {
+			println("Chapter:unbridgeLastVerse ERROR updating $bkInst.bkName $chNum Chapter record")
+		}
+	}
+
+	// Publication items involved in Introductory Matter
+
+	// Create Introductory Matter Title
+	fun createIntroTitle() {
+		val newitemID = dao.verseItemsInsertRec (chID, 1, "InTitle", 10, "", 0, false, 0)
+		if (newitemID > 0) {
+			println ("InTitle for Book created")
+			// Note that the Book now has an InTitle
+			hasInTitle = true
+			// Increment number of items
+			numIt = numIt + 1
+			// Make the new InTitle the current VerseItem
+			currIt = newitemID.toInt()
+			// Update the database Chapter record so that the new Title item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt()) ) {
+//				println ("Chapter:createInTitle updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:createInTitle ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		} else {
+			println ("Chapter:createInTitle ERROR inserting into database")
+		}
+	}
+
+	// Delete Introductory Matter Title
+	fun deleteIntroTitle() {
+		if (dao.itemsDeleteRec(currIt) ) {
+			println("InTitle deleted")
+			// Note that the Book no longer has an InTitle
+			hasInTitle = false
+			// Decrement number of items
+			numIt = numIt - 1
+			// Make the next VerseItem the current one
+			currIt = BibItems[currItOfst + 1].itID
+			// Update the database Chapter record so that the following item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+//				println ("Chapter:deleteInTitle updated $bkInst.bkName$ $chNum Chapter record")
+			} else {
+				println ("Chapter:deleteInTitle ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		}
+	}
+
+	// Create Introductory Matter Heading
+	fun createIntroHeading() {
+		val newitemID = dao.verseItemsInsertRec (chID, 1, "InSubj", 10 + nextIntSeq, "", nextIntSeq, false, 0)
+		nextIntSeq = nextIntSeq + 1
+		if (newitemID > 0) {
+			println ("InSubj for Book created")
+			// Increment number of items
+			numIt = numIt + 1
+			// Make the new InSubj the current VerseItem
+			currIt = newitemID.toInt()
+			// Update the database Chapter record so that the new Title item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt()) ) {
+//				println ("Chapter:createIntroHeading updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:createIntroHeading ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		} else {
+			println ("Chapter:createIntroHeading ERROR inserting into database")
+		}
+	}
+
+	// Delete Introductory Matter Heading
+	fun deleteIntroHeading() {
+		if (dao.itemsDeleteRec(currIt) ) {
+			println("InSubj deleted")
+			// Decrement number of items
+			numIt = numIt - 1
+			// Make the next VerseItem the current one
+			currIt = BibItems[currItOfst + 1].itID
+			// Update the database Chapter record so that the following item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+//				println ("Chapter:deleteIntroHeading updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:deleteIntroHeading ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		}
+	}
+
+	// Create Introductory Matter Paragraph
+	fun createIntroPara() {
+		val newitemID = dao.verseItemsInsertRec (chID, 1, "InPara", 10 + nextIntSeq, "", nextIntSeq, false, 0)
+		nextIntSeq = nextIntSeq + 1
+		if (newitemID > 0) {
+			println ("InPara for Book created")
+			// Increment number of items
+			numIt = numIt + 1
+			// Make the new InSubj the current VerseItem
+			currIt = newitemID.toInt()
+			// Update the database Chapter record so that the new Title item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt()) ) {
+//				println ("Chapter:createIntroPara updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:createIntroPara ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		} else {
+			println ("Chapter:createIntroPara ERROR inserting into database")
+		}
+	}
+
+	// Delete Introductory Matter Paragraph
+	fun deleteIntroPara() {
+		if (dao.itemsDeleteRec(currIt) ) {
+			println("InPara deleted")
+			// Decrement number of items
+			numIt = numIt - 1
+			// Make the next VerseItem the current one
+			currIt = BibItems[currItOfst + 1].itID
+			// Update the database Chapter record so that the following item becomes the current item
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+//				println ("Chapter:deleteIntroPara updated $bkInst.bkName $chNum Chapter record")
+			} else {
+				println ("Chapter:deleteIntroPara ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		}
+	}
+
 	fun calcUSFMExportText() : String {
 		var USFM = "\\id " + bkInst.bkCode + " " + bibInst.bibName + "\n\\c " + chNum.toString()
 		for (i in 0 until numIt) {
@@ -473,7 +790,6 @@ class Chapter(
 				"InTitle" -> s = "\n\\imt " + tx
 				"InSubj" -> s = "\n\\ims " + tx
 				"InPara" -> s = "\n\\ip " + tx
-				"DesTitle" -> s = "\n\\d " + tx
 				"Ascription" -> s = "\n\\d " + tx
 				else -> s = ""
 			}

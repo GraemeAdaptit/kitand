@@ -354,7 +354,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         val cursor = db.rawQuery(sql, whArray)
         if (cursor.moveToFirst())
             do {
-                val itemID = cursor.getInt(0)
+				val itemID = cursor.getInt(0)
                 val chapID = cursor.getInt(1)
                 val vsNum = cursor.getInt(2)
                 val itTyp = cursor.getString(3)
@@ -362,7 +362,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
                 val itTxt = cursor.getString(5)
                 val intSeq = cursor.getInt(6)
                 val isBrg = if (cursor.getInt(7) == 1) true else false
-                val lvBrg = cursor.getInt(7)
+                val lvBrg = cursor.getInt(8)
                 KITApp.chInst.appendItemToArray(itemID, chapID, vsNum, itTyp, itOrd, itTxt, intSeq, isBrg, lvBrg)
             } while (cursor.moveToNext())
         cursor.close()
@@ -380,6 +380,20 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         val whArray = arrayOf<String>(itID.toString())
 		val rows = db.update(TAB_VerseItems, cv, COL_ItemID + " = ?", whArray)
         return (rows == 1)
+	}
+
+
+	// When a verse is added to form (or extend) a bridge, the VerseItem record that is the head
+	// of the bridge needs to be updated.
+	fun itemsUpdateForBridge(itID:Int, itTxt:String, isBridge:Boolean, LastVsBr:Int) : Boolean {
+		this.db = this.getWritableDatabase()
+		val cv = ContentValues()
+		cv.put(COL_ItemText, itTxt)
+        cv.put(COL_IsBridge, isBridge)
+        cv.put(COL_LastVsBridge, LastVsBr)
+        val whArray = arrayOf<String>(itID.toString())
+		val rows = db.update(TAB_VerseItems, cv, COL_ItemID + " = ?", whArray)
+		return (rows == 1)
 	}
 
 	// The VerseItem record for a publication VerseItem needs to be deleted when the user
@@ -400,7 +414,58 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 		return (result > 0)
 	}
 
-     companion object {
+	//--------------------------------------------------------------------------------------------
+	// BridgeItems data table
+
+	// When a bridge is created a BridgeItem record is created to hold the following verse that is being appended
+	// to the bridge. This is needed only if the user later undoes the bridge and the original following verse is
+	// restored; otherwise the BridgeItem record just sits there out of the way of normal operations.
+	// This function returns the rowID of the newly inserted record or -1 if insert fails
+
+	fun bridgeInsertRec(itemID: Int, txtCurr: String, txtExtra: String) : Long {
+        this.db = this.getWritableDatabase()
+        val cv = ContentValues()
+		cv.put(COLF_ItemID, itemID)
+        cv.put(COL_TextCurrBridge, txtCurr)
+        cv.put(COL_TextExtraVerse, txtExtra)
+		val insID = db.insert(TAB_BridgeItems, null, cv)
+		return insID
+	}
+
+	// When a bridge is being undone it is necessary to retrieve the record containing the original
+	// following verse that is about to be restored. There may be more than one BridgeItems record
+	// for the current VerseItem; the one that will be used during the unbridging is the most recent one.
+
+	fun bridgeGetRecs(itemID:Int, chInst:Chapter) : Boolean{
+        this.db = this.getReadableDatabase()
+		val sql:String = "SELECT bridgeID, textCurrBridge, textExtraVerse FROM BridgeItems WHERE itemID = ?1 ORDER BY bridgeID;"
+        val whArray = arrayOf<String>(itemID.toString())
+        val cursor = db.rawQuery(sql, whArray)
+        if (cursor.moveToFirst()) {
+			do {
+				val bridgeID = cursor.getInt(0)
+				val txtBrid = cursor.getString(1)
+				val txtExtra = cursor.getString(2)
+				chInst.appendItemToBridArray(bridgeID, txtBrid, txtExtra)
+			} while (cursor.moveToNext())
+			cursor.close()
+			return true
+		} else {
+			cursor.close()
+			return false
+		}
+	}
+
+	// When a bridge has been undone the BridgeItem record involved needs to be deleted
+
+	fun bridgeDeleteRec(bridgeID:Int) : Boolean {
+		this.db = this.getWritableDatabase()
+		val whArray = arrayOf<String>(bridgeID.toString())
+		val result = db.delete(TAB_BridgeItems, COL_BridgeID + " = ?", whArray)
+		return (result > 0)
+	}
+
+	companion object {
         const val TAB_Bibles = "Bibles"
         const val COL_BibleID = "bibleID"
         const val COL_BibleName = "name"
