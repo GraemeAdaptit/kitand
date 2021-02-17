@@ -159,6 +159,15 @@ class Chapter(
 		BibItems.add(itRec)
 		if (itTyp == "Ascription") {hasAscription = true}
 		if (itTyp == "Title") {hasTitle = true}
+		if (itTyp == "InTitle") {hasInTitle = true}
+		// Set nextIntSeq to 1 more than the largest intSeq found in the existing VerseItem records
+		// remembering that the VerseItem records will be read in ascending order of intSeq, but there
+		// may be missing values because of records that were created but later deleted.
+		if (intSeq > 0) {
+			if (intSeq >= nextIntSeq) {
+				nextIntSeq = 1 + intSeq
+			}
+		}
 	}
 
 //	// Return the BibItem at an index (i.e. offset in BibItems or in VerseItemAdapter
@@ -287,7 +296,7 @@ class Chapter(
 
 	// Can be called when the current VerseItem is Verse 1 of a Psalm
 	fun createAscription () {
-		val newItemID = dao.verseItemsInsertRec (chID, 1, "Ascription", 70, "", 0, false, 0)
+		val newItemID = dao.verseItemsInsertRec (chID, 1, "Ascription", 75, "", 0, false, 0)
 		if (newItemID > 0) {
 			println ("Ascription created")
 			// Note that the Psalm now has an Ascription
@@ -328,7 +337,7 @@ class Chapter(
 
 	// Create Book title
 	fun createTitle() {
-		val newitemID = dao.verseItemsInsertRec (chID, 1, "Title", 10, "", 0, false, 0)
+		val newitemID = dao.verseItemsInsertRec (chID, 1, "Title", 70, "", 0, false, 0)
 		if (newitemID > 0) {
 			println ("Title for Book created")
 			// Note that the Book now has a Title

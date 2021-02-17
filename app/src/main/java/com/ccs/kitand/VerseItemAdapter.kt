@@ -105,10 +105,10 @@ class VerseItemAdapter(
 			println("Popover button tapped")
 			// If the button is not on the current VerseItem then change the current VerseItem to this one
 			val newPos = holder.getAdapterPosition()
-//			if (newPos != currCellOfst) {
+			if (newPos != currCellOfst) {
 				moveCurrCellToClickedCell(newPos)
-				showPopoverMenu(it)
-//			}
+			}
+			showPopoverMenu(it)
 		})
 	}
 
