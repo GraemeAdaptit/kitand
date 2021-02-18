@@ -209,6 +209,21 @@ class EditChapterActivity : AppCompatActivity() {
 		recyclerView.setLayoutManager(viewManager);
 		viewAdapter.notifyDataSetChanged()
 		KITApp.vItAda.setIsRefreshingRecyclerView(false)
+		// NOTE: at this time, the RecyclerView may not have been fully set up
+		// so attempting to show the correct VerseItem as selected may not work (and may crash).
+		// Setting a listener for the point when RecyclerView is fully set up is an OK approach.
+		recyclerView.getViewTreeObserver().addOnPreDrawListener(object : OnPreDrawListener {
+			override fun onPreDraw(): Boolean {
+				if (recyclerView.getChildCount() > 0) {
+					// Remove the listener to avoid continually triggering this code - once is enough.
+					recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
+					recyclerView.layoutManager?.scrollToPosition(currItOfst)
+					viewAdapter.selectCurrItem(currItOfst)
+					return true
+				}
+				return false
+			}
+		})
 	}
 
 	// Called when another VerseItem cell is selected in order to save the current VerseItem text

@@ -108,6 +108,18 @@ class Chapter(
 		// Calls readVerseItemsRecs() in KITDAO.swift to read the kdb.sqlite database VerseItems table
 		// readVerseItemsRecs() calls appendItemToArray() in this file for each ROW read from kdb.sqlite
 		dao.readVerseItemsRecs (this)
+		// Adjust the numIt read from kdb.sqlite if necessary
+		// This may have been found necessary because of errors caused during testing by interrupting
+		// kitand during some creation of publication items. Eventually it may not be necessary, but
+		// it could be a good safety measure even in the released app.
+		if (BibItems.size != numIt) {
+			numIt = BibItems.size
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+				println ("Chapter:init updated $bkInst.bkName $chNum Chapter record because numIt was wrong")
+			} else {
+				println ("Chapter:init ERROR updating $bkInst.bkName $chNum Chapter record")
+			}
+		}
 	}
 
 	// Create a VerseItem record in kdb.sqlite for each VerseItem in this Chapter
@@ -669,7 +681,7 @@ class Chapter(
 			// Make the new InTitle the current VerseItem
 			currIt = newitemID.toInt()
 			// Update the database Chapter record so that the new Title item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt()) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
 //				println ("Chapter:createInTitle updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createInTitle ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -709,7 +721,7 @@ class Chapter(
 			// Make the new InSubj the current VerseItem
 			currIt = newitemID.toInt()
 			// Update the database Chapter record so that the new Title item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt()) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
 //				println ("Chapter:createIntroHeading updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createIntroHeading ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -747,7 +759,7 @@ class Chapter(
 			// Make the new InSubj the current VerseItem
 			currIt = newitemID.toInt()
 			// Update the database Chapter record so that the new Title item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt()) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
 //				println ("Chapter:createIntroPara updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createIntroPara ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -776,7 +788,7 @@ class Chapter(
 
 	fun calcUSFMExportText() : String {
 		var USFM = "\\id " + bkInst.bkCode + " " + bibInst.bibName + "\n\\c " + chNum.toString()
-		for (i in 0 until numIt) {
+		for (i in 0 until numIt) {		// 0 until numIt includes zero but does not include numIt
 			var s: String
 			var vn: String
 			val item = BibItems[i]
