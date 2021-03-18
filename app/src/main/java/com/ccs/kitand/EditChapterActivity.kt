@@ -1,5 +1,6 @@
 package com.ccs.kitand
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Point
@@ -11,8 +12,6 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 
 class EditChapterActivity : AppCompatActivity() {
 
@@ -67,7 +66,7 @@ class EditChapterActivity : AppCompatActivity() {
 		KITApp.recycV = recyclerView
 		KITApp.edChAct = this
 //		// Ensure that the soft keyboard will appear
-		// TODO: Find a better way - this doesn't work
+		// TODO: Find a way that works!
 //		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 	}
 
@@ -151,51 +150,60 @@ class EditChapterActivity : AppCompatActivity() {
 
 	// Show popover menu; called from showPopoverMenu() in VerseItemAdapter
 	fun showPopOverMenu(butn: Button) {
-		val inflater: LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-		val popupView = inflater.inflate(R.layout.activity_popmenu, null)
 		val display = windowManager.defaultDisplay
 		val size = Point()
 		display.getSize(size)
 		val dispW: Int = size.x
 		val dispH: Int = size.y
-		var locations = IntArray(2)
+		val locations = IntArray(2)
 		butn.getLocationInWindow(locations)
 		val butW = butn.getWidth()
 		val butH = butn.getHeight()
 		curPoMenu = KITApp.chInst.curPoMenu
 		val numRows = curPoMenu?.numRows as Int
+		val popupWidth = dispW - butW + 10
 		val popupHeight = numRows * 180
-		popupWin = PopupWindow(popupView, dispW - butW + 10, popupHeight)
-		assert(popupWin != null) { "LINE 170 PopupWindow could not be created" }
+		val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+		val popupView = inflater.inflate(R.layout.activity_popup, null)
+		popupWin = PopupWindow(popupView, popupWidth, popupHeight, true)
+		val layoutMgr = LinearLayoutManager(applicationContext)
+		val popupMenu = popupView.findViewById<RecyclerView>(R.id.popmenu)
+		popupMenu.apply  {
+			// use this setting to improve performance if you know that changes
+			// in content do not change the layout size of the RecyclerView
+			setHasFixedSize(true)
+			// use a linear layout manager
+			layoutManager = layoutMgr
+			// specify a viewAdapter
+			adapter = PopupAdapter (curPoMenu!!)
+		}
 		popupWin!!.setOutsideTouchable(true)
 
-		val lst_popmenu = popupView.findViewById(R.id.lst_popmenu) as ListView
-		lst_popmenu.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
-			popMenuAction(position)
-		})
-
-		popupWin!!.showAtLocation (
+		popupWin!!.showAtLocation(
 			KITApp.recycV, // Location to display popup window
 			Gravity.NO_GRAVITY, // Position of layout to display popup
 			butW - 10, // X offset
 			locations[1] // Y offset
 		)
+//		// Go to the PopupActivity
+//		val i = Intent(this, PopupActivity::class.java)
+//		startActivity(i)
 
-		val popMenuArrayAdapter = ArrayAdapter<VIMenu.VIMenuItem>(
-				this,
-				android.R.layout.simple_selectable_list_item,
-				KITApp.chInst.curPoMenu!!.VIMenuItems
-		)
-		lst_popmenu.setAdapter(popMenuArrayAdapter)
-		lst_popmenu.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
-			popMenuAction(position)
-		})
+//		val popMenuArrayAdapter = ArrayAdapter<VIMenu.VIMenuItem>(
+//				this,
+//				android.R.layout.simple_selectable_list_item,
+//				KITApp.chInst.curPoMenu!!.VIMenuItems
+//		)
+//		lst_popmenu.setAdapter(popMenuArrayAdapter)
+//		lst_popmenu.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
+//			popMenuAction(position)
+//		})
 	}
 
-	fun popMenuAction (pos:Int) {
+	fun popMenuAction(pos: Int) {
 		val popMenuAction = curPoMenu!!.VIMenuItems[pos].VIMenuAction
 		KITApp.chInst.popMenuAction(popMenuAction)
-		popupWin!!. dismiss()
+		popupWin!!.dismiss()
 		// Refresh the RecyclerView of VerseItems
 		// Replacing the content of the RecyclerView causes its current contents to be saved to the database,
 		// but the database has already been updated correctly (for example, with an Ascription deleted) and

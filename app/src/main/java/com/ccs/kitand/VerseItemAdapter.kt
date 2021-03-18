@@ -27,7 +27,7 @@ class VerseItemAdapter(
 	// The VerseItemAdapter needs to keep up to date the offset to the
 	// view holder (VerseItem) that is the currently active one.
 	var currCellOfst: Int	// = -1	// -1 means it hasn't been set yet
-
+	var BibItems = BibItems
 	init {
 		this.currCellOfst = editChapterActivity.currItOfst
 	}
@@ -47,7 +47,7 @@ class VerseItemAdapter(
 	override fun onBindViewHolder(holder: ListCell, position: Int) {
 		// - get element from your dataset at this position
 		// - replace the contents of the view with that element's data
-		val BibItem = KITApp.chInst.BibItems[position]
+		val BibItem = BibItems[position]
 		val itemType = BibItem.itTyp
 		val verseNo = BibItem.vsNum
 		// Customise the popover button title

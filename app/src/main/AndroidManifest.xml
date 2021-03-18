@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity">
+         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,9 +26,9 @@
             android:name=".EditChapterActivity"
             android:parentActivityName=".ChooseChapterActivity"
             android:screenOrientation="sensor" />
-        <activity android:name=".PopmenuActivity"
-            android:theme="@style/AppTheme.PopoverTheme">
-        </activity>
+        <activity
+            android:name=".PopupActivity"
+            android:theme="@style/AppTheme.PopoverTheme"></activity>
         <activity
             android:name=".ExportChapterActivity"
             android:parentActivityName=".EditChapterActivity"

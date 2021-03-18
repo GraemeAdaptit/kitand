@@ -30,8 +30,8 @@
 21        android:theme="@style/AppTheme" >
 21-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:12:9-40
 22        <activity android:name="com.ccs.kitand.SplashActivity" >
-22-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:9-19:20
-22-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:19-49
+22-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:10-19:20
+22-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:13:20-50
 23            <intent-filter>
 23-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:14:13-18:29
 24                <action android:name="android.intent.action.MAIN" />
@@ -64,31 +64,30 @@
 37            android:screenOrientation="sensor" />
 37-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:28:13-47
 38        <activity
-38-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:29:9-31:20
-39            android:name="com.ccs.kitand.PopmenuActivity"
-39-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:29:19-50
-40            android:theme="@style/AppTheme.PopoverTheme" >
-40-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:30:13-57
-41        </activity>
-42        <activity
-42-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:32:9-35:50
-43            android:name="com.ccs.kitand.ExportChapterActivity"
-43-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:33:13-50
-44            android:parentActivityName="com.ccs.kitand.EditChapterActivity"
-44-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:34:13-62
-45            android:screenOrientation="sensor" />
-45-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:35:13-47
-46
-47        <provider
-47-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/595aa16c435e04bd295e3765e5d679aa/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:25:9-29:43
-48            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-48-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/595aa16c435e04bd295e3765e5d679aa/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:26:13-79
-49            android:authorities="com.ccs.kitand.lifecycle-process"
-49-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/595aa16c435e04bd295e3765e5d679aa/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:27:13-69
-50            android:exported="false"
-50-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/595aa16c435e04bd295e3765e5d679aa/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:28:13-37
-51            android:multiprocess="true" />
-51-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/595aa16c435e04bd295e3765e5d679aa/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:29:13-40
-52    </application>
-53
-54</manifest>
+38-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:29:9-31:69
+39            android:name="com.ccs.kitand.PopupActivity"
+39-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:30:13-42
+40            android:theme="@style/AppTheme.PopoverTheme" />
+40-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:31:13-57
+41        <activity
+41-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:32:9-35:50
+42            android:name="com.ccs.kitand.ExportChapterActivity"
+42-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:33:13-50
+43            android:parentActivityName="com.ccs.kitand.EditChapterActivity"
+43-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:34:13-62
+44            android:screenOrientation="sensor" />
+44-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:35:13-47
+45
+46        <provider
+46-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/595aa16c435e04bd295e3765e5d679aa/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:25:9-29:43
+47            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+47-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/595aa16c435e04bd295e3765e5d679aa/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:26:13-79
+48            android:authorities="com.ccs.kitand.lifecycle-process"
+48-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/595aa16c435e04bd295e3765e5d679aa/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:27:13-69
+49            android:exported="false"
+49-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/595aa16c435e04bd295e3765e5d679aa/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:28:13-37
+50            android:multiprocess="true" />
+50-->[androidx.lifecycle:lifecycle-process:2.2.0] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/595aa16c435e04bd295e3765e5d679aa/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:29:13-40
+51    </application>
+52
+53</manifest>
