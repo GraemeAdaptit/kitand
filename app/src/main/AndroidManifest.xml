@@ -27,9 +27,6 @@
             android:parentActivityName=".ChooseChapterActivity"
             android:screenOrientation="sensor" />
         <activity
-            android:name=".PopupActivity"
-            android:theme="@style/AppTheme.PopoverTheme"></activity>
-        <activity
             android:name=".ExportChapterActivity"
             android:parentActivityName=".EditChapterActivity"
             android:screenOrientation="sensor" />

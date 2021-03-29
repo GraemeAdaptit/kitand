@@ -36,9 +36,6 @@
             android:parentActivityName="com.ccs.kitand.ChooseChapterActivity"
             android:screenOrientation="sensor" />
         <activity
-            android:name="com.ccs.kitand.PopupActivity"
-            android:theme="@style/AppTheme.PopoverTheme" />
-        <activity
             android:name="com.ccs.kitand.ExportChapterActivity"
             android:parentActivityName="com.ccs.kitand.EditChapterActivity"
             android:screenOrientation="sensor" />

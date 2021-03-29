@@ -1,10 +1,8 @@
 package com.ccs.kitand
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.graphics.Point
 import android.os.Bundle
+import android.util.Half.toFloat
 import android.view.*
 import android.view.ViewTreeObserver.OnPreDrawListener
 import android.widget.*
@@ -30,11 +28,16 @@ class EditChapterActivity : AppCompatActivity() {
 
 	val dao = KITApp.dao	// Get access to KITDAO
 
+	// Scale factor for calculating size of PopupWindows
+	var scale: Float = 0.0F
+	// Layout width for calculating positioning of PopupWindows
+	var layout_width = 0
+
 	var suppActionBar: ActionBar? = null
 
 	// Properties of the EditChapterActivity instance related to popover menus
 	var curPoMenu: VIMenu? = null	// instance in memory of the current popover menu
-	var popupWin: PopupWindow? = null
+	private var popupWin: PopupWindow? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -63,8 +66,9 @@ class EditChapterActivity : AppCompatActivity() {
 			// specify a viewAdapter
 			adapter = viewAdapter
 		}
+
 		KITApp.recycV = recyclerView
-		KITApp.edChAct = this
+//		KITApp.edChAct = this
 //		// Ensure that the soft keyboard will appear
 		// TODO: Find a way that works!
 //		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -105,6 +109,10 @@ class EditChapterActivity : AppCompatActivity() {
 					recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
 					recyclerView.layoutManager?.scrollToPosition(posn)
 					viewAdapter.selectCurrItem(posn)
+					// Get the screen's density scale
+					scale = resources.displayMetrics.density
+					// Get the width of the layout
+					layout_width = recyclerView.getMeasuredWidth()
 					return true
 				}
 				return false
@@ -150,20 +158,17 @@ class EditChapterActivity : AppCompatActivity() {
 
 	// Show popover menu; called from showPopoverMenu() in VerseItemAdapter
 	fun showPopOverMenu(butn: Button) {
-		val display = windowManager.defaultDisplay
-		val size = Point()
-		display.getSize(size)
-		val dispW: Int = size.x
-		val dispH: Int = size.y
 		val locations = IntArray(2)
 		butn.getLocationInWindow(locations)
 		val butW = butn.getWidth()
-		val butH = butn.getHeight()
+//		val butH = butn.getHeight()
 		curPoMenu = KITApp.chInst.curPoMenu
-		val numRows = curPoMenu?.numRows as Int
-		val popupWidth = dispW - butW + 10
-		val popupHeight = numRows * 180
-		val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+		var numRows = 0
+		if (curPoMenu == null) numRows = 0 else numRows = curPoMenu!!.numRows
+		val popupWidth = layout_width - butW + 10
+		val pHeightIntdp = numRows.times(44)
+		val popupHeight = (pHeightIntdp.toFloat() * scale + 0.5f).toInt()
+		val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
 		val popupView = inflater.inflate(R.layout.activity_popup, null)
 		popupWin = PopupWindow(popupView, popupWidth, popupHeight, true)
 		val layoutMgr = LinearLayoutManager(applicationContext)
@@ -175,29 +180,16 @@ class EditChapterActivity : AppCompatActivity() {
 			// use a linear layout manager
 			layoutManager = layoutMgr
 			// specify a viewAdapter
-			adapter = PopupAdapter (curPoMenu!!)
+			adapter = PopupAdapter(curPoMenu!!)
 		}
 		popupWin!!.setOutsideTouchable(true)
 
 		popupWin!!.showAtLocation(
-			KITApp.recycV, // Location to display popup window
-			Gravity.NO_GRAVITY, // Position of layout to display popup
+			KITApp.recycV, // View for popup window to appear over
+			Gravity.NO_GRAVITY, // How to bias the position of the popup window
 			butW - 10, // X offset
 			locations[1] // Y offset
 		)
-//		// Go to the PopupActivity
-//		val i = Intent(this, PopupActivity::class.java)
-//		startActivity(i)
-
-//		val popMenuArrayAdapter = ArrayAdapter<VIMenu.VIMenuItem>(
-//				this,
-//				android.R.layout.simple_selectable_list_item,
-//				KITApp.chInst.curPoMenu!!.VIMenuItems
-//		)
-//		lst_popmenu.setAdapter(popMenuArrayAdapter)
-//		lst_popmenu.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
-//			popMenuAction(position)
-//		})
 	}
 
 	fun popMenuAction(pos: Int) {

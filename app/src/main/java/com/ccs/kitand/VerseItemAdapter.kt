@@ -28,6 +28,7 @@ class VerseItemAdapter(
 	// view holder (VerseItem) that is the currently active one.
 	var currCellOfst: Int	// = -1	// -1 means it hasn't been set yet
 	var BibItems = BibItems
+	var edChAct = editChapterActivity
 	init {
 		this.currCellOfst = editChapterActivity.currItOfst
 	}
@@ -162,19 +163,14 @@ class VerseItemAdapter(
 		var textBefore = ""
 		var textAfter = ""
 		val currCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst) as ListCell
-		assert (currCell != null)
-		if (currCell != null) {
-			val edText = currCell.verseItemTxt
-			val txtChars = edText.getText().toString()
-			cursPos = edText.getSelectionStart()
-			if (cursPos >= 0 && cursPos < txtChars.length )  {
-					textBefore = txtChars.subSequence(0, cursPos) as String
-					textAfter = txtChars.subSequence(cursPos, txtChars.length) as String
-				} else {
-					cursPos = 0
-					textBefore = ""
-					textAfter = ""
-				}
+		// TODO: Android Developer said that (currCell != null) is always true and so simplified the comparisons
+		// TODO: Check whether there are any crashes because of this assumption
+		val edText = currCell.verseItemTxt
+		val txtChars = edText.getText().toString()
+		cursPos = edText.getSelectionStart()
+		if (cursPos >= 0 && cursPos < txtChars.length )  {
+				textBefore = txtChars.subSequence(0, cursPos) as String
+				textAfter = txtChars.subSequence(cursPos, txtChars.length) as String
 			} else {
 				cursPos = 0
 				textBefore = ""
@@ -188,6 +184,8 @@ class VerseItemAdapter(
 
 	// Member function of VerseItemAdapter for making the clicked cell the current cell
 	// Called by the onClickListener for verseItemTxt
+	// TODO: This leaves the previous cell still selected, and so the user sees two (or even more) cells
+	// TODO: shown as selected. Fix this glitch!
 	fun moveCurrCellToClickedCell(newPos: Int) {
 		// Get start of selection in the new clicked cell
 		val newCurrCell = KITApp.recycV.findViewHolderForAdapterPosition(newPos) as ListCell
@@ -208,12 +206,11 @@ class VerseItemAdapter(
 	fun showPopoverMenu(it: View) {
 		println("About to show popover menu")
 		val btn_popovr = it as Button
-		val btnName = btn_popovr.getText()
 		var locations = IntArray(2)
 		btn_popovr.getLocationInWindow(locations)
 		// If the current cell has been edited it must be saved
 		saveCurrentItemText()
-		KITApp.edChAct.showPopOverMenu(btn_popovr)
+		edChAct.showPopOverMenu(btn_popovr)
 	}
 
 	// If the current VerseItem is outside the RecyclerView (i.e. invisible) then nothing is done;

@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import androidx.recyclerview.widget.RecyclerView
-import java.io.InputStream
 
 //  Created by Graeme Costin on 3JUL20.
 // The author disclaims copyright to this source code.  In place of
@@ -25,8 +24,6 @@ class KITApp : Application() {
     }
 
     companion object {
-        var context: Context? = null
-            private set
         var instance: KITApp? = null
             private set
 
@@ -37,7 +34,7 @@ class KITApp : Application() {
         lateinit var chInst: Chapter    // For access to the instance of the currently selected Chapter
         // TODO: Is vItAda really necessary? Remove it if possible
         lateinit var vItAda: VerseItemAdapter   // For access to the instance of the VerseItemAdapter
-        lateinit var edChAct: EditChapterActivity   // For access from VerseItemAdapter to show popover menus
+        // TODO: Is recycV really necessary? Remove it if possible
         lateinit var recycV: RecyclerView       // For access to the RecyclerView of EditChapterActivity
     }
 }

@@ -16,9 +16,9 @@
         android:backgroundTint="#FFFFFF"
         android:padding="2sp"
         android:text="Popover"
-        android:textAlignment="viewStart"
+        android:textAlignment="center"
         android:textAllCaps="false"
-        android:textSize="12sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
