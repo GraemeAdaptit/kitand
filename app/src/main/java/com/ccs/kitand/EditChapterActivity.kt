@@ -17,8 +17,9 @@ class EditChapterActivity : AppCompatActivity() {
 	private lateinit var ch_name:String
 	private lateinit var ps_name:String
 	lateinit var recyclerView: RecyclerView
-	lateinit var viewAdapter: VerseItemAdapter	//RecyclerView.Adapter<*>
+	lateinit var viewAdapter: VerseItemAdapter
 	private lateinit var viewManager: RecyclerView.LayoutManager
+	lateinit var edChAct: EditChapterActivity
 
 	var currIt = 0		// Zero until one of the VerseItems is chosen for editing;
 						// then it is the ItemID of the VerseItem that is the current one. (not needed?)
@@ -43,6 +44,7 @@ class EditChapterActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_edit_chapter)
 
+		edChAct = this
 		// Get access to the SupportActionBar
 		suppActionBar = getSupportActionBar()
 
@@ -177,7 +179,7 @@ class EditChapterActivity : AppCompatActivity() {
 			// use a linear layout manager
 			layoutManager = layoutMgr
 			// specify a viewAdapter
-			adapter = PopupAdapter(curPoMenu!!)
+			adapter = PopupAdapter(curPoMenu!!, edChAct)
 		}
 		popupWin!!.setOutsideTouchable(true)
 
@@ -190,8 +192,8 @@ class EditChapterActivity : AppCompatActivity() {
 	}
 
 	fun popMenuAction(pos: Int) {
-		val popMenuAction = curPoMenu!!.VIMenuItems[pos].VIMenuAction
-		KITApp.chInst.popMenuAction(popMenuAction, viewAdapter)
+		val popMenuCode = curPoMenu!!.VIMenuItems[pos].VIMenuAction
+		KITApp.chInst.popMenuAction(popMenuCode, viewAdapter)
 		popupWin!!.dismiss()
 		// Refresh the RecyclerView of VerseItems
 		// Replacing the content of the RecyclerView causes its current contents to be saved to the database,

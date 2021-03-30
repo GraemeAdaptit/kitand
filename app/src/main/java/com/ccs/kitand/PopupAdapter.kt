@@ -9,7 +9,10 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 
-class PopupAdapter (var curPoMenu: VIMenu)
+class PopupAdapter(
+	var curPoMenu: VIMenu,
+	var edChAct: EditChapterActivity
+)
 	: RecyclerView.Adapter<PopupAdapter.PopupCell>(){
 
 	// Create new view holders (invoked by the layout manager)
@@ -27,12 +30,25 @@ class PopupAdapter (var curPoMenu: VIMenu)
 		// - replace the contents of the view with that element's data
 		val menuText = curPoMenu.VIMenuItems[position].VIMenuLabel
 		holder.menu_cmd.setText(menuText)
+		holder.menu_cmd.setFocusable(false)
 		when (curPoMenu.VIMenuItems[position].VIMenuIcon) {
 			"C" -> holder.popup_icon.setImageResource(R.drawable.create_pubitem)
 			"D" -> holder.popup_icon.setImageResource(R.drawable.delete_pubitem)
 			"B" -> holder.popup_icon.setImageResource(R.drawable.bridge_pubitem)
 			"U" -> holder.popup_icon.setImageResource(R.drawable.unbridge_pubitem)
 		}
+
+		// Listeners for PopMenuItem selected
+		holder.popup_icon.setOnClickListener(View.OnClickListener {
+			// A PopupCell icon has been tapped
+			val menuPos = holder.getAdapterPosition()
+			edChAct.popMenuAction(menuPos)
+		})
+		holder.menu_cmd.setOnClickListener(View.OnClickListener {
+			// A PopupCell menu command has been tapped
+			val menuPos = holder.getAdapterPosition()
+			edChAct.popMenuAction(menuPos)
+		})
 	}
 
 	override fun getItemCount(): Int {
