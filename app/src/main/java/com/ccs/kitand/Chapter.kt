@@ -58,6 +58,11 @@ class Chapter(
 			currIt = BibItems[ofst].itID
 		}
 
+	// Reference to the current VerseItemAdapter needing Chapter services
+	// When the EditChapterActivity calls popMenuAction() it passes a reference to the
+	// current VerseItemAdapter
+	lateinit var vItAda: VerseItemAdapter
+
 	// This struct and the BibItems array are used for letting the user select the
 	// VerseItem to edit in the current Chapter of the current Book.
 
@@ -262,11 +267,14 @@ class Chapter(
 //		chDirty = true	// An item in this chapter has been edited (No longer used in UI)
 	}
 
-	// Function to carry out on the data model the actions required for the popover menu items
+	// Function to carry out on the data model the actions required for the popover menu items;
+	// this function is called by the EditChapterActivity when the user taps on a popover menu item.
 	// All of the possible actions change the BibItems[] array so, after carrying out the
 	// specific action, this function clears BibItems[] and reloads it from the database;
 	// following this the VersesTableViewController needs to reload the TableView.
-	fun popMenuAction(act: String) {
+
+	fun popMenuAction(act: String, vItAda: VerseItemAdapter) {
+		this.vItAda = vItAda
 		when (act) {
 		"crAsc" -> createAscription()
 		"delAsc" -> deleteAscription()
@@ -428,7 +436,7 @@ class Chapter(
 
 	// Create a paragraph break inside a verse
 	fun createParagraphCont() {
-		val cv = KITApp.vItAda.currTextSplit()
+		val cv = this.vItAda.currTextSplit()
         val cursPos = cv.getAsInteger("1")
         val txtBef = cv.getAsString("2")
         val txtAft = cv.getAsString("3")

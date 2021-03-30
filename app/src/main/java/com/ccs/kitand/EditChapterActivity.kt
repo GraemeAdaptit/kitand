@@ -16,8 +16,8 @@ class EditChapterActivity : AppCompatActivity() {
 	private lateinit var txt_ched_prompt: TextView
 	private lateinit var ch_name:String
 	private lateinit var ps_name:String
-	private lateinit var recyclerView: RecyclerView
-	private lateinit var viewAdapter: VerseItemAdapter	//RecyclerView.Adapter<*>
+	lateinit var recyclerView: RecyclerView
+	lateinit var viewAdapter: VerseItemAdapter	//RecyclerView.Adapter<*>
 	private lateinit var viewManager: RecyclerView.LayoutManager
 
 	var currIt = 0		// Zero until one of the VerseItems is chosen for editing;
@@ -55,7 +55,6 @@ class EditChapterActivity : AppCompatActivity() {
 		this.currItOfst = result
 		viewManager = LinearLayoutManager(this)
 		viewAdapter = VerseItemAdapter(KITApp.chInst.BibItems, this) as VerseItemAdapter
-		KITApp.vItAda = viewAdapter as VerseItemAdapter
 
 		recyclerView = findViewById<RecyclerView>(R.id.lv_verseitemlist).apply {
 			// use this setting to improve performance if you know that changes
@@ -67,8 +66,6 @@ class EditChapterActivity : AppCompatActivity() {
 			adapter = viewAdapter
 		}
 
-		KITApp.recycV = recyclerView
-//		KITApp.edChAct = this
 //		// Ensure that the soft keyboard will appear
 		// TODO: Find a way that works!
 //		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -185,7 +182,7 @@ class EditChapterActivity : AppCompatActivity() {
 		popupWin!!.setOutsideTouchable(true)
 
 		popupWin!!.showAtLocation(
-			KITApp.recycV, // View for popup window to appear over
+			recyclerView, // View for popup window to appear over
 			Gravity.NO_GRAVITY, // How to bias the position of the popup window
 			butW - 10, // X offset
 			locations[1] // Y offset
@@ -194,7 +191,7 @@ class EditChapterActivity : AppCompatActivity() {
 
 	fun popMenuAction(pos: Int) {
 		val popMenuAction = curPoMenu!!.VIMenuItems[pos].VIMenuAction
-		KITApp.chInst.popMenuAction(popMenuAction)
+		KITApp.chInst.popMenuAction(popMenuAction, viewAdapter)
 		popupWin!!.dismiss()
 		// Refresh the RecyclerView of VerseItems
 		// Replacing the content of the RecyclerView causes its current contents to be saved to the database,
@@ -202,13 +199,13 @@ class EditChapterActivity : AppCompatActivity() {
 		// so every VerseItem that is at present in the RecyclerView is saved to its preceding VerseItem in
 		// the database -- Verse 2 text goes to Verse 1, etc.!!
 		// This Boolean is a hack to prevent this; but there must be a better way!
-		KITApp.vItAda.setIsRefreshingRecyclerView(true)
+		viewAdapter.setIsRefreshingRecyclerView(true)
 		recyclerView.setAdapter(null);
 		recyclerView.setLayoutManager(null);
 		recyclerView.setAdapter(viewAdapter);
 		recyclerView.setLayoutManager(viewManager);
 		viewAdapter.notifyDataSetChanged()
-		KITApp.vItAda.setIsRefreshingRecyclerView(false)
+		viewAdapter.setIsRefreshingRecyclerView(false)
 		// NOTE: at this time, the RecyclerView may not have been fully set up
 		// so attempting to show the correct VerseItem as selected may not work (and may crash).
 		// Setting a listener for the point when RecyclerView is fully set up is an OK approach.

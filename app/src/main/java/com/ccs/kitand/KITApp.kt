@@ -32,9 +32,5 @@ class KITApp : Application() {
         lateinit var bibInst: Bible     // For access to the single instance of Bible
         lateinit var bkInst: Book       // For access to the instance of the currently selected Book
         lateinit var chInst: Chapter    // For access to the instance of the currently selected Chapter
-        // TODO: Is vItAda really necessary? Remove it if possible
-        lateinit var vItAda: VerseItemAdapter   // For access to the instance of the VerseItemAdapter
-        // TODO: Is recycV really necessary? Remove it if possible
-        lateinit var recycV: RecyclerView       // For access to the RecyclerView of EditChapterActivity
     }
 }

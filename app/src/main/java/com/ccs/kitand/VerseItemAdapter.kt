@@ -142,7 +142,7 @@ class VerseItemAdapter(
 	// Called when the current view holder is being changed to another one; it is necessary to save
 	// the text in whichever is the current view holder
 	fun saveCurrentItemText () {
-		val currCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst)
+		val currCell = edChAct.recyclerView.findViewHolderForAdapterPosition(currCellOfst)
 		if (currCell != null) {
 			val curCell = currCell as ListCell
 			if (curCell.dirty) {
@@ -162,7 +162,7 @@ class VerseItemAdapter(
 		var cursPos = 0
 		var textBefore = ""
 		var textAfter = ""
-		val currCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst) as ListCell
+		val currCell = edChAct.recyclerView.findViewHolderForAdapterPosition(currCellOfst) as ListCell
 		// TODO: Android Developer said that (currCell != null) is always true and so simplified the comparisons
 		// TODO: Check whether there are any crashes because of this assumption
 		val edText = currCell.verseItemTxt
@@ -188,7 +188,7 @@ class VerseItemAdapter(
 	// TODO: shown as selected. Fix this glitch!
 	fun moveCurrCellToClickedCell(newPos: Int) {
 		// Get start of selection in the new clicked cell
-		val newCurrCell = KITApp.recycV.findViewHolderForAdapterPosition(newPos) as ListCell
+		val newCurrCell = edChAct.recyclerView.findViewHolderForAdapterPosition(newPos) as ListCell
 		val edText = newCurrCell.verseItemTxt
 		val cursPos = edText.getSelectionStart()
 		// Save the current cell if necessary
@@ -216,7 +216,7 @@ class VerseItemAdapter(
 	// If the current VerseItem is outside the RecyclerView (i.e. invisible) then nothing is done;
 	// when the current VerseItem is scrolled into view onBindViewHolder() will show it as the current one.
 	fun selectCurrItem(position: Int) {
-		val verItCell = KITApp.recycV.findViewHolderForAdapterPosition(currCellOfst)
+		val verItCell = edChAct.recyclerView.findViewHolderForAdapterPosition(currCellOfst)
 		if (verItCell != null) {
 			val verseItemCell = verItCell as ListCell
 			verseItemCell.setSelected(true)
