@@ -1,36 +1,25 @@
 package com.ccs.kitand
 
 import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
 import android.graphics.Color
-import android.graphics.Rect
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.Button
 import android.widget.EditText
-import android.widget.PopupWindow
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.ContextCompat.startActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlin.properties.Delegates
-
 
 class VerseItemAdapter(
-	BibItems: ArrayList<Chapter.BibItem>,
-	editChapterActivity: EditChapterActivity
+	var BibItems: ArrayList<Chapter.BibItem>,
+	var edChAct: EditChapterActivity
 ) :
 	RecyclerView.Adapter<VerseItemAdapter.ListCell>() {
 
 	// The VerseItemAdapter needs to keep up to date the offset to the
 	// view holder (VerseItem) that is the currently active one.
 	var currCellOfst: Int	// = -1	// -1 means it hasn't been set yet
-	var BibItems = BibItems
-	var edChAct = editChapterActivity
 	init {
-		this.currCellOfst = editChapterActivity.currItOfst
+		this.currCellOfst = edChAct.currItOfst
 	}
 
 	// Create new view holders (invoked by the layout manager)
@@ -162,43 +151,60 @@ class VerseItemAdapter(
 		var cursPos = 0
 		var textBefore = ""
 		var textAfter = ""
-		val currCell = edChAct.recyclerView.findViewHolderForAdapterPosition(currCellOfst) as ListCell
-		// TODO: Android Developer said that (currCell != null) is always true and so simplified the comparisons
-		// TODO: Check whether there are any crashes because of this assumption
-		val edText = currCell.verseItemTxt
-		val txtChars = edText.getText().toString()
-		cursPos = edText.getSelectionStart()
-		if (cursPos >= 0 && cursPos < txtChars.length )  {
+		val currCell = edChAct.recyclerView.findViewHolderForAdapterPosition(currCellOfst)
+		if (currCell != null) {
+			val curCell = currCell as ListCell
+			val edText = curCell.verseItemTxt
+			val txtChars = edText.getText().toString()
+			cursPos = edText.getSelectionStart()
+			if (cursPos >= 0 && cursPos < txtChars.length) {
 				textBefore = txtChars.subSequence(0, cursPos) as String
 				textAfter = txtChars.subSequence(cursPos, txtChars.length) as String
 			} else {
-				cursPos = 0
-				textBefore = ""
+//				cursPos = 0
+				textBefore = txtChars
 				textAfter = ""
 			}
+		}
 		cv.put("1", cursPos)
 		cv.put("2", textBefore)
 		cv.put("3", textAfter)
 		return cv
 	}
 
-	// Member function of VerseItemAdapter for making the clicked cell the current cell
+	// Member function of VerseItemAdapter for making the tapped cell the current cell
 	// Called by the onClickListener for verseItemTxt
-	// TODO: This leaves the previous cell still selected, and so the user sees two (or even more) cells
-	// TODO: shown as selected. Fix this glitch!
 	fun moveCurrCellToClickedCell(newPos: Int) {
-		// Get start of selection in the new clicked cell
-		val newCurrCell = edChAct.recyclerView.findViewHolderForAdapterPosition(newPos) as ListCell
-		val edText = newCurrCell.verseItemTxt
-		val cursPos = edText.getSelectionStart()
-		// Save the current cell if necessary
-		saveCurrentItemText()
-		// make the ListCell just tapped the current one
-		currCellOfst = newPos
-		KITApp.chInst.setupCurrentItemFromRecyclerRow(newPos)
-		// Enable the new current cell
-		newCurrCell.setSelected(true)
-		edText.setSelection(cursPos)
+		if (newPos != currCellOfst) {
+			// Disable the current cell
+			val currCell = edChAct.recyclerView.findViewHolderForAdapterPosition(currCellOfst)
+			if (currCell != null) {
+				val curCell = currCell as ListCell
+				curCell.setSelected(false)
+			}
+			// Get start of selection in the new clicked cell
+			val newCurrCell = edChAct.recyclerView.findViewHolderForAdapterPosition(newPos)
+			if (newCurrCell != null) {
+				val newCurCell = newCurrCell as ListCell
+				val edText = newCurCell.verseItemTxt
+				val cursPos = edText.getSelectionStart()
+				// Save the current cell if necessary
+				saveCurrentItemText()
+				// make the ListCell just tapped the current one
+				currCellOfst = newPos
+				KITApp.chInst.setupCurrentItemFromRecyclerRow(newPos)
+				// Enable the new current cell
+				newCurCell.setSelected(true)
+				edText.setSelection(cursPos)
+			}
+		} else {
+			// Ensure the current cell has editing focus
+			val currCell = edChAct.recyclerView.findViewHolderForAdapterPosition(currCellOfst)
+			if (currCell != null) {
+				val curCell = currCell as ListCell
+				curCell.setSelected(true)
+			}
+		}
 	}
 
 	// Member function of VerseItemAdapter for showing the popup window for the tapped VerseItem
@@ -237,12 +243,14 @@ class VerseItemAdapter(
 
 		fun setSelected(state: Boolean) {
 			if (state == true) {
+				itemView.setSelected(true)
 				itemView.setBackgroundColor(Color.parseColor("#777777"))
 				verseItemTxt.setEnabled(true)
 				verseItemTxt.setFocusable(true)
 				verseItemTxt.setFocusableInTouchMode(true)
 				verseItemTxt.requestFocus()
 			} else {
+				itemView.setSelected(false)
 				itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))
 				verseItemTxt.setFocusableInTouchMode(false)
 			}

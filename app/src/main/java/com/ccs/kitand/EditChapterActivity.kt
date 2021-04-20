@@ -21,13 +21,15 @@ class EditChapterActivity : AppCompatActivity() {
 	private lateinit var viewManager: RecyclerView.LayoutManager
 	lateinit var edChAct: EditChapterActivity
 
+	// TODO: Unless a use for this property is found, delete it.
 	var currIt = 0		// Zero until one of the VerseItems is chosen for editing;
 						// then it is the ItemID of the VerseItem that is the current one. (not needed?)
 	var currItOfst = -1	// -1 until one of the VerseItems is chosen for editing;
 						// then it is the offset into the BibItems[] array which equals
 						// the offset into the list of cells in the RecyclerView.
 
-	val dao = KITApp.dao	// Get access to KITDAO
+	// TODO: Unless a use for this property is found, delete it.
+//	val dao = KITApp.dao	// Get access to KITDAO
 
 	// Scale factor for calculating size of PopupWindows
 	var scale: Float = 0.0F
