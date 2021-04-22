@@ -161,12 +161,12 @@ class EditChapterActivity : AppCompatActivity() {
 	fun showPopOverMenu(butn: Button) {
 		val locations = IntArray(2)
 		butn.getLocationInWindow(locations)
-		val butW = butn.getWidth()
-//		val butH = butn.getHeight()
+		val butW: Int = butn.getWidth()
 		curPoMenu = KITApp.chInst.curPoMenu
 		var numRows = 0
 		if (curPoMenu == null) numRows = 0 else numRows = curPoMenu!!.numRows
-		val popupWidth = layout_width - butW + 10
+		val poMenuWidth: Float = curPoMenu?.menuLabelLength!!		// Scaled points
+		val popupWidth: Int = ((poMenuWidth + 35.5f) * scale).toInt()	// Pixels
 		val pHeightIntdp = numRows.times(44)
 		val popupHeight = (pHeightIntdp.toFloat() * scale + 0.5f).toInt()
 		val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -188,7 +188,7 @@ class EditChapterActivity : AppCompatActivity() {
 		popupWin!!.showAtLocation(
 			recyclerView, // View for popup window to appear over
 			Gravity.NO_GRAVITY, // How to bias the position of the popup window
-			butW - 10, // X offset
+			butW + 100, // X offset
 			locations[1] // Y offset
 		)
 	}
