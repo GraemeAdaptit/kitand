@@ -8,6 +8,8 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ccs.kitand.Bible.BibBook
 
 
@@ -18,7 +20,10 @@ class ChooseBookActivity : AppCompatActivity()  {
 
 	lateinit var txt_bibname: TextView
 	lateinit var txt_bk_prompt: TextView
-	lateinit var lst_booklist: ListView
+	lateinit var lst_booklist: RecyclerView
+	lateinit var recyclerView: RecyclerView
+	lateinit var viewAdapter: BookAdapter
+	private lateinit var viewManager: RecyclerView.LayoutManager
 
 	// tableRow of the selected Book
 	var bkRow = 0		// Is this needed here? Remove if never used.
@@ -37,9 +42,17 @@ class ChooseBookActivity : AppCompatActivity()  {
 		txt_bk_prompt = findViewById(R.id.txt_bk_prompt)
 		lst_booklist = findViewById(R.id.lst_books)
 
-		lst_booklist.setOnItemClickListener(OnItemClickListener { parent, view, position, id ->
-			chooseBookAction(position)
-		})
+//		viewManager = LinearLayoutManager(this)
+//		viewAdapter = BookAdapter(KITApp.bibInst.BibBooks, this) as BookAdapter
+//		recyclerView = findViewById<RecyclerView>(R.id.lst_books).apply {
+//			// use this setting to improve performance if you know that changes
+//			// in content do not change the layout size of the RecyclerView
+//			setHasFixedSize(true)
+//			// use a linear layout manager
+//			layoutManager = viewManager
+//			// specify a viewAdapter
+//			adapter = viewAdapter
+//		}
 	}
 
 	override fun onStart() {
@@ -65,14 +78,19 @@ class ChooseBookActivity : AppCompatActivity()  {
 //			finish()	// Keep ChooseBookActivity in the Back Stack
 		} else {
 			// On first launch, and when user wants to choose another book,
-			// do nothing and wait for the user to choose a Book.
+			// set up the Books list and wait for the user to choose a Book.
 			txt_bk_prompt.setText("Choose Book")
-			val bookArrayAdapter = ArrayAdapter<BibBook>(
-				this,
-				android.R.layout.simple_selectable_list_item,
-				KITApp.bibInst.BibBooks
-			)
-			lst_booklist.setAdapter(bookArrayAdapter)
+			viewManager = LinearLayoutManager(this)
+			viewAdapter = BookAdapter(KITApp.bibInst.BibBooks, this) as BookAdapter
+			recyclerView = findViewById<RecyclerView>(R.id.lst_books).apply {
+				// use this setting to improve performance if you know that changes
+				// in content do not change the layout size of the RecyclerView
+				setHasFixedSize(true)
+				// use a linear layout manager
+				layoutManager = viewManager
+				// specify a viewAdapter
+				adapter = viewAdapter
+			}
 		}
 	}
 

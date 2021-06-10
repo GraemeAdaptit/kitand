@@ -60,7 +60,6 @@ class PopupAdapter(
 	inner class PopupCell(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		var popup_icon: ImageView = itemView.findViewById(R.id.popup_icon)
 		var menu_cmd: EditText = itemView.findViewById(R.id.menu_cmd)
-
 	}
 
 }
