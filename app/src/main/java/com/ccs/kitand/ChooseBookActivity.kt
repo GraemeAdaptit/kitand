@@ -18,7 +18,7 @@ class ChooseBookActivity : AppCompatActivity()  {
 	// Boolean for whether to let the user choose a Book
 	var letUserChooseBook = false	// Will be set from bibInst.canChooseAnotherBook
 
-	lateinit var txt_bibname: TextView
+//	lateinit var txt_bibname: TextView
 	lateinit var txt_bk_prompt: TextView
 	lateinit var lst_booklist: RecyclerView
 	lateinit var recyclerView: RecyclerView
@@ -26,7 +26,7 @@ class ChooseBookActivity : AppCompatActivity()  {
 	private lateinit var viewManager: RecyclerView.LayoutManager
 
 	// tableRow of the selected Book
-	var bkRow = 0		// Is this needed here? Remove if never used.
+//	var bkRow = 0		// Is this needed here? Remove if never used.
 
 	var suppActionBar: ActionBar? = null
 
@@ -41,18 +41,6 @@ class ChooseBookActivity : AppCompatActivity()  {
 		// Get references to layout widgets
 		txt_bk_prompt = findViewById(R.id.txt_bk_prompt)
 		lst_booklist = findViewById(R.id.lst_books)
-
-//		viewManager = LinearLayoutManager(this)
-//		viewAdapter = BookAdapter(KITApp.bibInst.BibBooks, this) as BookAdapter
-//		recyclerView = findViewById<RecyclerView>(R.id.lst_books).apply {
-//			// use this setting to improve performance if you know that changes
-//			// in content do not change the layout size of the RecyclerView
-//			setHasFixedSize(true)
-//			// use a linear layout manager
-//			layoutManager = viewManager
-//			// specify a viewAdapter
-//			adapter = viewAdapter
-//		}
 	}
 
 	override fun onStart() {
@@ -91,6 +79,8 @@ class ChooseBookActivity : AppCompatActivity()  {
 				// specify a viewAdapter
 				adapter = viewAdapter
 			}
+			val scrollPos = if (bInst.currBookOfst >= 5) (bInst.currBookOfst - 5) else 0
+			recyclerView.scrollToPosition(scrollPos)
 		}
 	}
 

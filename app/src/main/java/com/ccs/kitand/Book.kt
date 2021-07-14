@@ -24,7 +24,8 @@ class Book(
 	val bkName: String,		// bookName TEXT
 	var chapRCr: Boolean,	// chapRecsCreated INTEGER
 	var numChap: Int,		// numChaps INTEGER
-	var currChap: Int		// currChapter INTEGER (the ID assigned by SQLite when the Chapter was created)
+	var curChID: Int,		// currChID INTEGER (the ID assigned by SQLite when the Chapter was created)
+	var curChNum: Int		// currChNum INTEGER (the ID assigned by SQLite when the Chapter was created)
 ) {
 
 	// The following variables and data structures have lifetimes of the Book object
@@ -52,7 +53,8 @@ class Book(
 		var itRCr: Boolean,		// itemRecsCreated INTEGER
 		var numVs: Int,			// numVerses INTEGER
 		var numIt: Int,			// numItems INTEGER
-		var curIt: Int			// currItem INTEGER
+		var curIt: Int,			// currItem INTEGER (ID of current VerseItem)
+		var curVN: Int			// currVsNum INTEGER (verse number for curIt)
 	) {
 		override fun toString(): String {
 			val ch_name = KITApp.res.getString(com.ccs.kitand.R.string.nm_chapter)
@@ -125,6 +127,7 @@ class Book(
 		// Create a Chapters record in kdb.sqlite for each Chapter in this Book
 		var chNum = 1	// Start at Chapter 1
 		val currIt = 0	// No current VerseItem yet
+		val currVN = 0	// No current Verse number yet
 		for (elem in bkMList) {
 			var numIt = 0
 			var elemTr = elem		// for some Psalms a preceding "A" will be removed
@@ -134,7 +137,7 @@ class Book(
 			}
 			val numVs = elemTr.toInt()
 			numIt = numIt + numVs	// for some Psalms numIt will include the ascription VerseItem
-			if (dao.chaptersInsertRec(bib, book, chNum, false, numVs, numIt, currIt) ) {
+			if (dao.chaptersInsertRec(bib, book, chNum, false, numVs, numIt, currIt, currVN) ) {
 //				println("Book:createChapterRecords Created Chapter record for $bkName, chapter $chNum")
 			}
 			chNum = chNum + 1
@@ -145,7 +148,7 @@ class Book(
 
 		// Update kdb.sqlite Books record of current Book to indicate that its Chapter records have been created,
 		// the number of Chapters has been found, but there is not yet a current Chapter
-		if (dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, currChap) ) {
+		if (dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, curChID, curChNum) ) {
 //			println("Book:createChapterRecords updated the record for this Book")
 		}
 
@@ -158,9 +161,9 @@ class Book(
 
 	fun appendChapterToArray(
 		chapID: Int, bibID: Int, bookID: Int,
-		chNum: Int, itRCr: Boolean, numVs: Int, numIt: Int, curIt: Int
+		chNum: Int, itRCr: Boolean, numVs: Int, numIt: Int, curIt: Int, curVN: Int
 	) {
-		val chRec = Book.BibChap(chapID, bibID, bookID, chNum, itRCr, numVs, numIt, curIt)
+		val chRec = Book.BibChap(chapID, bibID, bookID, chNum, itRCr, numVs, numIt, curIt, curVN)
 		BibChaps.add(chRec)
 	}
 
@@ -181,7 +184,7 @@ class Book(
 	// in the current Book is the current Chapter, and to make the Book instance and
 	// the Book record remember that selection.
 	fun goCurrentChapter() {
-		currChapOfst = offsetToBibChap(currChap)
+		currChapOfst = offsetToBibChap(curChID)
 
 		// allow any previous in-memory instance of Chapter to be garbage collected
 		chapInst = null
@@ -189,20 +192,24 @@ class Book(
 		// create a Chapter instance for the current Chapter of the current Book
 		// The initialisation of the instance of Chapter stores a reference in KITApp
 		val chap = BibChaps[currChapOfst]
-		chapInst = Chapter(chap.chID, chap.bibID, chap.bkID, chap.chNum, chap.itRCr, chap.numVs, chap.numIt, chap.curIt)
+		chapInst = Chapter(chap.chID, chap.bibID, chap.bkID, chap.chNum, chap.itRCr, chap.numVs, chap.numIt, chap.curIt, chap.curVN)
 	}
 
 	// When the user selects a Chapter from the list of Chapters it needs to be recorded as the
 	// current Chapter and initialisation of data structures in a new Chapter instance must happen.
 
-	fun setupCurrentChapter(chapOfst: Int, diffChap: Boolean) {
+	fun setupCurrentChapter(chapOfst: Int) {
+		val diffChap = (chapOfst != currChapOfst)
 		val chap = BibChaps[chapOfst]
-		currChap = chap.chID
+		curChNum = chap.chNum
+		curChID = chap.chID
 		currChapOfst = chapOfst
 		// update Book record in kdb.sqlite to show this current Chapter
-		if (dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, currChap)) {
+		if (dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, curChID, curChNum)) {
 //			println("The currChap for $bkName in kdb.sqlite was updated to $chap.chNum")
 		}
+		// Update the curChID and curChNum for this book in BibBooks[] in bibInst
+		bibInst.setBibBooksCurChap (curChID, curChNum)
 
 		// If a different chapter is being selected allow any previous in-memory instance of Chapter
 		// to be garbage collected and create a new Chapter instance.
@@ -211,17 +218,16 @@ class Book(
 
 			// create a Chapter instance for the current Chapter of the current Book
 			// The initialisation of the instance of Chapter stores a reference in KITApp
-			chapInst = Chapter(
-				chap.chID,
-				chap.bibID,
-				chap.bkID,
-				chap.chNum,
-				chap.itRCr,
-				chap.numVs,
-				chap.numIt,
-				chap.curIt
-			)
+			chapInst = Chapter(chap.chID, chap.bibID, chap.bkID, chap.chNum, chap.itRCr, chap.numVs, chap.numIt, chap.curIt, chap.curVN)
 		}
+	}
+
+
+	// Set the new value for the current VerseItem into BibChaps[]
+	// called when the user selects a VerseItem of the current Chapter
+	fun setCurVItem (curIt:Int, curVN:Int) {
+		BibChaps[currChapOfst].curIt = curIt
+		BibChaps[currChapOfst].curVN = curVN
 	}
 
 	// When the VerseItem records have been created for the current Chapter, the entry for that Chapter in

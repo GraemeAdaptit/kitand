@@ -23,13 +23,10 @@ class EditChapterActivity : AppCompatActivity() {
 
 	// TODO: Unless a use for this property is found, delete it.
 	var currIt = 0		// Zero until one of the VerseItems is chosen for editing;
-						// then it is the ItemID of the VerseItem that is the current one. (not needed?)
+						// then it is the ItemID of the VerseItem that is the current one. (not needed here?)
 	var currItOfst = -1	// -1 until one of the VerseItems is chosen for editing;
 						// then it is the offset into the BibItems[] array which equals
 						// the offset into the list of cells in the RecyclerView.
-
-	// TODO: Unless a use for this property is found, delete it.
-//	val dao = KITApp.dao	// Get access to KITDAO
 
 	// Scale factor for calculating size of PopupWindows
 	var scale: Float = 0.0F
@@ -69,6 +66,8 @@ class EditChapterActivity : AppCompatActivity() {
 			// specify a viewAdapter
 			adapter = viewAdapter
 		}
+		val scrollPos = if (currItOfst >= 5) (currItOfst - 5) else 0
+		recyclerView.scrollToPosition(scrollPos)
 
 //		// Ensure that the soft keyboard will appear
 		// TODO: Find a way that works!
@@ -108,12 +107,14 @@ class EditChapterActivity : AppCompatActivity() {
 				if (recyclerView.getChildCount() > 0) {
 					// Remove the listener to avoid continually triggering this code - once is enough.
 					recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
-					recyclerView.layoutManager?.scrollToPosition(posn)
+//					recyclerView.layoutManager?.scrollToPosition(posn)
 					viewAdapter.selectCurrItem(posn)
 					// Get the screen's density scale
 					scale = resources.displayMetrics.density
 					// Get the width of the layout
 					layout_width = recyclerView.getMeasuredWidth()
+					val scrollPos = if (currItOfst >= 5) (currItOfst - 5) else 0
+					recyclerView.scrollToPosition(scrollPos)
 					return true
 				}
 				return false
@@ -195,6 +196,8 @@ class EditChapterActivity : AppCompatActivity() {
 
 	fun popMenuAction(pos: Int) {
 		val popMenuCode = curPoMenu!!.VIMenuItems[pos].VIMenuAction
+		// Ensure that the current BibItem is saved prior to possibly changing which one is the current one.
+		saveCurrentItemText()
 		KITApp.chInst.popMenuAction(popMenuCode, viewAdapter)
 		popupWin!!.dismiss()
 		// Refresh the RecyclerView of VerseItems
@@ -218,8 +221,10 @@ class EditChapterActivity : AppCompatActivity() {
 				if (recyclerView.getChildCount() > 0) {
 					// Remove the listener to avoid continually triggering this code - once is enough.
 					recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
-					recyclerView.layoutManager?.scrollToPosition(currItOfst)
+//					recyclerView.layoutManager?.scrollToPosition(currItOfst)
 					viewAdapter.selectCurrItem(currItOfst)
+					val scrollPos = if (currItOfst >= 5) (currItOfst - 5) else 0
+					recyclerView.scrollToPosition(scrollPos)
 					return true
 				}
 				return false

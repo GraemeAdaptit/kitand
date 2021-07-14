@@ -917,6 +917,9 @@ id baseline
 id beginOnFirstDraw
 id beginning
 id blocking
+id bookInfo
+id bookName
+id book_item
 id bottom
 id bounce
 id btn_go
@@ -926,6 +929,9 @@ id center
 id center_vertical
 id chain
 id chains
+id chapInfo
+id chapNum
+id chap_item
 id checkbox
 id checked
 id chronometer
@@ -1161,6 +1167,8 @@ layout activity_exportchapter
 layout activity_popup
 layout activity_setup
 layout activity_splash
+layout book_item
+layout chapter_item
 layout custom_dialog
 layout layout_item
 layout notification_action

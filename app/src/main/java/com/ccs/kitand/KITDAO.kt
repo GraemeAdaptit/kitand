@@ -53,7 +53,9 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
                 COL_BookName + " TEXT, " +
                 COL_ChapRecsCr + " BOOL, " +
                 COL_NumChaps + " INT, " +
-                COL_CurrentChap + " INT)"
+				COL_CurrChID + " INT, " +
+				COL_CurrChNum + " INT, " +
+				COL_USFMBookText + " TEXT)"
         db.execSQL(sqlBookT)
         // Create the Chapters table
         val sqlChapT = "CREATE TABLE " + TAB_Chapters + "(" +
@@ -65,6 +67,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
                 COL_NumVerses + " INT, " +
                 COL_NumItems + " INT, " +
                 COL_CurrItem + " INT, " +
+				COL_CurrVsNum + " INT, " +
                 COL_USFMText + " TEXT)"
         db.execSQL(sqlChapT)
         // Create the VerseItems table
@@ -87,12 +90,13 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
                 COL_TextExtraVerse + " TEXT)"
         db.execSQL(sqlBridgT)
         // Create the single Bibles record
-        val cv = ContentValues()
-        cv.put(COL_BibleID, 1)
-        cv.put(COL_BibleName, "Bible")
-        cv.put(COL_BookRecsCr, false)
-        cv.put(COL_CurrentBook, 0)
-        db.insert(TAB_Bibles, null, cv)
+		bibleInsertRec(1, "Bible", false, 0)
+//        val cv = ContentValues()
+//        cv.put(COL_BibleID, 1)
+//        cv.put(COL_BibleName, "Bible")
+//        cv.put(COL_BookRecsCr, false)
+//        cv.put(COL_CurrentBook, 0)
+//        db.insert(TAB_Bibles, null, cv)
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -101,6 +105,19 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 
 //--------------------------------------------------------------------------------------------
 //	Bibles data table
+
+	// The single record in the Bibles table needs to be inserted when the app first launches.
+	// A future extension of KIT may allow more than one Bible, so this function
+	// may be called more than once.
+
+	fun bibleInsertRec (bibID:Int, bibName:String, bkRCr:Boolean, currBook:Int) : Boolean {
+	    val cv = ContentValues()
+        cv.put(COL_BibleID, bibID)
+        cv.put(COL_BibleName, bibName)
+        cv.put(COL_BookRecsCr, bkRCr)
+        cv.put(COL_CurrentBook, currBook)
+        val insert = db.insert(TAB_Bibles, null, cv)
+		return (insert > 0L)	}
 
     // The single record in the Bibles table needs to be read when the app launches to find out
     //	* whether the Books records need to be created (on first launch) or
@@ -120,7 +137,8 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         if (cursor.moveToFirst()) {
             cv.put("1", cursor.getInt(0))
             cv.put("2", cursor.getString(1))
-            cv.put("3", if (cursor.getInt(2) == 1) true else false)
+			cv.put("3", cursor.getInt(2) == 1)
+//			cv.put("3", if (cursor.getInt(2) == 1) true else false)
             cv.put("4", cursor.getInt(3))
         } else {
             // If the read from database has failed, return bibleID = 0. The normal, one and only record
@@ -170,7 +188,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
     // The 66 records for the Books table need to be created and populated on the initial launch of the app
     // This function will be called 66 times by the KIT software
 
-    fun booksInsertRec (bkID:Int, bibID:Int, bkCode:String, bkName:String, chRCr:Boolean, numCh:Int, currCh:Int): Boolean {
+    fun booksInsertRec (bkID:Int, bibID:Int, bkCode:String, bkName:String, chRCr:Boolean, numCh:Int, curChID:Int, curChNum:Int): Boolean {
         this.db = this.getWritableDatabase()
         val cv = ContentValues()
         cv.put(COL_BookID, bkID)
@@ -179,7 +197,8 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         cv.put(COL_BookName, bkName)
         cv.put(COL_ChapRecsCr, chRCr)
         cv.put(COL_NumChaps, numCh)
-        cv.put(COL_CurrentChap, currCh)
+        cv.put(COL_CurrChID, curChID)
+		cv.put(COL_CurrChNum, curChNum)
         val insert = db.insert(TAB_Books, null, cv)
         return (insert > 0L)
     }
@@ -192,7 +211,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 
     fun readBooksRecs(bibInst: Bible) {
         this.db = this.getReadableDatabase()
-        val sql = "SELECT * FROM " + TAB_Books + " WHERE " + COLF_BibID + " = 1"
+        val sql = "SELECT * FROM " + TAB_Books + " WHERE " + COLF_BibID + " = 1 ORDER BY " + COL_BookID
         val cursor = db.rawQuery(sql, null)
         cursor.moveToFirst()
         do {
@@ -200,10 +219,12 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
             val bibID = cursor.getInt(1)
             val bkCode = cursor.getString(2)
             val bkName = cursor.getString(3)
-            val chRCr = if (cursor.getInt(4) == 1) true else false
+			val chRCr = cursor.getInt(4) == 1
+//			val chRCr = if (cursor.getInt(4) == 1) true else false
             val numCh = cursor.getInt(5)
-            val curCh = cursor.getInt(6)
-            bibInst.appendBibBookToArray(bkID, bibID, bkCode, bkName, chRCr, numCh, curCh)
+			val curChID = cursor.getInt(6)
+			val curChNum = cursor.getInt(7)
+            bibInst.appendBibBookToArray(bkID, bibID, bkCode, bkName, chRCr, numCh, curChID, curChNum)
         } while (cursor.moveToNext())
         cursor.close()
     }
@@ -213,12 +234,13 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 	//	* to set the number of Chapters in the Book (on first edit of that Book)
 	//	* to change the current Chapter when the user selects a different Chapter to work on
 
-	fun booksUpdateRec (bibID:Int, bkID:Int, chRCr:Boolean, numCh:Int, currCh:Int): Boolean {
+	fun booksUpdateRec (bibID:Int, bkID:Int, chRCr:Boolean, numCh:Int, curChID:Int, curChNum:Int): Boolean {
 		this.db = this.getWritableDatabase()
 		val cv = ContentValues()
 		cv.put(COL_ChapRecsCr, chRCr)
 		cv.put(COL_NumChaps, numCh)
-		cv.put(COL_CurrentChap, currCh)
+		cv.put(COL_CurrChID, curChID)
+		cv.put(COL_CurrChNum, curChNum)
         val whArray = arrayOf<String>(bibID.toString(), bkID.toString())
 		val rows = db.update(TAB_Books, cv, COL_BibleID + " = ? AND " + COL_BookID + " = ?", whArray)
         return (rows == 1)
@@ -237,7 +259,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
     // The field for USFM is left empty until the user taps the "Export" button after
     // keyboarding enough to export.
 
-	fun chaptersInsertRec (bibID:Int, bkID:Int, chNum:Int, itRCr:Boolean, numVs:Int, numIt:Int, currIt:Int): Boolean {
+	fun chaptersInsertRec (bibID:Int, bkID:Int, chNum:Int, itRCr:Boolean, numVs:Int, numIt:Int, currIt:Int, currVsNum:Int): Boolean {
         this.db = this.getWritableDatabase()
         val cv = ContentValues()
         cv.put(COLF_ChBibID, bibID)
@@ -247,6 +269,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         cv.put(COL_NumVerses, numVs)
         cv.put(COL_NumItems, numIt)
         cv.put(COL_CurrItem, currIt)
+		cv.put(COL_CurrVsNum, currVsNum)
         val insert = db.insert(TAB_Chapters, null, cv)
         return (insert > 0L)
 	}
@@ -257,7 +280,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 
 	fun readChaptersRecs (bibID:Int, bkInst:Book) {
         this.db = this.getReadableDatabase()
-        val sql1 = "SELECT chapterID, bibleID, bookID, chapterNumber, itemRecsCreated, numVerses, numItems, currItem FROM " + TAB_Chapters
+        val sql1 = "SELECT chapterID, bibleID, bookID, chapterNumber, itemRecsCreated, numVerses, numItems, currItem, currVsNum FROM " + TAB_Chapters
         val sql2 =  " WHERE " + COLF_ChBibID + " = ? AND " + COLF_BookID + " = ? ORDER BY " + COL_ChapNum
         val sql = sql1 + sql2
         val whArray = arrayOf<String>(bibID.toString(), bkInst.bkID.toString())
@@ -272,36 +295,37 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
             val numVs = cursor.getInt(5)
             val numIt = cursor.getInt(6)
             val curIt = cursor.getInt(7)
-            KITApp.bkInst.appendChapterToArray(chapID, biblID, bookID, chNum, itRCr, numVs, numIt, curIt)
+			val curVNm = cursor.getInt(8)
+            KITApp.bkInst.appendChapterToArray(chapID, biblID, bookID, chNum, itRCr, numVs, numIt, curIt, curVNm)
         } while (cursor.moveToNext())
         cursor.close()
 	}
 
 	// The Chapters record for the current Chapter needs to be updated
 	//	* to set the flag that indicates that the VerseItem records have been created (on first edit of that Chapter)
-    //  * to change the number of Items as publication VerseItems are created or deleted
-    //	* to change the current VerseItem when the user selects a different VerseItem to work on
+	//	* to change the current VerseItem when the user selects a different VerseItem to work on
 
-	fun chaptersUpdateRec (chID:Int, itRCr:Boolean, numIt:Int, currIt:Int) : Boolean {
+	fun chaptersUpdateRec (chID:Int, itRCr:Boolean, currIt:Int, currVN:Int) : Boolean {
 		this.db = this.getWritableDatabase()
 		val cv = ContentValues()
 		cv.put(COL_ItemRecsCr, itRCr)
-		cv.put(COL_NumItems, numIt)
 		cv.put(COL_CurrItem, currIt)
+		cv.put(COL_CurrVsNum, currVN)
         val whArray = arrayOf<String>(chID.toString())
 		val rows = db.update(TAB_Chapters, cv, COL_ChapterID + " = ?", whArray)
         return (rows == 1)
 	}
 
 	// The Chapters record for the current Chapter needs to be updated after changes to the publication items:
-	//	* to change the number of VerseItems
+	//	* to change the number of VerseItems after one has been deleted or inserted
 	//	* to change the current VerseItem after one has been deleted or inserted.
 
-	fun chaptersUpdateRecPub (chID:Int, numIt:Int, currIt:Int) : Boolean {
+	fun chaptersUpdateRecPub (chID:Int, numIt:Int, currIt:Int, currVN:Int) : Boolean {
 		this.db = this.getWritableDatabase()
 		val cv = ContentValues()
 		cv.put(COL_NumItems, numIt)
 		cv.put(COL_CurrItem, currIt)
+		cv.put(COL_CurrVsNum, currVN)
 		val whArray = arrayOf<String>(chID.toString())
 		val rows = db.update(TAB_Chapters, cv, COL_ChapterID + " = ?", whArray)
 		return (rows == 1)
@@ -371,6 +395,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 	// The text of a VerseItem record in the EditChapterActivity needs to be saved to kdb.sqlite
 	//	* when the user selects a different VerseItem to work on
 	//	* when the VerseItem cell scrolls outside the visible range
+	//	* when various life cycle stages of the Activity or App are reached
 	// returns true if successful
 
 	fun itemsUpdateRecText (itID:Int, itTxt:String) : Boolean {
@@ -438,7 +463,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
 
 	fun bridgeGetRecs(itemID:Int, chInst:Chapter) : Boolean{
         this.db = this.getReadableDatabase()
-		val sql:String = "SELECT bridgeID, textCurrBridge, textExtraVerse FROM BridgeItems WHERE itemID = ?1 ORDER BY bridgeID;"
+		val sql = "SELECT bridgeID, textCurrBridge, textExtraVerse FROM BridgeItems WHERE itemID = ?1 ORDER BY bridgeID;"
         val whArray = arrayOf<String>(itemID.toString())
         val cursor = db.rawQuery(sql, whArray)
         if (cursor.moveToFirst()) {
@@ -479,7 +504,9 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         const val COL_BookName = "bookName"
         const val COL_ChapRecsCr = "chapRecsCreated"
         const val COL_NumChaps = "numChaps"
-        const val COL_CurrentChap = "currChapter"
+        const val COL_CurrChID = "currChID"
+		const val COL_CurrChNum = "currChNum"
+		const val COL_USFMBookText = "USFMText"
 
         const val TAB_Chapters = "Chapters"
         const val COL_ChapterID = "chapterID"
@@ -490,6 +517,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         const val COL_NumVerses = "numVerses"
         const val COL_NumItems = "numItems"
         const val COL_CurrItem = "currItem"
+		const val COL_CurrVsNum = "currVsNum"
         const val COL_USFMText = "USFMText"
 
         const val TAB_VerseItems = "VerseItems"

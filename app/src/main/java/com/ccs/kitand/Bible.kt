@@ -62,7 +62,8 @@ class Bible (
 		var bkName: String,		// bookName TEXT
 		var chapRCr: Boolean,	// chapRecsCreated INTEGER
 		var numCh: Int,			// numChaps INTEGER
-		var currChap: Int		// currChapter INTEGER
+		var curChID: Int,		// currChID INTEGER
+		var curChNum: Int		// currChNum INTEGER
 
 	)	{
 		override fun toString(): String {
@@ -151,10 +152,11 @@ class Bible (
 				if (bkN != null) bkName = bkN else bkName = "Book"
 				val chRCr = false
 				val numCh = 0
-				val currCh = 0
-				println("BookID = $bkID, BibleID = $bibID, Book Code = $bkCode, BookName = $bkName, ChapRecsCreated is $chRCr, numChaps = $numCh, CurrentChap = $currCh")
+				val curChID = 0
+				val curChNum = 0
+				println("BookID = $bkID, BibleID = $bibID, Book Code = $bkCode, BookName = $bkName, ChapRecsCreated is $chRCr, numChaps = $numCh, CurrentChap = $curChNum")
 				// Write Books record to kdb.sqlite
-				if (dao.booksInsertRec(bkID, bibID, bkCode, bkName, chRCr, numCh, currCh)) {
+				if (dao.booksInsertRec(bkID, bibID, bkCode, bkName, chRCr, numCh, curChID, curChNum)) {
 					println("The Books record for $bkName was created")
 				} else {
 					println("The Books record for $bkName was not created")
@@ -177,8 +179,8 @@ class Bible (
 	// dao.readBooksRecs() calls appendBibBookToArray() for each row it reads from the kdb.sqlite database
 
 	fun appendBibBookToArray (bkID:Int, bibID:Int, bkCode:String, bkName:String,
-							chapRCr:Boolean, numCh:Int, currChap:Int) {
-		val bkRec = BibBook(bkID, bibID, bkCode, bkName, chapRCr, numCh, currChap)
+							chapRCr:Boolean, numCh:Int, curChID:Int, curChNum:Int) {
+		val bkRec = BibBook(bkID, bibID, bkCode, bkName, chapRCr, numCh, curChID, curChNum)
 		BibBooks.add(bkRec)
 	}
 
@@ -191,7 +193,7 @@ class Bible (
 
 		// create a Book instance for the currently selected book
 		// The initialisation of the instance of Book stores a reference to it in KITApp
-		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.currChap)
+		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.curChID, book.curChNum)
 	}
 
 	// When the user selects a book from the ListView of books it needs to be recorded as the
@@ -209,7 +211,7 @@ class Bible (
 
 		// create a Book instance for the currently selected book
 		// The initialisation of the instance of Book stores a reference to it in KITApp
-		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.currChap)
+		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.curChID, book.curChNum)
 	}
 
 	// When the Chapter records have been created for the current Book, the entry for that Book in
@@ -222,4 +224,13 @@ class Bible (
 		BibBooks[currBookOfst].chapRCr = true
 		BibBooks[currBookOfst].numCh = numChap
 	}
+
+	// When a Chapter is selected as the current Chapter (in ChooseChapterActivity), the entry
+	// for the current Book in the Bible's BibBooks[] array must be updated.
+
+	fun setBibBooksCurChap(curChID: Int, curChNum: Int) {
+		BibBooks[currBookOfst].curChID = curChID
+		BibBooks[currBookOfst].curChNum = curChNum
+	}
+
 }

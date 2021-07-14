@@ -33,7 +33,7 @@ class BookAdapter (
 			// Set colour of text
 			holder.bookName.setTextColor(Color.parseColor("#0000CD"))
 			// Set info text
-			val bookInfo = "Chap " + bibBook.currChap.toString() + " (" + bibBook.numCh.toString() + " ch)"
+			val bookInfo = "Ch " + bibBook.curChNum.toString() + " (" + bibBook.numCh.toString() + " chs)"
 			holder.bookInfo.setText(bookInfo)
 		}
 

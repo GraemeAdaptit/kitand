@@ -12,7 +12,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/txt_ch_prompt"
+        android:text="@string/txt_ed_prompt"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="14sp"

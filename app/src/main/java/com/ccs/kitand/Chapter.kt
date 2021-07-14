@@ -29,7 +29,8 @@ class Chapter(
 	var itRCr:Boolean,	// itemRecsCreated INTEGER
 	val numVs:Int,		// numVerses INTEGER
 	var numIt:Int,		// numItems INTEGER
-	var currIt:Int		// currItem INTEGER (the ID assigned by SQLite when the VerseItem was created)
+	var currIt:Int,		// currItem INTEGER (the ID assigned by SQLite when the VerseItem was created)
+	var currVN:Int		// currVsNum INTEGER (the Verse number associated with the current VerseItem)
 ) {
 	// The following variables and data structures also have lifetimes of the Chapter instance
 	val dao = KITApp.dao			// Access to the KITDAO instance for kdb.sqlite access
@@ -119,7 +120,7 @@ class Chapter(
 		// it could be a good safety measure even in the released app.
 		if (BibItems.size != numIt) {
 			numIt = BibItems.size
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, currVN) ) {
 				println ("Chapter:init updated $bkInst.bkName $chNum Chapter record because numIt was wrong")
 			} else {
 				println ("Chapter:init ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -219,15 +220,18 @@ class Chapter(
 		if (currIt == 0) {
 			// Make the first VerseItem the current one
 			currItOfst = 0		// Take first item in BibItems[] array
-			currIt = BibItems[currItOfst].itID	// Get its itemID
+			currIt = BibItems[currItOfst].itID		// Get its itemID
+			currVN = BibItems[currItOfst].vsNum		// Get its verse number
 		} else {
 			// Already have the itemID of the current item so need to get the offset into the
 			// BibItems[] array
 			currItOfst = offsetToBibItem(currIt)
+			currIt = BibItems[currItOfst].itID		// Get its itemID
+			currVN = BibItems[currItOfst].vsNum		// Get its verse number
 			// Setting currItOfst ensures that there is a VIMenu for the current VerseItem
 		}
 		// Update the database Chapter record
-		if (dao.chaptersUpdateRec (chID, itRCr, numIt, currIt) ) {
+		if (dao.chaptersUpdateRec (chID, itRCr, currIt, currVN) ) {
 			println("Chapter:goCurrentItem updated $bkInst.bkName $chNum Chapter record")
 		}
 		return currItOfst
@@ -240,8 +244,11 @@ class Chapter(
 		currIt = curIt
 		currItOfst = offsetToBibItem(curIt)
 		// Setting currItOfst ensures that there is a VIMenu for the current VerseItem
+		currVN = BibItems[currItOfst].vsNum
+		// Update the BibChap record for this Chapter
+		bkInst.setCurVItem (currIt, currVN)
 		// Update the database Chapter record
-		if (dao.chaptersUpdateRec (chID, itRCr, numIt, currIt) ) {
+		if (dao.chaptersUpdateRec (chID, itRCr, currIt, currVN) ) {
 //			println("Chapter:setupCurrentItem updated $bkInst.bkName) $chNum) Chapter record")
 		}
 	}
@@ -250,8 +257,11 @@ class Chapter(
 		currItOfst = pos
 		// Setting currItOfst ensures that there is a VIMenu for the current VerseItem
 		currIt = BibItems[pos].itID
+		currVN = BibItems[pos].vsNum
+		// Update the BibChap record for this Chapter
+		bkInst.setCurVItem (currIt, currVN)
 		// Update the database Chapter record
-		if (dao.chaptersUpdateRec (chID, itRCr, numIt, currIt) ) {
+		if (dao.chaptersUpdateRec (chID, itRCr, currIt, currVN) ) {
 //			println("Chapter:goCurrentItem updated $bkInst.bkName $chNum Chapter record")
 		}
 	}
@@ -259,6 +269,7 @@ class Chapter(
 	// Copy and save a VerseItem's text; parameters are
 	// Offset of the VerseItem
 	// Text of the VerseItem
+	// TODO: Avoid doing this when there is not change in the text
 	fun copyAndSaveVItem(ofSt:Int, text:String) {
 		BibItems[ofSt].itTxt = text
 		if (dao.itemsUpdateRecText (BibItems[ofSt].itID, BibItems[ofSt].itTxt) ) {
@@ -316,6 +327,7 @@ class Chapter(
 
 	// Can be called when the current VerseItem is Verse 1 of a Psalm
 	fun createAscription () {
+		val vsNum = 1
 		val newItemID = dao.verseItemsInsertRec (chID, 1, "Ascription", 75, "", 0, false, 0)
 		if (newItemID > 0) {
 			println ("Ascription created")
@@ -326,7 +338,7 @@ class Chapter(
 			// Make the new Ascription the current VerseItem
 			currIt = newItemID.toInt()
 			// Update the database Chapter record so that the new Ascription item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, newItemID.toInt()) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, newItemID.toInt(), vsNum) ) {
 //				println ("Chapter:createAscription updated \(bkInst!.bkName) \(chNum) Chapter record")
 			} else {
 				println ("Chapter:createAscription ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -338,6 +350,7 @@ class Chapter(
 
 	// Can be called when the current VerseItem is an Ascription
 	fun deleteAscription () {
+		val vsNum = 1
 		if (dao.itemsDeleteRec(currIt) ) {
 			println("Ascription deleted")
 			// Note that the Psalm no longer has an Ascription
@@ -347,7 +360,7 @@ class Chapter(
 			// Make the next VerseItem the current one
 			currIt = BibItems[currItOfst + 1].itID
 			// Update the database Chapter record so that the following item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:deleteAscription updated \(bkInst!.bkName) \(chNum) Chapter record")
 			} else {
 				println ("Chapter:deleteAscription ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -357,6 +370,7 @@ class Chapter(
 
 	// Create Book title
 	fun createTitle() {
+		val vsNum = 1
 		val newitemID = dao.verseItemsInsertRec (chID, 1, "Title", 70, "", 0, false, 0)
 		if (newitemID > 0) {
 			println ("Title for Book created")
@@ -367,7 +381,7 @@ class Chapter(
 			// Make the new Title the current VerseItem
 			currIt = newitemID.toInt()
 			// Update the database Chapter record so that the new Title item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:createTitle updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createTitle ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -379,6 +393,7 @@ class Chapter(
 
 	// Can be called when the current VerseItem is a Title
 	fun deleteTitle () {
+		val vsNum = 1
 		if (dao.itemsDeleteRec(currIt) ) {
 			println("Title deleted")
 			// Note that the Book no longer has a Title
@@ -388,7 +403,7 @@ class Chapter(
 			// Make the next VerseItem the current one
 			currIt = BibItems[currItOfst + 1].itID
 			// Update the database Chapter record so that the following item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:deleteTitle updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:deleteTitle ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -400,6 +415,7 @@ class Chapter(
 	// Create a paragraph break before a verse.
 	fun createParagraphBefore () {
 		val vsNum = BibItems[currItOfst].vsNum
+		val itemID = BibItems[currItOfst].itID
 		val newitemID = dao.verseItemsInsertRec (chID, vsNum, "Para", vsNum * 100 - 10, "", 0, false, 0)
 		if (newitemID > 0) {
 			println ("Para Before created")
@@ -407,7 +423,7 @@ class Chapter(
 			numIt = numIt + 1
 			// Leave the Verse as the current VerseItem (there is nothing to keyboard in the Para record)
 			// but increment the number of VerseItems
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:createParagraphBefore updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createParagraphBefore ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -419,6 +435,7 @@ class Chapter(
 
 	// Can be called when the current VerseItem is a Para
 	fun deleteParagraphBefore () {
+		val vsNum = BibItems[currItOfst].vsNum
 		if (dao.itemsDeleteRec(currIt) ) {
 			println("Para deleted")
 			// Decrement number of items
@@ -426,7 +443,7 @@ class Chapter(
 			// Make the next VerseItem the current one
 			currIt = BibItems[currItOfst + 1].itID
 			// Update the database Chapter record so that the following item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:deleteParagraphBefore updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:deleteParagraphBefore ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -459,7 +476,7 @@ class Chapter(
 			// Increment number of items
 			numIt = numIt + 1
 			// Update the database Chapter record so that the new VerseCont becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, newVContID.toInt()) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, newVContID.toInt(), vsNum) ) {
 //				println ("Chapter:createParagraphCont updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createParagraphCont ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -473,6 +490,7 @@ class Chapter(
 		val prevItem = BibItems[currItOfst - 1]
 		val nextItem = BibItems[currItOfst + 1]
 		val prevItID = prevItem.itID
+		val vsNum = BibItems[currItOfst].vsNum
 		// Delete ParaCont record
 		dao.itemsDeleteRec(currIt)
 		numIt = numIt - 1
@@ -484,7 +502,7 @@ class Chapter(
 		dao.itemsDeleteRec(nextItem.itID)
 		numIt = numIt - 1
 		// Update the database Chapter record so that the original VerseItem becomes the current item
-		if (dao.chaptersUpdateRecPub (chID, numIt, prevItID) ) {
+		if (dao.chaptersUpdateRecPub (chID, numIt, prevItID, vsNum) ) {
 //				println ("Chapter:deleteParagraphCont updated $bkInst.bkName $chNum Chapter record")
 		} else {
 			println ("Chapter:deleteParagraphCont ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -497,6 +515,7 @@ class Chapter(
 		val prevVersID = prevItem.itID
 		val txtBef = prevItem.itTxt
 		val txtAft = contItem.itTxt
+		val vsNum = BibItems[currItOfst].vsNum
 		// Append continuation text to original Verse
 		dao.itemsUpdateRecText(prevItem.itID, txtBef + txtAft)
 		// Delete VerseCont record
@@ -508,7 +527,7 @@ class Chapter(
 		numIt = numIt - 1
 		// Update currIt and the database Chapter record so that the original VerseItem becomes the current item
 		currIt = prevVersID
-		if (dao.chaptersUpdateRecPub (chID, numIt, prevVersID) ) {
+		if (dao.chaptersUpdateRecPub (chID, numIt, prevVersID, vsNum) ) {
 //				println ("Chapter:deleteVerseCont updated $bkInst.bkName $chNum Chapter record")
 		} else {
 			println ("Chapter:deleteVerseCont ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -525,7 +544,7 @@ class Chapter(
 			// Make the new Subject Heading the current VerseItem
 			currIt = newitemID.toInt()
 			// Update the database Chapter record so that the new Subject Heading item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt()) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt(), vsNum) ) {
 //				println ("Chapter:createSubjHeading updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createSubjHeading ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -537,6 +556,7 @@ class Chapter(
 
 	// Can be called when the current VerseItem is a Subject Heading
 	fun deleteSubjHeading() {
+		val vsNum = BibItems[currItOfst].vsNum
 		if (dao.itemsDeleteRec(currIt) ) {
 			println("Subj Heading deleted")
 			// Decrement number of items
@@ -544,7 +564,7 @@ class Chapter(
 			// Make the next VerseItem the current one
 			currIt = BibItems[currItOfst + 1].itID
 			// Update the database Chapter record so that the following item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:deleteSubjHeading updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:deleteSubjHeading ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -563,7 +583,7 @@ class Chapter(
 			// Make the new Parallel Ref the current VerseItem
 			currIt = newitemID.toInt()
 			// Update the database Chapter record so that the new Parallel Ref item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt()) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, newitemID.toInt(), vsNum) ) {
 //				println ("Chapter:createParallelRef updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createParallelRef ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -575,6 +595,7 @@ class Chapter(
 
 		// Can be called when the current VerseItem is a Parallel Ref
 		fun deleteParallelRef () {
+			val vsNum = BibItems[currItOfst].vsNum
 			if (dao.itemsDeleteRec(currIt) ) {
 				println("Parallel Ref deleted")
 				// Decrement number of items
@@ -582,7 +603,7 @@ class Chapter(
 				// Make the next VerseItem the current one
 				currIt = BibItems[currItOfst + 1].itID
 				// Update the database Chapter record so that the following item becomes the current item
-				if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+				if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 	//				println ("Chapter:deleteParallelRef updated $bkInst.bkName $chNum Chapter record")
 				} else {
 					println ("Chapter:deleteParallelRef ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -594,6 +615,7 @@ class Chapter(
 	// the database via KITDAO. After the database changes have been made,
 	//  BibItems[] will be refreshed from KITDAO.
 	fun bridgeNextVerse() {
+		val vsNum = BibItems[currItOfst].vsNum
 		// Get the vsNum and itTxt from  the verse to be added to the bridge
 		val nexVsNum = BibItems[currItOfst + 1].vsNum
 		val nexVsTxt = BibItems[currItOfst + 1].itTxt
@@ -609,7 +631,7 @@ class Chapter(
 		dao.itemsUpdateForBridge(curVsItID, newBridHdTxt, true, nexVsNum)
 		// Update the database Chapter record so that the bridge head VerseItem remains the current item
 		// and the number of items is updated
-		if (dao.chaptersUpdateRecPub (chID, numIt, curVsItID) ) {
+		if (dao.chaptersUpdateRecPub (chID, numIt, curVsItID, vsNum) ) {
 //				println ("Chapter:bridgeNextVerse updated $bkInst.bkName $chNum Chapter record")
 		} else {
 			println ("Chapter:bridgeNextVerse ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -636,6 +658,7 @@ class Chapter(
 		// the database via KITDAO. After the database changes have been made,
 		//  BibItems[] will be refreshed from KITDAO.
 	fun unbridgeLastVerse() {
+		val vsNum = BibItems[currItOfst].vsNum
 		// Get the most recent BridgeItems record for this verse
 		val result = dao.bridgeGetRecs(BibItems[currItOfst].itID, this)
 		if (result) {
@@ -668,7 +691,7 @@ class Chapter(
 		dao.bridgeDeleteRec(curBridItem.BridgeID)
 		// Update the database Chapter record so that the bridge head VerseItem remains the current item
 		// and the number of items is updated
-		if (dao.chaptersUpdateRecPub (chID, numIt, BibItems[currItOfst].itID) ) {
+		if (dao.chaptersUpdateRecPub (chID, numIt, BibItems[currItOfst].itID, vsNum) ) {
 //				println ("Chapter:unbridgeLastVerse updated $bkInst.bkName $chNum Chapter record")
 		} else {
 			println("Chapter:unbridgeLastVerse ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -679,6 +702,7 @@ class Chapter(
 
 	// Create Introductory Matter Title
 	fun createIntroTitle() {
+		val vsNum = 1
 		val newitemID = dao.verseItemsInsertRec (chID, 1, "InTitle", 10, "", 0, false, 0)
 		if (newitemID > 0) {
 			println ("InTitle for Book created")
@@ -689,7 +713,7 @@ class Chapter(
 			// Make the new InTitle the current VerseItem
 			currIt = newitemID.toInt()
 			// Update the database Chapter record so that the new Title item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:createInTitle updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createInTitle ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -701,6 +725,7 @@ class Chapter(
 
 	// Delete Introductory Matter Title
 	fun deleteIntroTitle() {
+		val vsNum = 1
 		if (dao.itemsDeleteRec(currIt) ) {
 			println("InTitle deleted")
 			// Note that the Book no longer has an InTitle
@@ -710,7 +735,7 @@ class Chapter(
 			// Make the next VerseItem the current one
 			currIt = BibItems[currItOfst + 1].itID
 			// Update the database Chapter record so that the following item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:deleteInTitle updated $bkInst.bkName$ $chNum Chapter record")
 			} else {
 				println ("Chapter:deleteInTitle ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -720,6 +745,7 @@ class Chapter(
 
 	// Create Introductory Matter Heading
 	fun createIntroHeading() {
+		val vsNum = 1
 		val newitemID = dao.verseItemsInsertRec (chID, 1, "InSubj", 10 + nextIntSeq, "", nextIntSeq, false, 0)
 		nextIntSeq = nextIntSeq + 1
 		if (newitemID > 0) {
@@ -729,7 +755,7 @@ class Chapter(
 			// Make the new InSubj the current VerseItem
 			currIt = newitemID.toInt()
 			// Update the database Chapter record so that the new Title item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:createIntroHeading updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createIntroHeading ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -741,6 +767,7 @@ class Chapter(
 
 	// Delete Introductory Matter Heading
 	fun deleteIntroHeading() {
+		val vsNum = 1
 		if (dao.itemsDeleteRec(currIt) ) {
 			println("InSubj deleted")
 			// Decrement number of items
@@ -748,7 +775,7 @@ class Chapter(
 			// Make the next VerseItem the current one
 			currIt = BibItems[currItOfst + 1].itID
 			// Update the database Chapter record so that the following item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:deleteIntroHeading updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:deleteIntroHeading ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -758,6 +785,7 @@ class Chapter(
 
 	// Create Introductory Matter Paragraph
 	fun createIntroPara() {
+		val vsNum = 1
 		val newitemID = dao.verseItemsInsertRec (chID, 1, "InPara", 10 + nextIntSeq, "", nextIntSeq, false, 0)
 		nextIntSeq = nextIntSeq + 1
 		if (newitemID > 0) {
@@ -767,7 +795,7 @@ class Chapter(
 			// Make the new InSubj the current VerseItem
 			currIt = newitemID.toInt()
 			// Update the database Chapter record so that the new Title item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:createIntroPara updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createIntroPara ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -779,6 +807,7 @@ class Chapter(
 
 	// Delete Introductory Matter Paragraph
 	fun deleteIntroPara() {
+		val vsNum = 1
 		if (dao.itemsDeleteRec(currIt) ) {
 			println("InPara deleted")
 			// Decrement number of items
@@ -786,7 +815,7 @@ class Chapter(
 			// Make the next VerseItem the current one
 			currIt = BibItems[currItOfst + 1].itID
 			// Update the database Chapter record so that the following item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:deleteIntroPara updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:deleteIntroPara ERROR updating $bkInst.bkName $chNum Chapter record")

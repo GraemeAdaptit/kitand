@@ -6,26 +6,32 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ListView
+//import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class ChooseChapterActivity : AppCompatActivity() {
 
 	// Boolean for whether to let the user choose a Chapter
 	var letUserChooseChapter = false	// Will be set from bkInst.canChooseAnotherChapter
 
+	//	lateinit var txt_bibname: TextView
+	lateinit var txt_ch_prompt: TextView
+	lateinit var lst_chapters: RecyclerView
+	lateinit var recyclerView: RecyclerView
+	lateinit var viewAdapter: ChapterAdapter
+	private lateinit var viewManager: RecyclerView.LayoutManager
+	lateinit var ch_name: String
+	lateinit var ps_name: String
+	lateinit var chOrPsName: String
+	lateinit var bkInst: Book
+
 	// tableRow of the selected Chapter
 	// chRow = -1 means that no Chapter has been selected yet
 	// chRow is used when determining whether the user had chosen a different Chapter from before
 	var chRow = -1
-
-//	lateinit var txt_bibname: TextView
-	lateinit var txt_ch_prompt: TextView
-	lateinit var lst_chapters: ListView
-	lateinit var ch_name: String
-	lateinit var ps_name: String
-	lateinit var bkInst: Book
 
 	var suppActionBar: ActionBar? = null
 
@@ -45,11 +51,12 @@ class ChooseChapterActivity : AppCompatActivity() {
 		lst_chapters = findViewById(R.id.lst_chapters)
 		ch_name = KITApp.res.getString(R.string.nm_chapter)
 		ps_name = KITApp.res.getString(R.string.nm_psalm)
-
-		lst_chapters.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
-			chooseChapterAction(position)
-		})
-
+		bkInst = KITApp.bkInst
+		if (bkInst.bkID == 19) {
+			chOrPsName = ps_name
+		} else {
+			chOrPsName = ch_name
+		}
 	}
 
 	override fun onStart() {
@@ -65,7 +72,7 @@ class ChooseChapterActivity : AppCompatActivity() {
 		// Set flag for when user comes back to choose another chapter
 		letUserChooseChapter = bkInst.canChooseAnotherChapter
 		// Most launches will have a current Chapter and will go straight to it
-		if (!letUserChooseChapter && bkInst.currChap > 0) {
+		if (!letUserChooseChapter && bkInst.curChID > 0) {
 			bkInst.goCurrentChapter()	// Creates an instance for the current Book (from kdb.sqlite)
 			// If the user comes back to the Choose Book scene we need to let him choose again
 			bkInst.canChooseAnotherChapter = true
@@ -81,12 +88,19 @@ class ChooseChapterActivity : AppCompatActivity() {
 			val prompt =
 				if (KITApp.bkInst.bkID == 19) "Choose " + ps_name else "Choose " + ch_name + " of " + KITApp.bkInst.bkName
 			txt_ch_prompt.setText(prompt)
-			val chapterArrayAdapter = ArrayAdapter<Book.BibChap>(
-				this,
-				android.R.layout.simple_selectable_list_item,
-				KITApp.bkInst.BibChaps
-			)
-			lst_chapters.setAdapter(chapterArrayAdapter)
+			viewManager = LinearLayoutManager(this)
+			viewAdapter = ChapterAdapter(KITApp.bkInst.BibChaps, this) as ChapterAdapter
+			recyclerView = findViewById<RecyclerView>(R.id.lst_chapters).apply {
+				// use this setting to improve performance if you know that changes
+				// in content do not change the layout size of the RecyclerView
+				setHasFixedSize(true)
+				// use a linear layout manager
+				layoutManager = viewManager
+				// specify a viewAdapter
+				adapter = viewAdapter
+			}
+			val scrollPos = if (bkInst.curChNum >= 5) (bkInst.curChNum - 5) else 0
+			recyclerView.scrollToPosition(scrollPos)
 		}
 	}
 
@@ -110,10 +124,9 @@ class ChooseChapterActivity : AppCompatActivity() {
 
 	fun chooseChapterAction(position:Int) {
 		val chRowNew = position
-		val diffChap = chRowNew != chRow
 		chRow = chRowNew
 		// Set up the selected Chapter as the current Chapter
-		bkInst.setupCurrentChapter(position, diffChap)
+		bkInst.setupCurrentChapter(position)
 
 		// If the user comes back to the Choose Chapter scene we need to let him choose again
 		bkInst.canChooseAnotherChapter = true
