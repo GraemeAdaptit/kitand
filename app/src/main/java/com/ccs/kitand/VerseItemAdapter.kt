@@ -176,10 +176,16 @@ class VerseItemAdapter(
 	// Called by the onClickListener for verseItemTxt
 	fun moveCurrCellToClickedCell(newPos: Int) {
 		if (newPos != currCellOfst) {
-			// Disable the current cell
 			val currCell = edChAct.recyclerView.findViewHolderForAdapterPosition(currCellOfst)
 			if (currCell != null) {
 				val curCell = currCell as ListCell
+				// Save the current cell if necessary
+				if (curCell.dirty) {
+					val textSrc = curCell.verseItemTxt.getText().toString()
+					KITApp.chInst.copyAndSaveVItem(currCellOfst, textSrc)
+					curCell.dirty = false
+				}
+				// Disable the current cell
 				curCell.setSelected(false)
 			}
 			// Get start of selection in the new clicked cell
@@ -188,8 +194,6 @@ class VerseItemAdapter(
 				val newCurCell = newCurrCell as ListCell
 				val edText = newCurCell.verseItemTxt
 				val cursPos = edText.getSelectionStart()
-				// Save the current cell if necessary
-				saveCurrentItemText()
 				// make the ListCell just tapped the current one
 				currCellOfst = newPos
 				KITApp.chInst.setupCurrentItemFromRecyclerRow(newPos)
@@ -198,11 +202,14 @@ class VerseItemAdapter(
 				edText.setSelection(cursPos)
 			}
 		} else {
-			// Ensure the current cell has editing focus
+			// Ensure the current cell has editing focus at position the user tapped
 			val currCell = edChAct.recyclerView.findViewHolderForAdapterPosition(currCellOfst)
 			if (currCell != null) {
 				val curCell = currCell as ListCell
+				val edText = curCell.verseItemTxt
+				val cursPos = edText.getSelectionStart()
 				curCell.setSelected(true)
+				edText.setSelection(cursPos)
 			}
 		}
 	}
@@ -222,7 +229,8 @@ class VerseItemAdapter(
 	// If the current VerseItem is outside the RecyclerView (i.e. invisible) then nothing is done;
 	// when the current VerseItem is scrolled into view onBindViewHolder() will show it as the current one.
 	fun selectCurrItem(position: Int) {
-		val verItCell = edChAct.recyclerView.findViewHolderForAdapterPosition(currCellOfst)
+		currCellOfst = position
+		val verItCell = edChAct.recyclerView.findViewHolderForAdapterPosition(position)
 		if (verItCell != null) {
 			val verseItemCell = verItCell as ListCell
 			verseItemCell.setSelected(true)

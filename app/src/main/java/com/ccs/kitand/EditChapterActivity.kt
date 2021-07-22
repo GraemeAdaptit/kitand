@@ -20,10 +20,8 @@ class EditChapterActivity : AppCompatActivity() {
 	lateinit var viewAdapter: VerseItemAdapter
 	private lateinit var viewManager: RecyclerView.LayoutManager
 	lateinit var edChAct: EditChapterActivity
+//	lateinit var linLM: RecyclerView.LayoutManager
 
-	// TODO: Unless a use for this property is found, delete it.
-	var currIt = 0		// Zero until one of the VerseItems is chosen for editing;
-						// then it is the ItemID of the VerseItem that is the current one. (not needed here?)
 	var currItOfst = -1	// -1 until one of the VerseItems is chosen for editing;
 						// then it is the offset into the BibItems[] array which equals
 						// the offset into the list of cells in the RecyclerView.
@@ -32,6 +30,8 @@ class EditChapterActivity : AppCompatActivity() {
 	var scale: Float = 0.0F
 	// Layout width for calculating positioning of PopupWindows
 	var layout_width = 0
+	// Layout height for calculating scrolling offset
+	var layout_height = 0
 
 	var suppActionBar: ActionBar? = null
 
@@ -66,8 +66,8 @@ class EditChapterActivity : AppCompatActivity() {
 			// specify a viewAdapter
 			adapter = viewAdapter
 		}
-		val scrollPos = if (currItOfst >= 5) (currItOfst - 5) else 0
-		recyclerView.scrollToPosition(scrollPos)
+//		val scrollPos = if (currItOfst >= 5) (currItOfst - 5) else 0
+//		recyclerView.scrollToPosition(scrollPos)
 
 //		// Ensure that the soft keyboard will appear
 		// TODO: Find a way that works!
@@ -97,8 +97,8 @@ class EditChapterActivity : AppCompatActivity() {
 
 	override fun onResume() {
 		super.onResume()
-		val posn = KITApp.chInst.goCurrentItem()
-		this.currItOfst = posn
+		val curItOfst = KITApp.chInst.goCurrentItem()
+		this.currItOfst = curItOfst
 		// NOTE: at the time that onResume() is called, the RecyclerView has not been fully set up
 		// so attempting to show the correct VerseItem as selected will not work (and may crash).
 		// Setting a listener for the point when RecyclerView is fully set up is an OK approach.
@@ -107,14 +107,14 @@ class EditChapterActivity : AppCompatActivity() {
 				if (recyclerView.getChildCount() > 0) {
 					// Remove the listener to avoid continually triggering this code - once is enough.
 					recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
-//					recyclerView.layoutManager?.scrollToPosition(posn)
-					viewAdapter.selectCurrItem(posn)
 					// Get the screen's density scale
 					scale = resources.displayMetrics.density
 					// Get the width of the layout
 					layout_width = recyclerView.getMeasuredWidth()
-					val scrollPos = if (currItOfst >= 5) (currItOfst - 5) else 0
-					recyclerView.scrollToPosition(scrollPos)
+					layout_height = recyclerView.getMeasuredHeight()
+//					viewManager.scrollToPosition(currItOfst)
+					(viewManager as LinearLayoutManager).scrollToPositionWithOffset(currItOfst, layout_height/2)
+					viewAdapter.selectCurrItem(currItOfst)
 					return true
 				}
 				return false
@@ -213,6 +213,10 @@ class EditChapterActivity : AppCompatActivity() {
 		recyclerView.setLayoutManager(viewManager);
 		viewAdapter.notifyDataSetChanged()
 		viewAdapter.setIsRefreshingRecyclerView(false)
+		// Get the current offset calculated by chInst after the pomenu action had finished
+		currItOfst = KITApp.chInst.currItOfst
+		// Set currCellOfst of the VerseItemAdapter
+		viewAdapter.currCellOfst = currItOfst
 		// NOTE: at this time, the RecyclerView may not have been fully set up
 		// so attempting to show the correct VerseItem as selected may not work (and may crash).
 		// Setting a listener for the point when RecyclerView is fully set up is an OK approach.
@@ -221,10 +225,10 @@ class EditChapterActivity : AppCompatActivity() {
 				if (recyclerView.getChildCount() > 0) {
 					// Remove the listener to avoid continually triggering this code - once is enough.
 					recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
-//					recyclerView.layoutManager?.scrollToPosition(currItOfst)
+					viewManager.scrollToPosition(currItOfst)
+//					val scrollPos = if (currItOfst >= 4) (currItOfst - 4) else 0
+//					recyclerView.scrollToPosition(scrollPos)
 					viewAdapter.selectCurrItem(currItOfst)
-					val scrollPos = if (currItOfst >= 5) (currItOfst - 5) else 0
-					recyclerView.scrollToPosition(scrollPos)
 					return true
 				}
 				return false

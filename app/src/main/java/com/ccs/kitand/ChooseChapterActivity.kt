@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 //import android.widget.ListView
@@ -34,6 +35,9 @@ class ChooseChapterActivity : AppCompatActivity() {
 	var chRow = -1
 
 	var suppActionBar: ActionBar? = null
+
+	// Layout height for calculating scrolling offset
+	var layout_height = 0
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -99,8 +103,21 @@ class ChooseChapterActivity : AppCompatActivity() {
 				// specify a viewAdapter
 				adapter = viewAdapter
 			}
-			val scrollPos = if (bkInst.curChNum >= 5) (bkInst.curChNum - 5) else 0
-			recyclerView.scrollToPosition(scrollPos)
+
+			recyclerView.getViewTreeObserver().addOnPreDrawListener(object :
+				ViewTreeObserver.OnPreDrawListener {
+				override fun onPreDraw(): Boolean {
+					if (recyclerView.getChildCount() > 0) {
+						// Remove the listener to avoid continually triggering this code - once is enough.
+						recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
+						// Get the height of the layout
+						layout_height = recyclerView.getMeasuredHeight()
+						(viewManager as LinearLayoutManager).scrollToPositionWithOffset(bkInst.currChapOfst, layout_height/2)
+						return true
+					}
+					return false
+				}
+			})
 		}
 	}
 

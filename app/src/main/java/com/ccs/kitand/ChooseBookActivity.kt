@@ -2,6 +2,8 @@ package com.ccs.kitand
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
@@ -18,17 +20,22 @@ class ChooseBookActivity : AppCompatActivity()  {
 	// Boolean for whether to let the user choose a Book
 	var letUserChooseBook = false	// Will be set from bibInst.canChooseAnotherBook
 
-//	lateinit var txt_bibname: TextView
 	lateinit var txt_bk_prompt: TextView
 	lateinit var lst_booklist: RecyclerView
 	lateinit var recyclerView: RecyclerView
 	lateinit var viewAdapter: BookAdapter
 	private lateinit var viewManager: RecyclerView.LayoutManager
 
-	// tableRow of the selected Book
-//	var bkRow = 0		// Is this needed here? Remove if never used.
-
 	var suppActionBar: ActionBar? = null
+	// By the time ChooseBookActivity is started the Bible instance will have been created
+	var bInst: Bible = KITApp.bibInst
+
+	//	// Scale factor for calculating widget sizes
+//	var scale: Float = 0.0F
+//	// Layout width
+//	var layout_width = 0
+	// Layout height for calculating scrolling offset
+	var layout_height = 0
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -47,7 +54,7 @@ class ChooseBookActivity : AppCompatActivity()  {
 		super.onStart()
 
 		val bibName = KITApp.bibInst.bibName
-		val bInst = KITApp.bibInst
+		bInst = KITApp.bibInst
 
 		val actionBarTitle = "Key It  -  " + bibName
 		if (suppActionBar != null) {
@@ -79,8 +86,20 @@ class ChooseBookActivity : AppCompatActivity()  {
 				// specify a viewAdapter
 				adapter = viewAdapter
 			}
-			val scrollPos = if (bInst.currBookOfst >= 5) (bInst.currBookOfst - 5) else 0
-			recyclerView.scrollToPosition(scrollPos)
+			recyclerView.getViewTreeObserver().addOnPreDrawListener(object :
+				ViewTreeObserver.OnPreDrawListener {
+				override fun onPreDraw(): Boolean {
+					if (recyclerView.getChildCount() > 0) {
+						// Remove the listener to avoid continually triggering this code - once is enough.
+						recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
+						// Get the height of the layout
+						layout_height = recyclerView.getMeasuredHeight()
+						(viewManager as LinearLayoutManager).scrollToPositionWithOffset(bInst.currBookOfst, layout_height/2)
+						return true
+					}
+					return false
+				}
+			})
 		}
 	}
 

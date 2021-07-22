@@ -5,6 +5,7 @@
     android:id="@+id/layout_edit"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#3F51B5"
     tools:context=".EditChapterActivity">
 
     <TextView
@@ -14,8 +15,9 @@
         android:layout_marginTop="8dp"
         android:text="@string/txt_ed_prompt"
         android:textAlignment="center"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,8 +27,11 @@
         android:id="@+id/lv_verseitemlist"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="2dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="#F5F5F5"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="2dp"
+        android:background="#FFFFFF"
         android:clickable="true"
         android:clipToPadding="false"
         android:focusable="true"

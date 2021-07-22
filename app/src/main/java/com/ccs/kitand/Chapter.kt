@@ -226,7 +226,6 @@ class Chapter(
 			// Already have the itemID of the current item so need to get the offset into the
 			// BibItems[] array
 			currItOfst = offsetToBibItem(currIt)
-			currIt = BibItems[currItOfst].itID		// Get its itemID
 			currVN = BibItems[currItOfst].vsNum		// Get its verse number
 			// Setting currItOfst ensures that there is a VIMenu for the current VerseItem
 		}
@@ -269,7 +268,7 @@ class Chapter(
 	// Copy and save a VerseItem's text; parameters are
 	// Offset of the VerseItem
 	// Text of the VerseItem
-	// TODO: Avoid doing this when there is not change in the text
+	// TODO: Avoid doing this when there is no change in the text
 	fun copyAndSaveVItem(ofSt:Int, text:String) {
 		BibItems[ofSt].itTxt = text
 		if (dao.itemsUpdateRecText (BibItems[ofSt].itID, BibItems[ofSt].itTxt) ) {
@@ -321,24 +320,26 @@ class Chapter(
 		curPoMenu = null
 		// Clear the current BibItems[] array
 		BibItems.clear()
-		// Reload the BibItems[] array of VerseItems
+		// Reload the BibItems[] array of VerseItems from the modified database
 		dao.readVerseItemsRecs (this)
+		// Calculate offset in BibItems[] to the new current item
+		currItOfst = offsetToBibItem(currIt)
 	}
 
 	// Can be called when the current VerseItem is Verse 1 of a Psalm
 	fun createAscription () {
-		val vsNum = 1
-		val newItemID = dao.verseItemsInsertRec (chID, 1, "Ascription", 75, "", 0, false, 0)
+		val newItemID:Long = dao.verseItemsInsertRec (chID, 1, "Ascription", 75, "", 0, false, 0)
 		if (newItemID > 0) {
-			println ("Ascription created")
+//			println ("Ascription created")
+			// Make the new Ascription the current VerseItem
+			currIt = newItemID.toInt()
+			currVN = 1
 			// Note that the Psalm now has an Ascription
 			hasAscription = true
 			// Increment number of items
 			numIt = numIt + 1
-			// Make the new Ascription the current VerseItem
-			currIt = newItemID.toInt()
 			// Update the database Chapter record so that the new Ascription item becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, newItemID.toInt(), vsNum) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, currVN) ) {
 //				println ("Chapter:createAscription updated \(bkInst!.bkName) \(chNum) Chapter record")
 			} else {
 				println ("Chapter:createAscription ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -414,16 +415,15 @@ class Chapter(
 
 	// Create a paragraph break before a verse.
 	fun createParagraphBefore () {
-		val vsNum = BibItems[currItOfst].vsNum
-		val itemID = BibItems[currItOfst].itID
-		val newitemID = dao.verseItemsInsertRec (chID, vsNum, "Para", vsNum * 100 - 10, "", 0, false, 0)
+		// currIt and currVN are for the verse before which the paragraph break is to be created
+		val newitemID:Long = dao.verseItemsInsertRec (chID, currVN, "Para", currVN * 100 - 10, "", 0, false, 0)
 		if (newitemID > 0) {
 			println ("Para Before created")
 			// Increment number of items
 			numIt = numIt + 1
 			// Leave the Verse as the current VerseItem (there is nothing to keyboard in the Para record)
 			// but increment the number of VerseItems
-			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, currVN) ) {
 //				println ("Chapter:createParagraphBefore updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createParagraphBefore ERROR updating $bkInst.bkName $chNum Chapter record")
@@ -475,8 +475,10 @@ class Chapter(
 			println ("VerseCont created")
 			// Increment number of items
 			numIt = numIt + 1
+			// Update currIt to the new VerseCont item
+			currIt = newVContID.toInt()
 			// Update the database Chapter record so that the new VerseCont becomes the current item
-			if (dao.chaptersUpdateRecPub (chID, numIt, newVContID.toInt(), vsNum) ) {
+			if (dao.chaptersUpdateRecPub (chID, numIt, currIt, vsNum) ) {
 //				println ("Chapter:createParagraphCont updated $bkInst.bkName $chNum Chapter record")
 			} else {
 				println ("Chapter:createParagraphCont ERROR updating $bkInst.bkName $chNum Chapter record")
