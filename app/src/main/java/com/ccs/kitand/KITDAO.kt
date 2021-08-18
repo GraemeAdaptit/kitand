@@ -39,64 +39,58 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
         // Keep a reference to kdb.sqlite
         this.db = db
         // Create the Bibles table
-        val sqlBibT = "CREATE TABLE " + TAB_Bibles + "(" +
-                COL_BibleID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COL_BibleName + " TEXT, " +
-                COL_BookRecsCr + " BOOL, " +
-                COL_CurrentBook + " INT)"
-        db.execSQL(sqlBibT)
-        // Create the Books table
-        val sqlBookT = "CREATE TABLE " + TAB_Books + "(" +
-                COL_BookID + " INT, " +
-                COLF_BibID + " INT, " +
-                COL_BookCode + " TEXT, " +
-                COL_BookName + " TEXT, " +
-                COL_ChapRecsCr + " BOOL, " +
-                COL_NumChaps + " INT, " +
+		val sqlBibT = "CREATE TABLE " + TAB_Bibles + "(" +
+				COL_BibleID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				COL_BibleName + " TEXT, " +
+				COL_BookRecsCr + " BOOL, " +
+				COL_CurrentBook + " INT)"
+		db.execSQL(sqlBibT)
+		// Create the Books table
+		val sqlBookT = "CREATE TABLE " + TAB_Books + "(" +
+				COL_BookID + " INT, " +
+				COLF_BibID + " INT, " +
+				COL_BookCode + " TEXT, " +
+				COL_BookName + " TEXT, " +
+				COL_ChapRecsCr + " BOOL, " +
+				COL_NumChaps + " INT, " +
 				COL_CurrChID + " INT, " +
 				COL_CurrChNum + " INT, " +
 				COL_USFMBookText + " TEXT)"
-        db.execSQL(sqlBookT)
-        // Create the Chapters table
-        val sqlChapT = "CREATE TABLE " + TAB_Chapters + "(" +
-                COL_ChapterID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLF_ChBibID + " INT, " +
-                COLF_BookID + " INT, " +
-                COL_ChapNum + " INT, " +
-                COL_ItemRecsCr + " BOOL, " +
-                COL_NumVerses + " INT, " +
-                COL_NumItems + " INT, " +
-                COL_CurrItem + " INT, " +
+		db.execSQL(sqlBookT)
+		// Create the Chapters table
+		val sqlChapT = "CREATE TABLE " + TAB_Chapters + "(" +
+				COL_ChapterID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				COLF_ChBibID + " INT, " +
+				COLF_BookID + " INT, " +
+				COL_ChapNum + " INT, " +
+				COL_ItemRecsCr + " BOOL, " +
+				COL_NumVerses + " INT, " +
+				COL_NumItems + " INT, " +
+				COL_CurrItem + " INT, " +
 				COL_CurrVsNum + " INT, " +
-                COL_USFMText + " TEXT)"
-        db.execSQL(sqlChapT)
-        // Create the VerseItems table
-        val sqlVerseT = "CREATE TABLE " + TAB_VerseItems + "(" +
-                COL_ItemID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLF_ChapID + " INT, " +
-                COL_VerseNum + " INT, " +
-                COL_ItemType + " TEXT, " +
-                COL_ItemOrder + " INT, " +
-                COL_ItemText + " TEXT, " +
-                COL_IntSeq + " INT, " +
-                COL_IsBridge + " BOOL, " +
-                COL_LastVsBridge + " INT)"
-        db.execSQL(sqlVerseT)
-        // Create the BridgeItems table
-        val sqlBridgT = "CREATE TABLE " + TAB_BridgeItems + "(" +
-                COL_BridgeID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLF_ItemID + " INT, " +
-                COL_TextCurrBridge + " TEXT, " +
-                COL_TextExtraVerse + " TEXT)"
+				COL_USFMText + " TEXT)"
+		db.execSQL(sqlChapT)
+		// Create the VerseItems table
+		val sqlVerseT = "CREATE TABLE " + TAB_VerseItems + "(" +
+				COL_ItemID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				COLF_ChapID + " INT, " +
+				COL_VerseNum + " INT, " +
+				COL_ItemType + " TEXT, " +
+				COL_ItemOrder + " INT, " +
+				COL_ItemText + " TEXT, " +
+				COL_IntSeq + " INT, " +
+				COL_IsBridge + " BOOL, " +
+				COL_LastVsBridge + " INT)"
+		db.execSQL(sqlVerseT)
+		// Create the BridgeItems table
+		val sqlBridgT = "CREATE TABLE " + TAB_BridgeItems + "(" +
+				COL_BridgeID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				COLF_ItemID + " INT, " +
+				COL_TextCurrBridge + " TEXT, " +
+				COL_TextExtraVerse + " TEXT)"
         db.execSQL(sqlBridgT)
         // Create the single Bibles record
 		bibleInsertRec(1, "Bible", false, 0)
-//        val cv = ContentValues()
-//        cv.put(COL_BibleID, 1)
-//        cv.put(COL_BibleName, "Bible")
-//        cv.put(COL_BookRecsCr, false)
-//        cv.put(COL_CurrentBook, 0)
-//        db.insert(TAB_Bibles, null, cv)
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -138,7 +132,6 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
             cv.put("1", cursor.getInt(0))
             cv.put("2", cursor.getString(1))
 			cv.put("3", cursor.getInt(2) == 1)
-//			cv.put("3", if (cursor.getInt(2) == 1) true else false)
             cv.put("4", cursor.getInt(3))
         } else {
             // If the read from database has failed, return bibleID = 0. The normal, one and only record
@@ -220,7 +213,6 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
             val bkCode = cursor.getString(2)
             val bkName = cursor.getString(3)
 			val chRCr = cursor.getInt(4) == 1
-//			val chRCr = if (cursor.getInt(4) == 1) true else false
             val numCh = cursor.getInt(5)
 			val curChID = cursor.getInt(6)
 			val curChNum = cursor.getInt(7)
@@ -291,12 +283,12 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
             val biblID = cursor.getInt(1)
             val bookID = cursor.getInt(2)
             val chNum = cursor.getInt(3)
-            val itRCr = if (cursor.getInt(4) == 1) true else false
+            val itRCr = cursor.getInt(4) == 1
             val numVs = cursor.getInt(5)
             val numIt = cursor.getInt(6)
             val curIt = cursor.getInt(7)
 			val curVNm = cursor.getInt(8)
-            KITApp.bkInst.appendChapterToArray(chapID, biblID, bookID, chNum, itRCr, numVs, numIt, curIt, curVNm)
+            bkInst.appendChapterToArray(chapID, biblID, bookID, chNum, itRCr, numVs, numIt, curIt, curVNm)
         } while (cursor.moveToNext())
         cursor.close()
 	}
@@ -387,7 +379,7 @@ class KITDAO(context: Context?) : SQLiteOpenHelper(context, "kdb.sqlite", null, 
                 val intSeq = cursor.getInt(6)
                 val isBrg = if (cursor.getInt(7) == 1) true else false
                 val lvBrg = cursor.getInt(8)
-                KITApp.chInst.appendItemToArray(itemID, chapID, vsNum, itTyp, itOrd, itTxt, intSeq, isBrg, lvBrg)
+                KITApp.chInst!!.appendItemToArray(itemID, chapID, vsNum, itTyp, itOrd, itTxt, intSeq, isBrg, lvBrg)
             } while (cursor.moveToNext())
         cursor.close()
 	}

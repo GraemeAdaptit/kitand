@@ -20,7 +20,8 @@ class SetupActivity : AppCompatActivity() {
     var currBook: Int = 0	// current Book ID
     // Bible Book IDs are assigned by the Bible Societies as 1 to 39 OT and 41 to 67 NT)
 
-    lateinit var bibInst: Bible
+//    lateinit var bibInst: Bible
+// GDLC 12AUG21 No need for local var bInst
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,11 +49,10 @@ class SetupActivity : AppCompatActivity() {
         //	Once the user has dealt with the Setup scene, subsequent launches skip this step.
         //	Any future editing of the name of the Bible will be done in a separate scene.
 		if (bkRCr) {
-            // Create the instance of Bible
-            bibInst = Bible(bibID, bibName, bkRCr, currBook)
-            // Ensure rest of app has access to the Bible instance
-            KITApp.bibInst = bibInst
-            // Go to the ChooseBookActivity
+            // Create the instance of Bible and
+            // ensure rest of app has access to the Bible instance
+            KITApp.bibInst = Bible(bibID, bibName, bkRCr, currBook)
+             // Go to the ChooseBookActivity
             val i = Intent(this, ChooseBookActivity::class.java)
             startActivity(i)
             finish()
@@ -67,10 +67,9 @@ class SetupActivity : AppCompatActivity() {
         val bibName: String = txt_bibname.text.toString()
         // Save the Bible name into the Bible record in kdb.sqlite
         KITApp.dao.bibleUpdateName(bibName)
-        // Create the instance of Bible
-        bibInst = Bible(bibID, bibName, bkRCr, currBook)
-        // Ensure rest of app has access to the Bible instance
-        KITApp.bibInst = bibInst
+        // Create the instance of Bible and
+        // ensure rest of app has access to the Bible instance
+        KITApp.bibInst = Bible(bibID, bibName, bkRCr, currBook)
         // Go to the ChooseBookActivity
         val i = Intent(this, ChooseBookActivity::class.java)
         startActivity(i)

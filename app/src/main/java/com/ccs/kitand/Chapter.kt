@@ -19,7 +19,8 @@ package com.ccs.kitand
 // just its ID rather than by a combination of Book, Chapter, and VerseItem.
 // On the other hand, the user interface needs only the VerseItems for the current Chapter and,
 // in addition, the user interface functions on both Android and iOS expect data to be supplied
-// from
+// from the array BibItems[] whose index matches the indexes to the cells of the
+// RecyclerView (on Android) or TableView (on iOS).
 
 class Chapter(
 	val chID:Int,		// chapterID INTEGER PRIMARY KEY
@@ -59,10 +60,12 @@ class Chapter(
 			currIt = BibItems[ofst].itID
 		}
 
+	//	GDLC 17AUG21 Changed so that cursor position in text of VerseItem is passed to
+	//	popMenuAction() instead of a reference to the VerseItemAdapter instance
 	// Reference to the current VerseItemAdapter needing Chapter services
 	// When the EditChapterActivity calls popMenuAction() it passes a reference to the
 	// current VerseItemAdapter
-	lateinit var vItAda: VerseItemAdapter
+//	lateinit var vItAda: VerseItemAdapter
 
 	// This struct and the BibItems array are used for letting the user select the
 	// VerseItem to edit in the current Chapter of the current Book.
@@ -163,7 +166,7 @@ class Chapter(
 		// Update in-memory record of current Chapter to indicate that its VerseItem records have been created
 		itRCr = true
 		// Also update the BibChap struct to show itRCr true and numVs & numIt
-		bkInst.setBibChapsNums(numVs, numIt)
+		bkInst!!.setBibChapsNums(numVs, numIt)
 		// Update Chapter record to show that VerseItems have been created
 		if (dao.chaptersUpdateRec (chID, itRCr, numIt, currIt) ) {
 //			println("Chapter:createItemRecords update Chapter record for chap $chNum succeeded")
@@ -245,7 +248,7 @@ class Chapter(
 		// Setting currItOfst ensures that there is a VIMenu for the current VerseItem
 		currVN = BibItems[currItOfst].vsNum
 		// Update the BibChap record for this Chapter
-		bkInst.setCurVItem (currIt, currVN)
+		bkInst!!.setCurVItem (currIt, currVN)
 		// Update the database Chapter record
 		if (dao.chaptersUpdateRec (chID, itRCr, currIt, currVN) ) {
 //			println("Chapter:setupCurrentItem updated $bkInst.bkName) $chNum) Chapter record")
@@ -258,7 +261,7 @@ class Chapter(
 		currIt = BibItems[pos].itID
 		currVN = BibItems[pos].vsNum
 		// Update the BibChap record for this Chapter
-		bkInst.setCurVItem (currIt, currVN)
+		bkInst!!.setCurVItem (currIt, currVN)
 		// Update the database Chapter record
 		if (dao.chaptersUpdateRec (chID, itRCr, currIt, currVN) ) {
 //			println("Chapter:goCurrentItem updated $bkInst.bkName $chNum Chapter record")
@@ -283,8 +286,9 @@ class Chapter(
 	// specific action, this function clears BibItems[] and reloads it from the database;
 	// following this the VersesTableViewController needs to reload the TableView.
 
-	fun popMenuAction(act: String, vItAda: VerseItemAdapter) {
-		this.vItAda = vItAda
+	fun popMenuAction(act: String, cursPos: Int) {
+//	GDLC 17AUG21 Changed to pass cursor position instead
+//		this.vItAda = vItAda
 		when (act) {
 		"crAsc" -> createAscription()
 		"delAsc" -> deleteAscription()
@@ -292,7 +296,7 @@ class Chapter(
 		"delTitle" -> deleteTitle()
 		"crParaBef" -> createParagraphBefore()
 		"delPara" -> deleteParagraphBefore()
-		"crParaCont" -> createParagraphCont()
+		"crParaCont" -> createParagraphCont(cursPos)
 		"delPCon" -> deleteParagraphCont()
 		"delVCon" -> deleteVerseCont()
 		"crHdBef" -> createSubjHeading()
@@ -452,11 +456,15 @@ class Chapter(
 	}
 
 	// Create a paragraph break inside a verse
-	fun createParagraphCont() {
-		val cv = this.vItAda.currTextSplit()
-        val cursPos = cv.getAsInteger("1")
-        val txtBef = cv.getAsString("2")
-        val txtAft = cv.getAsString("3")
+	fun createParagraphCont(cursPos: Int) {
+//		val cv = this.vItAda.currTextSplit()
+//        val cursPos = cv.getAsInteger("1")
+//        val txtBef = cv.getAsString("2")
+//        val txtAft = cv.getAsString("3")
+		val itemTxt = BibItems[currItOfst].itTxt
+		val txtBef = itemTxt.substring(0, cursPos)
+		val len = itemTxt.length
+		val txtAft = itemTxt.substring(cursPos, len)
 		val vsNum = BibItems[currItOfst].vsNum
 		// Remove text after cursor from Verse
 		dao.itemsUpdateRecText(BibItems[currItOfst].itID, txtBef)
@@ -826,7 +834,7 @@ class Chapter(
 	}
 
 	fun calcUSFMExportText() : String {
-		var USFM = "\\id " + bkInst.bkCode + " " + bibInst.bibName + "\n\\c " + chNum.toString()
+		var USFM = "\\id " + bkInst!!.bkCode + " " + bibInst.bibName + "\n\\c " + chNum.toString()
 		for (i in 0 until numIt) {		// 0 until numIt includes zero but does not include numIt
 			var s: String
 			var vn: String

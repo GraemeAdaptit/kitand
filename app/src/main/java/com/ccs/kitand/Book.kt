@@ -41,7 +41,8 @@ class Book(
 	var canChooseAnotherChapter = false		// true if the user is allowed to choose another Chapter
 
 	var currChapOfst: Int = -1	// offset to the current Chapter in BibChaps[] array
-	var chapInst: Chapter? = null	// instance in memory of the current Chapter
+	var chapInst: Chapter? = null	// Instance in memory of the current Chapter -
+									// this is the strong ref that owns it
 
 	// BibChaps array (for listing the Chapters so the user can choose one)
 
@@ -72,9 +73,6 @@ class Book(
 	// the currently selected book from the BibBooks array
 
 	init {
-		// A reference to this instance of the current Book needs to be saved in KITApp
-		KITApp.bkInst = this
-
 		// On the first time this Book has been selected the Chapter records must be created
 		if (!chapRCr) {
 			createChapterRecords(bkID, bibID, bkCode)
@@ -93,7 +91,6 @@ class Book(
 		dao.readChaptersRecs(bibID, this)
 		// calls readChaptersRecs() in KITDAO.swift to read the kdb.sqlite database Books table
 		// readChaptersRecs() calls appendChapterToArray() in this file for each ROW read from kdb.sqlite
-//		println("Chapter records for $bkName have been read from kdb.sqlite")
 	}
 
 	fun createChapterRecords(book: Int, bib: Int, code: String) {
@@ -138,7 +135,6 @@ class Book(
 			val numVs = elemTr.toInt()
 			numIt = numIt + numVs	// for some Psalms numIt will include the ascription VerseItem
 			if (dao.chaptersInsertRec(bib, book, chNum, false, numVs, numIt, currIt, currVN) ) {
-//				println("Book:createChapterRecords Created Chapter record for $bkName, chapter $chNum")
 			}
 			chNum = chNum + 1
 		}
@@ -149,7 +145,6 @@ class Book(
 		// Update kdb.sqlite Books record of current Book to indicate that its Chapter records have been created,
 		// the number of Chapters has been found, but there is not yet a current Chapter
 		if (dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, curChID, curChNum) ) {
-//			println("Book:createChapterRecords updated the record for this Book")
 		}
 
 		// Update the entry in BibBooks[] for the current Book to show that its Chapter records have been created
@@ -188,11 +183,13 @@ class Book(
 
 		// allow any previous in-memory instance of Chapter to be garbage collected
 		chapInst = null
+		KITApp.chInst = null
 
 		// create a Chapter instance for the current Chapter of the current Book
 		// The initialisation of the instance of Chapter stores a reference in KITApp
 		val chap = BibChaps[currChapOfst]
 		chapInst = Chapter(chap.chID, chap.bibID, chap.bkID, chap.chNum, chap.itRCr, chap.numVs, chap.numIt, chap.curIt, chap.curVN)
+		KITApp.chInst = chapInst
 	}
 
 	// When the user selects a Chapter from the list of Chapters it needs to be recorded as the
@@ -215,10 +212,12 @@ class Book(
 		// to be garbage collected and create a new Chapter instance.
 		if (diffChap) {
 			chapInst = null
+			KITApp.chInst = null
 
 			// create a Chapter instance for the current Chapter of the current Book
 			// The initialisation of the instance of Chapter stores a reference in KITApp
 			chapInst = Chapter(chap.chID, chap.bibID, chap.bkID, chap.chNum, chap.itRCr, chap.numVs, chap.numIt, chap.curIt, chap.curVN)
+			KITApp.chInst = chapInst
 		}
 	}
 

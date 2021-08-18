@@ -25,20 +25,11 @@ import java.io.InputStream
 //    Bible -> curr Book -> curr Chapter -> curr VerseItem data structures.
 
 class Bible (
-	val bibID: Int,
-	var bibName: String,
-	var bkRCr: Boolean,
-	var currBk: Int
+	val bibID: Int,			//	BibleID
+	var bibName: String,	//	Bible Name
+	var bkRCr: Boolean,		//	Book Records Created
+	var currBk: Int			//	Current Book
 ) {
-
-	// The following variables and data structures have lifetimes of the Bible object
-	// which is also the lifetime of this run of the app
-
-	// Properties of a Bible instance defined in the primary constructor
-//	val bibID: Int			BibleID
-//	val bibName: String		Bible Name
-//	var bkRCr: Boolean		Book Records Created
-//	var currBk: Int			Current Book
 
 	// Additional properties of the Bible instance
 
@@ -52,7 +43,7 @@ class Bible (
 	val dao = KITApp.dao
 
 	var currBookOfst = - 1 			// Offset in BibBooks[] to the current book 0 to 38 (OT) 39 to 65 (NT)
-	var bookInst: Book?	= null		// instance in memory of the current Book
+	var bookInst: Book?	= null		// Instance in memory of the current Book - this is the strong ref that owns it
 
 	// BibBooks array (for listing the Books so the user can choose one)
 	data class BibBook (
@@ -78,9 +69,6 @@ class Bible (
 	// from the Bible record of kdb.sqlite
 
 	init {
-		// A reference to this instance of the Bible needs to be saved in KITApp
-		KITApp.bibInst = this
-
 		currBookOfst = if (currBk > 39) (currBk - 2) else (currBk - 1)
 		if (!bkRCr) {
 			// Create the 66 Book records for this Bible
@@ -190,10 +178,12 @@ class Bible (
 
 		// allow any previous in-memory instance of Book to be garbage collected
 		bookInst = null
+		KITApp.bkInst = null
 
 		// create a Book instance for the currently selected book
-		// The initialisation of the instance of Book stores a reference to it in KITApp
 		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.curChID, book.curChNum)
+		// keep a weak ref on KITApp
+		KITApp.bkInst = bookInst
 	}
 
 	// When the user selects a book from the ListView of books it needs to be recorded as the
@@ -208,10 +198,12 @@ class Bible (
 
 		// allow any previous in-memory instance of Book to be garbage collected
 		bookInst = null
+		KITApp.bkInst = null
 
 		// create a Book instance for the currently selected book
-		// The initialisation of the instance of Book stores a reference to it in KITApp
 		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.curChID, book.curChNum)
+		// keep a weak ref on KITApp
+		KITApp.bkInst = bookInst
 	}
 
 	// When the Chapter records have been created for the current Book, the entry for that Book in

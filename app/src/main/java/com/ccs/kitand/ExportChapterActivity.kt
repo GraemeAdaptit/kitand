@@ -10,6 +10,7 @@ class ExportChapterActivity : AppCompatActivity() {
 	private lateinit var ch_name:String
 	private lateinit var ps_name:String
 	lateinit var txt_USFM: TextView
+	var bkInst: Book? = null
 
 	var suppActionBar: ActionBar? = null
 
@@ -25,6 +26,7 @@ class ExportChapterActivity : AppCompatActivity() {
 
 		// Get references to layout widgets
 		txt_USFM = findViewById(R.id.txt_usfm)
+		bkInst = KITApp.bkInst
 
 		// Get names for prompt string
 		ch_name = KITApp.res.getString(R.string.nm_chapter)
@@ -34,10 +36,10 @@ class ExportChapterActivity : AppCompatActivity() {
 	override fun onStart() {
 		super.onStart()
 		val bibName = KITApp.bibInst.bibName
-		val chNumStr = KITApp.chInst.chNum.toString()
-		val prompt = if (KITApp.bkInst.bkID == 19)
+		val chNumStr = KITApp.chInst!!.chNum.toString()
+		val prompt = if (bkInst!!.bkID == 19)
 			" " + ps_name + " " + chNumStr else
-			" " + ch_name + " " + chNumStr + " of " + KITApp.bkInst.bkName
+			" " + ch_name + " " + chNumStr + " of " + bkInst!!.bkName
 		val actionBarTitle = bibName + prompt
 		if (suppActionBar != null) {
 			suppActionBar?.setDisplayShowTitleEnabled(true)
@@ -49,11 +51,11 @@ class ExportChapterActivity : AppCompatActivity() {
 		super.onResume()
 
 		// Generate the USFM text
-		val USFMexp = KITApp.chInst.calcUSFMExportText()
+		val USFMexp = KITApp.chInst!!.calcUSFMExportText()
 		// Display it to the user
 		txt_USFM.setText(USFMexp)
 		// Save it into the current Chapter record of kdb.sqlite
-		if (KITApp.chInst.saveUSFMText (KITApp.chInst.chID, USFMexp) ) {
+		if (KITApp.chInst!!.saveUSFMText (KITApp.chInst!!.chID, USFMexp) ) {
 			println("ExportChapterViewController:viewDidLoad saved USFM text to kdb.sqlite")
 		} else {
 			println("ExportChapterViewController:viewDidLoad save to kdb.sqlite FAILED")

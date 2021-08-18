@@ -70,7 +70,8 @@ class ChooseBookActivity : AppCompatActivity()  {
 			// Go to the ChooseChapterActivity
 			val i = Intent(this, ChooseChapterActivity::class.java)
 			startActivity(i)
-//			finish()	// Keep ChooseBookActivity in the Back Stack
+			// Dispose of ChooseBookActivity to reduce memory usage
+			finish()
 		} else {
 			// On first launch, and when user wants to choose another book,
 			// set up the Books list and wait for the user to choose a Book.
@@ -115,7 +116,8 @@ class ChooseBookActivity : AppCompatActivity()  {
 		// Go to the ChooseChapterActivity
 		val i = Intent(this, ChooseChapterActivity::class.java)
 		startActivity(i)
-//		finish()	// Keep ChooseBookActivity in the Back Stack
+		// Dispose of ChooseBookActivity to reduce memory usage
+		finish()
 	}
 
 }

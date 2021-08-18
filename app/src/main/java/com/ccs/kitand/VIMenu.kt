@@ -3,9 +3,6 @@ package com.ccs.kitand
 import android.graphics.Paint
 import android.graphics.Typeface
 
-
-
-
 //
 //  VIMenu.kt
 //  kitand
@@ -46,7 +43,7 @@ class VIMenu(curItOfst: Int)
 	val VIMenuItems = ArrayList<VIMenuItem>()	// array of the menu items
 
 	init {
-		val chInst = KITApp.chInst
+		val chInst = KITApp.chInst!!
 		val bibItem = chInst.BibItems[curItOfst]
 
 		VIType = bibItem.itTyp

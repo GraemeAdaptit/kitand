@@ -30,7 +30,14 @@ class KITApp : Application() {
         lateinit var res: Resources
         lateinit var dao: KITDAO        // For access to kdb.sqlite
         lateinit var bibInst: Bible     // For access to the single instance of Bible
-        lateinit var bkInst: Book       // For access to the instance of the currently selected Book
-        lateinit var chInst: Chapter    // For access to the instance of the currently selected Chapter
+                        // The owning ref to bibInst which lasts for the entire run of the app
+        var bkInst: Book? = null        // For access to the instance of the currently selected Book
+                        // This is the weak ref to bkInst which allows rest of app to access the current
+                        // Book instance; lasts only for the time that Book is the current one - the owning
+                        // ref is in the Bible instance
+        var chInst: Chapter? = null    // For access to the instance of the currently selected Chapter
+                        // The weak ref to chInst which allows rest of app to access the current
+                        // Chapter instance; lasts only for the time that Chapter is the current one -
+                        // the owning ref is in the Book instance
     }
 }

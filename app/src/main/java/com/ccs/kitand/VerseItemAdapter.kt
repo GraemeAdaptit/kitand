@@ -22,6 +22,10 @@ class VerseItemAdapter(
 		this.currCellOfst = edChAct.currItOfst
 	}
 
+	// Cursor position in text of current VerseItem
+	// Set in moveCurrCellToClickedCell()
+	var cursPos = 0
+
 	// Create new view holders (invoked by the layout manager)
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VerseItemAdapter.ListCell {
 		// create a new view
@@ -92,7 +96,6 @@ class VerseItemAdapter(
 		})
 		// Listener for popover button
 		holder.popoverButton.setOnClickListener(View.OnClickListener() {
-			println("Popover button tapped")
 			// If the button is not on the current VerseItem then change the current VerseItem to this one
 			val newPos = holder.getAdapterPosition()
 			if (newPos != currCellOfst) {
@@ -104,7 +107,7 @@ class VerseItemAdapter(
 
 	// Return the size of your data set (invoked by the layout manager)
 	override fun getItemCount() : Int {
-		val numItems = KITApp.chInst.BibItems.size
+		val numItems = KITApp.chInst!!.BibItems.size
 		return numItems
 	}
 
@@ -125,7 +128,7 @@ class VerseItemAdapter(
 			val pos = holder.getAdapterPosition()
 			// Save VerseItem text from cell at pos
 			val textSrc = holder.verseItemTxt.getText().toString()
-			KITApp.chInst.copyAndSaveVItem(pos, textSrc)
+			KITApp.chInst!!.copyAndSaveVItem(pos, textSrc)
 		}
 	}
 	// Called when the current view holder is being changed to another one; it is necessary to save
@@ -136,7 +139,7 @@ class VerseItemAdapter(
 			val curCell = currCell as ListCell
 			if (curCell.dirty) {
 				val textSrc = curCell.verseItemTxt.getText().toString()
-				KITApp.chInst.copyAndSaveVItem(currCellOfst, textSrc)
+				KITApp.chInst!!.copyAndSaveVItem(currCellOfst, textSrc)
 				curCell.dirty = false
 				curCell.setSelected(false)
 			}
@@ -144,6 +147,7 @@ class VerseItemAdapter(
 	}
 
 
+/*	No longer used since cursPos is passed to the pop menu action in Chapter.kt
 	// Returns from the text of the current cell, the cursor position, the text before the cursor
 	// and the text after the cursor.
 	fun currTextSplit() : ContentValues {
@@ -170,7 +174,7 @@ class VerseItemAdapter(
 		cv.put("2", textBefore)
 		cv.put("3", textAfter)
 		return cv
-	}
+	}*/
 
 	// Member function of VerseItemAdapter for making the tapped cell the current cell
 	// Called by the onClickListener for verseItemTxt
@@ -182,7 +186,7 @@ class VerseItemAdapter(
 				// Save the current cell if necessary
 				if (curCell.dirty) {
 					val textSrc = curCell.verseItemTxt.getText().toString()
-					KITApp.chInst.copyAndSaveVItem(currCellOfst, textSrc)
+					KITApp.chInst!!.copyAndSaveVItem(currCellOfst, textSrc)
 					curCell.dirty = false
 				}
 				// Disable the current cell
@@ -193,10 +197,10 @@ class VerseItemAdapter(
 			if (newCurrCell != null) {
 				val newCurCell = newCurrCell as ListCell
 				val edText = newCurCell.verseItemTxt
-				val cursPos = edText.getSelectionStart()
+				cursPos = edText.getSelectionStart()
 				// make the ListCell just tapped the current one
 				currCellOfst = newPos
-				KITApp.chInst.setupCurrentItemFromRecyclerRow(newPos)
+				KITApp.chInst!!.setupCurrentItemFromRecyclerRow(newPos)
 				// Enable the new current cell
 				newCurCell.setSelected(true)
 				edText.setSelection(cursPos)
@@ -207,7 +211,7 @@ class VerseItemAdapter(
 			if (currCell != null) {
 				val curCell = currCell as ListCell
 				val edText = curCell.verseItemTxt
-				val cursPos = edText.getSelectionStart()
+				cursPos = edText.getSelectionStart()
 				curCell.setSelected(true)
 				edText.setSelection(cursPos)
 			}
@@ -217,13 +221,12 @@ class VerseItemAdapter(
 	// Member function of VerseItemAdapter for showing the popup window for the tapped VerseItem
 	// Called by the onClickListener for popoverButton
 	fun showPopoverMenu(it: View) {
-		println("About to show popover menu")
 		val btn_popovr = it as Button
 		var locations = IntArray(2)
 		btn_popovr.getLocationInWindow(locations)
 		// If the current cell has been edited it must be saved
 		saveCurrentItemText()
-		edChAct.showPopOverMenu(btn_popovr)
+		edChAct.showPopOverMenu(btn_popovr, cursPos)
 	}
 
 	// If the current VerseItem is outside the RecyclerView (i.e. invisible) then nothing is done;

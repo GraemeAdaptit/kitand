@@ -27,7 +27,7 @@ class ChooseChapterActivity : AppCompatActivity() {
 	lateinit var ch_name: String
 	lateinit var ps_name: String
 	lateinit var chOrPsName: String
-	lateinit var bkInst: Book
+	var bkInst: Book? = null
 
 	// tableRow of the selected Chapter
 	// chRow = -1 means that no Chapter has been selected yet
@@ -56,7 +56,7 @@ class ChooseChapterActivity : AppCompatActivity() {
 		ch_name = KITApp.res.getString(R.string.nm_chapter)
 		ps_name = KITApp.res.getString(R.string.nm_psalm)
 		bkInst = KITApp.bkInst
-		if (bkInst.bkID == 19) {
+		if (bkInst!!.bkID == 19) {
 			chOrPsName = ps_name
 		} else {
 			chOrPsName = ch_name
@@ -74,26 +74,27 @@ class ChooseChapterActivity : AppCompatActivity() {
 			suppActionBar?.setTitle(actionBarTitle)
 		}
 		// Set flag for when user comes back to choose another chapter
-		letUserChooseChapter = bkInst.canChooseAnotherChapter
+		letUserChooseChapter = bkInst!!.canChooseAnotherChapter
 		// Most launches will have a current Chapter and will go straight to it
-		if (!letUserChooseChapter && bkInst.curChID > 0) {
-			bkInst.goCurrentChapter()	// Creates an instance for the current Book (from kdb.sqlite)
+		if (!letUserChooseChapter && bkInst!!.curChID > 0) {
+			bkInst!!.goCurrentChapter()	// Creates an instance for the current Book (from kdb.sqlite)
 			// If the user comes back to the Choose Book scene we need to let him choose again
-			bkInst.canChooseAnotherChapter = true
+			bkInst!!.canChooseAnotherChapter = true
 			// Go to the EditChapterActivity
 			val i = Intent(this, EditChapterActivity::class.java)
 			startActivity(i)
-//			finish()		// Keep ChooseChapterActivity in the Back Stack
+			// Dispose of ChooseChapterActivity to reduce memory usage
+			finish()
 		} else {
 
 			// On first launch, and when user wants to choose another chapter,
 			// do nothing and wait for the user to choose a Chapter.
 //			txt_bibname.setText(KITApp.bibInst.bibName)
 			val prompt =
-				if (KITApp.bkInst.bkID == 19) "Choose " + ps_name else "Choose " + ch_name + " of " + KITApp.bkInst.bkName
+				if (bkInst!!.bkID == 19) "Choose " + ps_name else "Choose " + ch_name + " of " + bkInst!!.bkName
 			txt_ch_prompt.setText(prompt)
 			viewManager = LinearLayoutManager(this)
-			viewAdapter = ChapterAdapter(KITApp.bkInst.BibChaps, this) as ChapterAdapter
+			viewAdapter = ChapterAdapter(bkInst!!.BibChaps, this) as ChapterAdapter
 			recyclerView = findViewById<RecyclerView>(R.id.lst_chapters).apply {
 				// use this setting to improve performance if you know that changes
 				// in content do not change the layout size of the RecyclerView
@@ -112,7 +113,7 @@ class ChooseChapterActivity : AppCompatActivity() {
 						recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
 						// Get the height of the layout
 						layout_height = recyclerView.getMeasuredHeight()
-						(viewManager as LinearLayoutManager).scrollToPositionWithOffset(bkInst.currChapOfst, layout_height/2)
+						(viewManager as LinearLayoutManager).scrollToPositionWithOffset(bkInst!!.currChapOfst, layout_height/2)
 						return true
 					}
 					return false
@@ -136,21 +137,23 @@ class ChooseChapterActivity : AppCompatActivity() {
 		// Go to the ChooseBookActivity
 		val i = Intent(this, ChooseBookActivity::class.java)
 		startActivity(i)
-		finish()	// If user returns to ChooseChapterActivity it will be to a new instance of the activity
+		// Dispose of ChooseChapterActivity to reduce memory usage
+		finish()
 	}
 
 	fun chooseChapterAction(position:Int) {
 		val chRowNew = position
 		chRow = chRowNew
 		// Set up the selected Chapter as the current Chapter
-		bkInst.setupCurrentChapter(position)
+		bkInst!!.setupCurrentChapter(position)
 
 		// If the user comes back to the Choose Chapter scene we need to let him choose again
-		bkInst.canChooseAnotherChapter = true
+		bkInst!!.canChooseAnotherChapter = true
 
 		// Go to the EditChapterActivity
 		val i = Intent(this, EditChapterActivity::class.java)
 		startActivity(i)
-//		finish()		// Keep ChooseChapterActivity in the Back Stack
+		// Dispose of ChooseChapterActivity to reduce memory usage
+		finish()
 	}
 }

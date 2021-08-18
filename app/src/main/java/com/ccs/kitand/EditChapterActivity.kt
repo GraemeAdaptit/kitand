@@ -10,6 +10,9 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+//
+//	NOTE: The EditChapterActivity of kitand matches the VersesTableViewController in kitios
+//
 
 class EditChapterActivity : AppCompatActivity() {
 
@@ -17,10 +20,10 @@ class EditChapterActivity : AppCompatActivity() {
 	private lateinit var ch_name:String
 	private lateinit var ps_name:String
 	lateinit var recyclerView: RecyclerView
-	lateinit var viewAdapter: VerseItemAdapter
-	private lateinit var viewManager: RecyclerView.LayoutManager
+	private var viewAdapter: VerseItemAdapter? = null
+	private var viewManager: RecyclerView.LayoutManager? = null
 	lateinit var edChAct: EditChapterActivity
-//	lateinit var linLM: RecyclerView.LayoutManager
+	var bkInst: Book? = null
 
 	var currItOfst = -1	// -1 until one of the VerseItems is chosen for editing;
 						// then it is the offset into the BibItems[] array which equals
@@ -38,10 +41,15 @@ class EditChapterActivity : AppCompatActivity() {
 	// Properties of the EditChapterActivity instance related to popover menus
 	var curPoMenu: VIMenu? = null	// instance in memory of the current popover menu
 	private var popupWin: PopupWindow? = null
+	// Cursor position in text of current VerseItem
+	// Set in showPopOverMenu() which gets the value from a parameter
+	// The value is kept in case it is needed in popMenuAction()
+	var cursPos = 0
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_edit_chapter)
+		bkInst = KITApp.bkInst
 
 		edChAct = this
 		// Get access to the SupportActionBar
@@ -52,10 +60,10 @@ class EditChapterActivity : AppCompatActivity() {
 		ch_name = KITApp.res.getString(R.string.nm_chapter)
 		ps_name = KITApp.res.getString(R.string.nm_psalm)
 
-		val result = KITApp.chInst.goCurrentItem()
+		val result = KITApp.chInst!!.goCurrentItem()
 		this.currItOfst = result
 		viewManager = LinearLayoutManager(this)
-		viewAdapter = VerseItemAdapter(KITApp.chInst.BibItems, this) as VerseItemAdapter
+		viewAdapter = VerseItemAdapter(KITApp.chInst!!.BibItems, this) as VerseItemAdapter
 
 		recyclerView = findViewById<RecyclerView>(R.id.lv_verseitemlist).apply {
 			// use this setting to improve performance if you know that changes
@@ -66,8 +74,6 @@ class EditChapterActivity : AppCompatActivity() {
 			// specify a viewAdapter
 			adapter = viewAdapter
 		}
-//		val scrollPos = if (currItOfst >= 5) (currItOfst - 5) else 0
-//		recyclerView.scrollToPosition(scrollPos)
 
 //		// Ensure that the soft keyboard will appear
 		// TODO: Find a way that works!
@@ -83,10 +89,10 @@ class EditChapterActivity : AppCompatActivity() {
 	override fun onStart() {
 		super.onStart()
 		val bibName = KITApp.bibInst.bibName
-		val chNumStr = KITApp.chInst.chNum.toString()
-		val prompt = if (KITApp.bkInst.bkID == 19)
+		val chNumStr = KITApp.chInst!!.chNum.toString()
+		val prompt = if (bkInst!!.bkID == 19)
 			"Edit " + ps_name + " " + chNumStr else
-			"Edit " + ch_name + " " + chNumStr + " of " + KITApp.bkInst.bkName
+			"Edit " + ch_name + " " + chNumStr + " of " + bkInst!!.bkName
 		txt_ched_prompt.setText(prompt)
 		val actionBarTitle = "Key It  -  " + bibName
 		if (suppActionBar != null) {
@@ -97,7 +103,7 @@ class EditChapterActivity : AppCompatActivity() {
 
 	override fun onResume() {
 		super.onResume()
-		val curItOfst = KITApp.chInst.goCurrentItem()
+		val curItOfst = KITApp.chInst!!.goCurrentItem()
 		this.currItOfst = curItOfst
 		// NOTE: at the time that onResume() is called, the RecyclerView has not been fully set up
 		// so attempting to show the correct VerseItem as selected will not work (and may crash).
@@ -112,9 +118,8 @@ class EditChapterActivity : AppCompatActivity() {
 					// Get the width of the layout
 					layout_width = recyclerView.getMeasuredWidth()
 					layout_height = recyclerView.getMeasuredHeight()
-//					viewManager.scrollToPosition(currItOfst)
 					(viewManager as LinearLayoutManager).scrollToPositionWithOffset(currItOfst, layout_height/2)
-					viewAdapter.selectCurrItem(currItOfst)
+					viewAdapter?.selectCurrItem(currItOfst)
 					return true
 				}
 				return false
@@ -125,8 +130,18 @@ class EditChapterActivity : AppCompatActivity() {
 	// The Android system calls this function when KIT is going into the background
 	override fun onStop() {
 		saveCurrentItemText()
+		println("EditChapterActivity onStop() has been called")
 		super.onStop()
 	}
+
+	// The Android system calls this function when EditChapterActivity is being removed
+	override fun onDestroy() {
+		viewManager = null
+		viewAdapter = null
+		println("EditChapterActivity onDestroy() has been called")
+		super.onDestroy()
+	}
+
 	// The Android system's Action Bar calls this function when the user taps the Back button
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		when (item.getItemId()) {
@@ -146,24 +161,26 @@ class EditChapterActivity : AppCompatActivity() {
 		// Go to the ChooseChapterActivity
 		val i = Intent(this, ChooseChapterActivity::class.java)
 		startActivity(i)
-		finish()	// If user returns to EditChapterActivity it will be to a new instance of the activity
+		// Dispose of the EditChapterActivity to reduce memory usage
+		finish()
 	}
 
 	// Go to the ExportChapterActivity
 	private fun goToExport() {
 		// Save the current VerseItem text if necessary
 		saveCurrentItemText()
-		// Go to the ChooseChapterActivity
+		// Go to the ExportChapterActivity
 		val i = Intent(this, ExportChapterActivity::class.java)
 		startActivity(i)
 	}
 
 	// Show popover menu; called from showPopoverMenu() in VerseItemAdapter
-	fun showPopOverMenu(butn: Button) {
+	fun showPopOverMenu(butn: Button, cursPos: Int) {
+		this.cursPos = cursPos
 		val locations = IntArray(2)
 		butn.getLocationInWindow(locations)
 		val butW: Int = butn.getWidth()
-		curPoMenu = KITApp.chInst.curPoMenu
+		curPoMenu = KITApp.chInst!!.curPoMenu
 		var numRows = 0
 		if (curPoMenu == null) numRows = 0 else numRows = curPoMenu!!.numRows
 		val poMenuWidth: Float = curPoMenu?.menuLabelLength!!		// Scaled points
@@ -198,7 +215,7 @@ class EditChapterActivity : AppCompatActivity() {
 		val popMenuCode = curPoMenu!!.VIMenuItems[pos].VIMenuAction
 		// Ensure that the current BibItem is saved prior to possibly changing which one is the current one.
 		saveCurrentItemText()
-		KITApp.chInst.popMenuAction(popMenuCode, viewAdapter)
+		KITApp.chInst!!.popMenuAction(popMenuCode, cursPos /*viewAdapter*/)
 		popupWin!!.dismiss()
 		// Refresh the RecyclerView of VerseItems
 		// Replacing the content of the RecyclerView causes its current contents to be saved to the database,
@@ -206,17 +223,17 @@ class EditChapterActivity : AppCompatActivity() {
 		// so every VerseItem that is at present in the RecyclerView is saved to its preceding VerseItem in
 		// the database -- Verse 2 text goes to Verse 1, etc.!!
 		// This Boolean is a hack to prevent this; but there must be a better way!
-		viewAdapter.setIsRefreshingRecyclerView(true)
+		viewAdapter?.setIsRefreshingRecyclerView(true)
 		recyclerView.setAdapter(null);
 		recyclerView.setLayoutManager(null);
 		recyclerView.setAdapter(viewAdapter);
 		recyclerView.setLayoutManager(viewManager);
-		viewAdapter.notifyDataSetChanged()
-		viewAdapter.setIsRefreshingRecyclerView(false)
+		viewAdapter?.notifyDataSetChanged()
+		viewAdapter?.setIsRefreshingRecyclerView(false)
 		// Get the current offset calculated by chInst after the pomenu action had finished
-		currItOfst = KITApp.chInst.currItOfst
+		currItOfst = KITApp.chInst!!.currItOfst
 		// Set currCellOfst of the VerseItemAdapter
-		viewAdapter.currCellOfst = currItOfst
+		if (viewAdapter != null) viewAdapter!!.currCellOfst = currItOfst
 		// NOTE: at this time, the RecyclerView may not have been fully set up
 		// so attempting to show the correct VerseItem as selected may not work (and may crash).
 		// Setting a listener for the point when RecyclerView is fully set up is an OK approach.
@@ -225,10 +242,8 @@ class EditChapterActivity : AppCompatActivity() {
 				if (recyclerView.getChildCount() > 0) {
 					// Remove the listener to avoid continually triggering this code - once is enough.
 					recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
-					viewManager.scrollToPosition(currItOfst)
-//					val scrollPos = if (currItOfst >= 4) (currItOfst - 4) else 0
-//					recyclerView.scrollToPosition(scrollPos)
-					viewAdapter.selectCurrItem(currItOfst)
+					(viewManager as LinearLayoutManager).scrollToPositionWithOffset(currItOfst, layout_height/2)
+					viewAdapter?.selectCurrItem(currItOfst)
 					return true
 				}
 				return false
@@ -239,6 +254,6 @@ class EditChapterActivity : AppCompatActivity() {
 	// Called when another VerseItem cell is selected in order to save the current VerseItem text
 	// before making another VerseItem the current one
 	private fun saveCurrentItemText() {
-		viewAdapter.saveCurrentItemText()
+		viewAdapter?.saveCurrentItemText()
 	}
 }
