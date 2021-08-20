@@ -232,6 +232,8 @@ class Chapter(
 			currVN = BibItems[currItOfst].vsNum		// Get its verse number
 			// Setting currItOfst ensures that there is a VIMenu for the current VerseItem
 		}
+		// Update the BibChap record for this Chapter
+		bkInst!!.setCurVItem (currIt, currVN)
 		// Update the database Chapter record
 		if (dao.chaptersUpdateRec (chID, itRCr, currIt, currVN) ) {
 			println("Chapter:goCurrentItem updated $bkInst.bkName $chNum Chapter record")

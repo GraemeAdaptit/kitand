@@ -48,7 +48,9 @@ class VerseItemAdapter(
 		var buttonText = ""
 		when (itemType) {
 		"Title" -> buttonText = "Main Title"
-		"Para", "ParaCont" -> buttonText = "Paragraph"
+		"Para", "ParaCont" -> {
+			buttonText = "Paragraph"
+		}
 		"ParlRef" -> buttonText = "Parallel Ref"
 		"VerseCont" -> buttonText = "Verse " + verseNo.toString() + " (cont)"
 		"Verse" -> {
@@ -66,8 +68,8 @@ class VerseItemAdapter(
 		holder.popoverButton.setText(buttonText)
 		// Set the VerseItem text into the cell
 		holder.verseItemTxt.setText(BibItem.itTxt)
-		if (this.currCellOfst == position) {
-			// If this is the current VerseItem turn on EditText for editing
+		if (this.currCellOfst == position && itemType != "Para" && itemType != "ParaCont") {
+			// If this is the current VerseItem and it is not a Paragraph, turn on EditText for editing
 			holder.setSelected(true)
 		} else {
 			// Otherwise disable editing of the EditText field
@@ -201,9 +203,14 @@ class VerseItemAdapter(
 				// make the ListCell just tapped the current one
 				currCellOfst = newPos
 				KITApp.chInst!!.setupCurrentItemFromRecyclerRow(newPos)
-				// Enable the new current cell
-				newCurCell.setSelected(true)
-				edText.setSelection(cursPos)
+				// Enable the new current cell if it is not a Paragraph
+				val newCellType = KITApp.chInst!!.BibItems[currCellOfst].itTyp
+				if (newCellType != "Para" && newCellType != "ParaCont") {
+					newCurCell.setSelected(true)
+					edText.setSelection(cursPos)
+				} else {
+					edText.setSelected(false)
+				}
 			}
 		} else {
 			// Ensure the current cell has editing focus at position the user tapped
@@ -236,7 +243,14 @@ class VerseItemAdapter(
 		val verItCell = edChAct.recyclerView.findViewHolderForAdapterPosition(position)
 		if (verItCell != null) {
 			val verseItemCell = verItCell as ListCell
-			verseItemCell.setSelected(true)
+			// Enable the current cell if it is not a Paragraph
+			val newCellType = KITApp.chInst!!.BibItems[currCellOfst].itTyp
+			if (newCellType != "Para" && newCellType != "ParaCont") {
+				verseItemCell.setSelected(true)
+			} else {
+				verseItemCell.setSelected(false)
+			}
+//			verseItemCell.setSelected(true)
 		}
 	}
 

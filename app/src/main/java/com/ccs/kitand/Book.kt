@@ -25,7 +25,7 @@ class Book(
 	var chapRCr: Boolean,	// chapRecsCreated INTEGER
 	var numChap: Int,		// numChaps INTEGER
 	var curChID: Int,		// currChID INTEGER (the ID assigned by SQLite when the Chapter was created)
-	var curChNum: Int		// currChNum INTEGER (the ID assigned by SQLite when the Chapter was created)
+	var curChNum: Int		// currChNum INTEGER (the Chapter number)
 ) {
 
 	// The following variables and data structures have lifetimes of the Book object

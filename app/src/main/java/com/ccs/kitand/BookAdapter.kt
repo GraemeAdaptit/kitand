@@ -26,15 +26,23 @@ class BookAdapter (
 	override fun onBindViewHolder(holder: BookCell, position: Int) {
 		// - get element from your dataset at this position
 		// - replace the contents of the view with that element's data
-		val bibBook = BibBooks[position]
-		val bookName = bibBook.bkName
+		val book = BibBooks[position]
+		val bookName = book.bkName
 		holder.bookName.setText(bookName)
-		if (bibBook.chapRCr) {
+		val numCh = book.numCh
+		val curChapID = BibBooks[position].curChID
+		val curChNum = BibBooks[position].curChNum
+		var bookInfo = ""
+		if (book.chapRCr) {
 			// Set colour of text
 			holder.bookName.setTextColor(Color.parseColor("#0000CD"))
+			if (curChapID > 0) {
+				bookInfo = "Ch " + curChNum.toString() + " "
+			}
+			bookInfo += "(" + numCh.toString() + " chs)"
 			// Set info text
-			val bookInfo = "Ch " + bibBook.curChNum.toString() + " (" + bibBook.numCh.toString() + " chs)"
 			holder.bookInfo.setText(bookInfo)
+			holder.bookInfo.setTextColor(Color.parseColor("#0000CD"))
 		}
 
 		// Listeners for Book selected
