@@ -1,8 +1,6 @@
 package com.ccs.kitand
 
-import android.R
 import java.io.BufferedReader
-import kotlin.properties.Delegates
 
 //  Created by Graeme Costin on 24SEP20.
 // The author disclaims copyright to this source code.  In place of
@@ -72,10 +70,14 @@ class Book(
 	// When the instance of Bible creates the instance for the current Book it supplies the values for
 	// the currently selected book from the BibBooks array
 
-	init {
+	init {	// Book.init()
 		// On the first time this Book has been selected the Chapter records must be created
 		if (!chapRCr) {
-			createChapterRecords(bkID, bibID, bkCode)
+			try {
+				createChapterRecords(bkID, bibID, bkCode)
+			} catch (e:SQLiteCreateRecExc) {
+				throw SQLiteCreateRecExc(e.message + "\nBook.init()")
+			}
 		}
 
 		// Every time this Book is selected: The Chapters records in kdb.sqlite will have been
@@ -87,10 +89,13 @@ class Book(
 		// when VerseItem records for this Chapter are created, and when the user chooses
 		// a different Chapter to edit.
 		// Its life will end when the user chooses a different Book to edit.
-
-		dao.readChaptersRecs(bibID, this)
-		// calls readChaptersRecs() in KITDAO.swift to read the kdb.sqlite database Books table
-		// readChaptersRecs() calls appendChapterToArray() in this file for each ROW read from kdb.sqlite
+		try {
+			dao.readChaptersRecs(bibID, this)
+			// calls readChaptersRecs() in KITDAO.swift to read the kdb.sqlite database Books table
+			// readChaptersRecs() calls appendChapterToArray() in this file for each ROW read from kdb.sqlite
+		} catch (e:SQLiteReadRecExc) {
+			throw SQLiteReadRecExc(e.message + "\nBook.init()")
+		}
 	}
 
 	fun createChapterRecords(book: Int, bib: Int, code: String) {
@@ -134,7 +139,10 @@ class Book(
 			}
 			val numVs = elemTr.toInt()
 			numIt = numIt + numVs	// for some Psalms numIt will include the ascription VerseItem
-			if (dao.chaptersInsertRec(bib, book, chNum, false, numVs, numIt, currIt, currVN) ) {
+			try {
+				dao.chaptersInsertRec(bib, book, chNum, false, numVs, numIt, currIt, currVN)
+			} catch (e:SQLiteCreateRecExc) {
+				throw SQLiteCreateRecExc(e.message + "\ncreateChapterRecords()")
 			}
 			chNum = chNum + 1
 		}
@@ -144,7 +152,10 @@ class Book(
 
 		// Update kdb.sqlite Books record of current Book to indicate that its Chapter records have been created,
 		// the number of Chapters has been found, but there is not yet a current Chapter
-		if (dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, curChID, curChNum) ) {
+		try {
+			dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, curChID, curChNum)
+		} catch (e:SQLiteUpdateRecExc) {
+			throw SQLiteUpdateRecExc(e.message + "\ncreateChapterRecords()")
 		}
 
 		// Update the entry in BibBooks[] for the current Book to show that its Chapter records have been created
@@ -158,7 +169,7 @@ class Book(
 		chapID: Int, bibID: Int, bookID: Int,
 		chNum: Int, itRCr: Boolean, numVs: Int, numIt: Int, curIt: Int, curVN: Int
 	) {
-		val chRec = Book.BibChap(chapID, bibID, bookID, chNum, itRCr, numVs, numIt, curIt, curVN)
+		val chRec = BibChap(chapID, bibID, bookID, chNum, itRCr, numVs, numIt, curIt, curVN)
 		BibChaps.add(chRec)
 	}
 
@@ -188,7 +199,11 @@ class Book(
 		// create a Chapter instance for the current Chapter of the current Book
 		// The initialisation of the instance of Chapter stores a reference in KITApp
 		val chap = BibChaps[currChapOfst]
-		chapInst = Chapter(chap.chID, chap.bibID, chap.bkID, chap.chNum, chap.itRCr, chap.numVs, chap.numIt, chap.curIt, chap.curVN)
+		try {
+			chapInst = Chapter(chap.chID, chap.bibID, chap.bkID, chap.chNum, chap.itRCr, chap.numVs, chap.numIt, chap.curIt, chap.curVN)
+		} catch (e:SQLiteUpdateRecExc) {
+			throw SQLiteUpdateRecExc(e.message + "\ngoCurrentChapter()")
+		}
 		KITApp.chInst = chapInst
 	}
 
@@ -202,22 +217,32 @@ class Book(
 		curChID = chap.chID
 		currChapOfst = chapOfst
 		// update Book record in kdb.sqlite to show this current Chapter
-		if (dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, curChID, curChNum)) {
-//			println("The currChap for $bkName in kdb.sqlite was updated to $chap.chNum")
-		}
-		// Update the curChID and curChNum for this book in BibBooks[] in bibInst
-		bibInst.setBibBooksCurChap (curChID, curChNum)
+		try {
+			dao.booksUpdateRec(bibID, bkID, chapRCr, numChap, curChID, curChNum)
+			// Update the curChID and curChNum for this book in BibBooks[] in bibInst
+			bibInst.setBibBooksCurChap (curChID, curChNum)
 
-		// If a different chapter is being selected allow any previous in-memory instance of Chapter
-		// to be garbage collected and create a new Chapter instance.
-		if (diffChap) {
-			chapInst = null
-			KITApp.chInst = null
+			// If a different chapter is being selected allow any previous in-memory instance of Chapter
+			// to be garbage collected and create a new Chapter instance.
+			if (diffChap) {
+				chapInst = null
+				KITApp.chInst = null
 
-			// create a Chapter instance for the current Chapter of the current Book
-			// The initialisation of the instance of Chapter stores a reference in KITApp
-			chapInst = Chapter(chap.chID, chap.bibID, chap.bkID, chap.chNum, chap.itRCr, chap.numVs, chap.numIt, chap.curIt, chap.curVN)
-			KITApp.chInst = chapInst
+				// create a Chapter instance for the current Chapter of the current Book
+				// The initialisation of the instance of Chapter stores a reference in KITApp
+				try {
+					chapInst = Chapter(chap.chID, chap.bibID, chap.bkID, chap.chNum, chap.itRCr, chap.numVs, chap.numIt, chap.curIt, chap.curVN)
+//				} catch (e:SQLiteUpdateRecExc) {
+//					throw SQLiteUpdateRecExc(e.message + "\nsetupCurrentChapter()")
+				} catch (e:SQLiteCreateRecExc) {
+					throw SQLiteCreateRecExc(e.message + "\nsetupCurrentChapter()")
+				} catch (e:SQLiteReadRecExc) {
+					throw SQLiteReadRecExc(e.message + "\nsetupCurrentChapter()")
+				}
+				KITApp.chInst = chapInst
+			}
+		} catch (e:SQLiteUpdateRecExc) {
+			throw SQLiteUpdateRecExc(e.message + "\nsetupCurrentChapter()")
 		}
 	}
 

@@ -72,10 +72,14 @@ class VIMenu(curItOfst: Int)
 				VIMenuItems.add(viMI3)
 			}
 			"InSubj" -> {            // Subject heading within Book introductory matter
-				val viMI1 = VIMenuItem("Intro Paragraph", "crInPar", "C")
-				VIMenuItems.add(viMI1)
-				val viMI2 = VIMenuItem("Intro Subject", "delInSubj", "D")
+				if ((bibItem.vsNum == 1) && (chNum == 1) && (!chInst.hasInTitle)) {
+					val viMI1 = VIMenuItem("Intro Title", "crInTit", "C")
+					VIMenuItems.add(viMI1)
+				}
+				val viMI2 = VIMenuItem("Intro Paragraph", "crInPar", "C")
 				VIMenuItems.add(viMI2)
+				val viMI3 = VIMenuItem("Intro Subject", "delInSubj", "D")
+				VIMenuItems.add(viMI3)
 			}
 			"InPara" -> {            // Paragraph within Book introductory matter
 				val viMI1 = VIMenuItem("Intro Paragraph", "crInPar", "C")
@@ -134,13 +138,19 @@ class VIMenu(curItOfst: Int)
 						VIMenuItems.add(viMI3)
 					}
 				}
-				val viMI4 = VIMenuItem("Heading Before", "crHdBef", "C")
-				VIMenuItems.add(viMI4)
-				val viMI5 = VIMenuItem("Paragraph Before", "crParaBef", "C")
-				VIMenuItems.add(viMI5)
-				if (!bibItem.isBrg) {
-					val viMI6 = VIMenuItem("Paragraph In", "crParaCont", "C")
-					VIMenuItems.add(viMI6)
+				if (curItOfst == 0 || ( (curItOfst > 0) && (chInst.BibItems[curItOfst - 1].itTyp != "Heading") ) ) {
+					val viMI4 = VIMenuItem("Heading Before", "crHdBef", "C")
+					VIMenuItems.add(viMI4)
+				}
+				if (curItOfst == 0 || ( (curItOfst > 0) && (chInst.BibItems[curItOfst - 1].itTyp != "Para") ) ) {
+					val viMI5 = VIMenuItem("Paragraph Before", "crParaBef", "C")
+					VIMenuItems.add(viMI5)
+				}
+				if (curItOfst == 0 || (bibItem.itTyp != "VerseCont") ) {
+					if (!bibItem.isBrg) {
+						val viMI6 = VIMenuItem("Paragraph In", "crParaCont", "C")
+						VIMenuItems.add(viMI6)
+					}
 				}
 				val viMI7 = VIMenuItem("Parallel Ref", "crPalRef", "C")
 				VIMenuItems.add(viMI7)
@@ -151,7 +161,9 @@ class VIMenu(curItOfst: Int)
 					brgPossible = (bibItem.vsNum < chInst.numVs)
 				}
 				if (brgPossible) {
-					if (chInst.BibItems[curItOfst + 1].itTyp == "Verse") {
+					// GDLC 24AUG21 Don't allow verse to be bridged with a following bridge
+					val nextVI = chInst.BibItems[curItOfst + 1]
+					if (nextVI.itTyp == "Verse" && !nextVI.isBrg) {
 						val viMI8 = VIMenuItem("Bridge Next Verse", "brid", "B")
 						VIMenuItems.add(viMI8)
 					}

@@ -1,9 +1,7 @@
 package com.ccs.kitand
 
-import android.content.ContentValues
 import android.content.res.Resources
 import java.io.BufferedReader
-import java.io.InputStream
 
 //  Bible.kt
 //
@@ -28,7 +26,7 @@ class Bible (
 	val bibID: Int,			//	BibleID
 	var bibName: String,	//	Bible Name
 	var bkRCr: Boolean,		//	Book Records Created
-	var currBk: Int			//	Current Book
+	var currBk: Int		//	Current Book
 ) {
 
 	// Additional properties of the Bible instance
@@ -68,11 +66,25 @@ class Bible (
 	// When SetupActivity creates the instance of Bible it supplies the values
 	// from the Bible record of kdb.sqlite
 
-	init {
+	init {	// Bible.init()
 		currBookOfst = if (currBk > 39) (currBk - 2) else (currBk - 1)
 		if (!bkRCr) {
 			// Create the 66 Book records for this Bible
-			createBooksRecords(bibID)
+			try {
+				createBooksRecords(bibID)
+
+				// Update the in-memory Bible record to note that Books recs have been created
+				bkRCr = true
+
+				// Update the kdb.sqlite Bible record to note that Books recs have been created
+				try {
+					dao.bibleUpdateRecsCreated()
+				} catch (e: SQLiteUpdateRecExc) {
+					throw SQLiteUpdateRecExc(e.message + "\ncreateBooksRecords()")
+				}
+			} catch (e:SQLiteCreateRecExc) {
+				throw SQLiteCreateRecExc (e.message + "\nBible.init()")
+			}
 		}
 		// Every launch: the Books records will have been created at this point,
 		// so set up the array BibBooks by reading the 66 Books records from kdb.sqlite.
@@ -84,7 +96,13 @@ class Bible (
 		// readBooksRecs() in KITDAO.kt reads the kdb.sqlite database Books table
 		// and calls appendBibBookToArray() in this file for each ROW read from kdb.sqlite
 		// appendBibBookToArray() builds the array BibBooks
-		dao.readBooksRecs (this)
+		if (bkRCr) {	// Will this prevent reading Books records if there were an exception above?
+			try {
+				dao.readBooksRecs(this)
+			} catch (e: SQLiteReadRecExc) {
+				throw SQLiteReadRecExc(e.message + "\nBible.init()")
+			}
+		}
 	}
 
 	// createBooksRecords creates the Books records for every Bible book from the text files in the
@@ -129,7 +147,7 @@ class Bible (
 		// getting the book names from the look-up dictionary made from KIT_BooksNames.txt
 		for (spec in specLines) {
 			// Ignore empty lines and line starting with #
-			if (!spec.isEmpty() && (spec.first() != '#')) {
+			if (spec.isNotEmpty() && (spec.first() != '#')) {
 				// Create the Books record for this Book
 				val bkStrs = spec.split(", ").toTypedArray()
 				val bkID = bkStrs[0].toInt()
@@ -142,26 +160,14 @@ class Bible (
 				val numCh = 0
 				val curChID = 0
 				val curChNum = 0
-				println("BookID = $bkID, BibleID = $bibID, Book Code = $bkCode, BookName = $bkName, ChapRecsCreated is $chRCr, numChaps = $numCh, CurrentChap = $curChNum")
 				// Write Books record to kdb.sqlite
-				if (dao.booksInsertRec(bkID, bibID, bkCode, bkName, chRCr, numCh, curChID, curChNum)) {
-					println("The Books record for $bkName was created")
-				} else {
-					println("The Books record for $bkName was not created")
+				try {
+					dao.booksInsertRec(bkID, bibID, bkCode, bkName, chRCr, numCh, curChID, curChNum)
+				} catch (e:SQLiteCreateRecExc) {
+					throw SQLiteCreateRecExc(e.message + "\ncreateBooksRecords()")
 				}
 			}
 		}
-
-		// Update the in-memory Bible record to note that Books recs have been created
-		bkRCr = true
-
-		// Update the kdb.sqlite Bible record to note that Books recs have been created
-		if (dao.bibleUpdateRecsCreated()) {
-			println("bookRecsCreated in the Bible rec was set to true")
-		} else {
-			println("bookRecsCreated in the Bible rec was not set to true")
-		}
-
 	}
 
 	// dao.readBooksRecs() calls appendBibBookToArray() for each row it reads from the kdb.sqlite database
@@ -181,9 +187,15 @@ class Bible (
 		KITApp.bkInst = null
 
 		// create a Book instance for the currently selected book
-		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.curChID, book.curChNum)
-		// keep a weak ref on KITApp
-		KITApp.bkInst = bookInst
+		try {
+			bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.curChID, book.curChNum)
+			// keep a weak ref on KITApp
+			KITApp.bkInst = bookInst
+		} catch (e:SQLiteCreateRecExc) {
+			throw SQLiteCreateRecExc(e.message + "\ngoCurrentBook()")
+		} catch (e:SQLiteReadRecExc) {
+			throw SQLiteReadRecExc(e.message + "\ngoCurrentBook()")
+		}
 	}
 
 	// When the user selects a book from the ListView of books it needs to be recorded as the
@@ -192,18 +204,26 @@ class Bible (
 		currBk = book.bkID
 		currBookOfst = if (currBk > 39) currBk - 2 else currBk - 1
 		// update Bible record in kdb.sqlite to show this current book
-		if (KITApp.dao.bibleUpdateCurrBook(currBk) ) {
-			print("The currBook in kdb.sqlite was updated to $currBk)")
+		try {
+			KITApp.dao.bibleUpdateCurrBook(currBk)
+
+			// allow any previous in-memory instance of Book to be garbage collected
+			bookInst = null
+			KITApp.bkInst = null
+
+			// create a Book instance for the currently selected book
+			try {
+				bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.curChID, book.curChNum)
+			} catch (e:SQLiteCreateRecExc) {
+				throw SQLiteCreateRecExc(e.message + "\nsetupCurrentBook()")
+			} catch (e:SQLiteReadRecExc) {
+				throw SQLiteReadRecExc(e.message + "\nsetupCurrentBook()")
+			}
+			// keep a weak ref on KITApp
+			KITApp.bkInst = bookInst
+		} catch (e:SQLiteUpdateRecExc) {
+			throw SQLiteUpdateRecExc(e.message + "\nsetupCurrentBook()")
 		}
-
-		// allow any previous in-memory instance of Book to be garbage collected
-		bookInst = null
-		KITApp.bkInst = null
-
-		// create a Book instance for the currently selected book
-		bookInst = Book(book.bkID, book.bibID, book.bkCode, book.bkName, book.chapRCr, book.numCh, book.curChID, book.curChNum)
-		// keep a weak ref on KITApp
-		KITApp.bkInst = bookInst
 	}
 
 	// When the Chapter records have been created for the current Book, the entry for that Book in

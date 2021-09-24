@@ -201,7 +201,7 @@ class EditChapterActivity : AppCompatActivity() {
 			// specify a viewAdapter
 			adapter = PopupAdapter(curPoMenu!!, edChAct)
 		}
-		popupWin!!.setOutsideTouchable(true)
+//		popupWin!!.setOutsideTouchable(true)
 
 		popupWin!!.showAtLocation(
 			recyclerView, // View for popup window to appear over
@@ -215,40 +215,61 @@ class EditChapterActivity : AppCompatActivity() {
 		val popMenuCode = curPoMenu!!.VIMenuItems[pos].VIMenuAction
 		// Ensure that the current BibItem is saved prior to possibly changing which one is the current one.
 		saveCurrentItemText()
-		KITApp.chInst!!.popMenuAction(popMenuCode, cursPos /*viewAdapter*/)
-		popupWin!!.dismiss()
-		// Refresh the RecyclerView of VerseItems
-		// Replacing the content of the RecyclerView causes its current contents to be saved to the database,
-		// but the database has already been updated correctly (for example, with an Ascription deleted) and
-		// so every VerseItem that is at present in the RecyclerView is saved to its preceding VerseItem in
-		// the database -- Verse 2 text goes to Verse 1, etc.!!
-		// This Boolean is a hack to prevent this; but there must be a better way!
-		viewAdapter?.setIsRefreshingRecyclerView(true)
-		recyclerView.setAdapter(null);
-		recyclerView.setLayoutManager(null);
-		recyclerView.setAdapter(viewAdapter);
-		recyclerView.setLayoutManager(viewManager);
-		viewAdapter?.notifyDataSetChanged()
-		viewAdapter?.setIsRefreshingRecyclerView(false)
-		// Get the current offset calculated by chInst after the pomenu action had finished
-		currItOfst = KITApp.chInst!!.currItOfst
-		// Set currCellOfst of the VerseItemAdapter
-		if (viewAdapter != null) viewAdapter!!.currCellOfst = currItOfst
-		// NOTE: at this time, the RecyclerView may not have been fully set up
-		// so attempting to show the correct VerseItem as selected may not work (and may crash).
-		// Setting a listener for the point when RecyclerView is fully set up is an OK approach.
-		recyclerView.getViewTreeObserver().addOnPreDrawListener(object : OnPreDrawListener {
-			override fun onPreDraw(): Boolean {
-				if (recyclerView.getChildCount() > 0) {
-					// Remove the listener to avoid continually triggering this code - once is enough.
-					recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
-					(viewManager as LinearLayoutManager).scrollToPositionWithOffset(currItOfst, layout_height/2)
-					viewAdapter?.selectCurrItem(currItOfst)
-					return true
+		var noerr:Boolean = true
+		try {
+			KITApp.chInst!!.popMenuAction(popMenuCode, cursPos)
+		} catch (e:SQLiteCreateRecExc){
+			noerr = false
+			KITApp.ReportError(DBC_PopErr,e.message + "\npopMenuAction()\nEditChapterActivity", this)
+		} catch (e:SQLiteUpdateRecExc){
+			noerr = false
+			KITApp.ReportError(DBU_PopErr,e.message + "\npopMenuAction()\nEditChapterActivity", this)
+		} catch (e:SQLiteReadRecExc){
+			noerr = false
+			KITApp.ReportError(DBR_PopErr,e.message + "\npopMenuAction()\nEditChapterActivity", this)
+		} catch (e:SQLiteDeleteRecExc){
+			noerr = false
+			KITApp.ReportError(DBD_PopErr,e.message + "\npopMenuAction()\nEditChapterActivity", this)
+		}
+		// Avoid executing the rest of this function if there is a fatal error
+		if (noerr) {
+			popupWin!!.dismiss()
+			// Refresh the RecyclerView of VerseItems
+			// Replacing the content of the RecyclerView causes its current contents to be saved to the database,
+			// but the database has already been updated correctly (for example, with an Ascription deleted) and
+			// so every VerseItem that is at present in the RecyclerView is saved to its preceding VerseItem in
+			// the database -- Verse 2 text goes to Verse 1, etc.!!
+			// This Boolean is a hack to prevent this; but there must be a better way!
+			viewAdapter?.setIsRefreshingRecyclerView(true)
+			recyclerView.setAdapter(null);
+			recyclerView.setLayoutManager(null);
+			recyclerView.setAdapter(viewAdapter);
+			recyclerView.setLayoutManager(viewManager);
+			viewAdapter?.notifyDataSetChanged()
+			viewAdapter?.setIsRefreshingRecyclerView(false)
+			// Get the current offset calculated by chInst after the pomenu action had finished
+			currItOfst = KITApp.chInst!!.currItOfst
+			// Set currCellOfst of the VerseItemAdapter
+			if (viewAdapter != null) viewAdapter!!.currCellOfst = currItOfst
+			// NOTE: at this time, the RecyclerView may not have been fully set up
+			// so attempting to show the correct VerseItem as selected may not work (and may crash).
+			// Setting a listener for the point when RecyclerView is fully set up is an OK approach.
+			recyclerView.getViewTreeObserver().addOnPreDrawListener(object : OnPreDrawListener {
+				override fun onPreDraw(): Boolean {
+					if (recyclerView.getChildCount() > 0) {
+						// Remove the listener to avoid continually triggering this code - once is enough.
+						recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
+						(viewManager as LinearLayoutManager).scrollToPositionWithOffset(
+							currItOfst,
+							layout_height / 2
+						)
+						viewAdapter?.selectCurrItem(currItOfst)
+						return true
+					}
+					return false
 				}
-				return false
-			}
-		})
+			})
+		}
 	}
 
 	// Called when another VerseItem cell is selected in order to save the current VerseItem text

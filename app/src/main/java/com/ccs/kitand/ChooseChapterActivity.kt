@@ -73,18 +73,27 @@ class ChooseChapterActivity : AppCompatActivity() {
 			suppActionBar?.setDisplayShowTitleEnabled(true)
 			suppActionBar?.setTitle(actionBarTitle)
 		}
+	}
+
+	override fun onResume() {
+		super.onResume()
 		// Set flag for when user comes back to choose another chapter
 		letUserChooseChapter = bkInst!!.canChooseAnotherChapter
 		// Most launches will have a current Chapter and will go straight to it
 		if (!letUserChooseChapter && bkInst!!.curChID > 0) {
-			bkInst!!.goCurrentChapter()	// Creates an instance for the current Book (from kdb.sqlite)
-			// If the user comes back to the Choose Book scene we need to let him choose again
-			bkInst!!.canChooseAnotherChapter = true
-			// Go to the EditChapterActivity
-			val i = Intent(this, EditChapterActivity::class.java)
-			startActivity(i)
-			// Dispose of ChooseChapterActivity to reduce memory usage
-			finish()
+			try {
+				bkInst!!.goCurrentChapter()
+				// Creates an instance for the current Book (from kdb.sqlite)
+				// If the user comes back to the Choose Book scene we need to let him choose again
+				bkInst!!.canChooseAnotherChapter = true
+				// Go to the EditChapterActivity
+				val i = Intent(this, EditChapterActivity::class.java)
+				startActivity(i)
+				// Dispose of ChooseChapterActivity to reduce memory usage
+				finish()
+			} catch (e:SQLiteUpdateRecExc) {
+				KITApp.ReportError(DBU_BooErr, e.message + "\nonResume()\nChooseChapterActivity", this)
+			}
 		} else {
 
 			// On first launch, and when user wants to choose another chapter,
@@ -145,15 +154,23 @@ class ChooseChapterActivity : AppCompatActivity() {
 		val chRowNew = position
 		chRow = chRowNew
 		// Set up the selected Chapter as the current Chapter
-		bkInst!!.setupCurrentChapter(position)
+		try {
+			bkInst!!.setupCurrentChapter(position)
 
-		// If the user comes back to the Choose Chapter scene we need to let him choose again
-		bkInst!!.canChooseAnotherChapter = true
+			// If the user comes back to the Choose Chapter scene we need to let him choose again
+			bkInst!!.canChooseAnotherChapter = true
 
-		// Go to the EditChapterActivity
-		val i = Intent(this, EditChapterActivity::class.java)
-		startActivity(i)
-		// Dispose of ChooseChapterActivity to reduce memory usage
-		finish()
+			// Go to the EditChapterActivity
+			val i = Intent(this, EditChapterActivity::class.java)
+			startActivity(i)
+			// Dispose of ChooseChapterActivity to reduce memory usage
+			finish()
+		} catch (e:SQLiteUpdateRecExc) {
+			KITApp.ReportError(DBU_ChaRcrErr, e.message + "\nchooseChapterAction\nChooseChapterActivity", this)
+		} catch (e:SQLiteCreateRecExc) {
+			KITApp.ReportError(DBC_VItErr, e.message + "\nchooseChapterAction\nChooseChapterActivity", this)
+		} catch (e:SQLiteReadRecExc) {
+			KITApp.ReportError(DBR_VItErr, e.message + "\nchooseChapterAction\nChooseChapterActivity", this)
+		}
 	}
 }

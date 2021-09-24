@@ -49,17 +49,15 @@ class ExportChapterActivity : AppCompatActivity() {
 
 	override fun onResume() {
 		super.onResume()
-
 		// Generate the USFM text
 		val USFMexp = KITApp.chInst!!.calcUSFMExportText()
 		// Display it to the user
 		txt_USFM.setText(USFMexp)
 		// Save it into the current Chapter record of kdb.sqlite
-		if (KITApp.chInst!!.saveUSFMText (KITApp.chInst!!.chID, USFMexp) ) {
-			println("ExportChapterViewController:viewDidLoad saved USFM text to kdb.sqlite")
-		} else {
-			println("ExportChapterViewController:viewDidLoad save to kdb.sqlite FAILED")
+		try {
+			KITApp.chInst!!.saveUSFMText (KITApp.chInst!!.chID, USFMexp)
+		} catch (e:SQLiteUpdateRecExc) {
+			KITApp.ReportError(DBU_ChaUSFMErr, e.message + "\nonResume()\nExportChapterActivity", this)
 		}
-
 	}
 }

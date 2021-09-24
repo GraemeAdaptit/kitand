@@ -18,12 +18,12 @@
 14        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 14-->[androidx.core:core:1.3.1] /Users/graemecostin/.gradle/caches/transforms-2/files-2.1/a4b31c3d69a20ff1ed66586d53407f9c/core-1.3.1/AndroidManifest.xml:24:18-86
 15        android:debuggable="true"
-16        android:icon="@mipmap/ic_launcher"
-16-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:8:9-43
+16        android:icon="@mipmap/kitlogo"
+16-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:8:9-39
 17        android:label="Key It"
 17-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:9:9-31
-18        android:roundIcon="@mipmap/ic_launcher_round"
-18-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:10:9-54
+18        android:roundIcon="@mipmap/kitlogo_round"
+18-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:10:9-50
 19        android:supportsRtl="true"
 19-->/Users/graemecostin/kitand/app/src/main/AndroidManifest.xml:11:9-35
 20        android:testOnly="true"

@@ -29,19 +29,19 @@ class ChapterAdapter (
 		val chapNum = bibChap.chNum
 		val chapNumText = chChAct.chOrPsName + " " + chapNum.toString()
 		holder.chapNum.setText(chapNumText)
-		// Set colour of text
-		holder.chapNum.setTextColor(Color.parseColor("#0000CD"))
 		var numVsItText = ""
 		val curVsNum = bibChap.curVN
 		if (bibChap.itRCr) {
+			// Set colour of chapter number text
+			holder.chapNum.setTextColor(Color.parseColor("#0000CD"))
 			if (curVsNum > 0) {
 				numVsItText = "Vs " + curVsNum.toString() + " "
 			}
 			numVsItText += "(" + bibChap.numVs.toString() + " vs)"
+			// Set colour of text
+			holder.chapInfo.setTextColor(Color.parseColor("#0000CD"))
 		}
 		holder.chapInfo.setText(numVsItText)
-		// Set colour of text
-		holder.chapInfo.setTextColor(Color.parseColor("#0000CD"))
 
 		// Listeners for Chapter selected
 		holder.chapNum.setOnClickListener(View.OnClickListener {

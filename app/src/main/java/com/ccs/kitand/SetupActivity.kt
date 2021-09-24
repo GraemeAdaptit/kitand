@@ -39,40 +39,71 @@ class SetupActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // Create the KITDAO instance
+        val dao = KITDAO(this)
+        KITApp.dao = dao
+        // Get access to the raw resource files
+        KITApp.res = this.getResources()
         // Read the single Bibles record from kdb.sqlite
-        val cv = KITApp.dao.bibleGetRec()
-        bibID = cv.getAsInteger("1")
-        bibName = cv.getAsString("2")
-        bkRCr = cv.getAsBoolean("3")
-        currBook = cv.getAsInteger("4")
+        try {
+            val cv = KITApp.dao.bibleGetRec()
+            bibID = cv.getAsInteger("1")
+            bibName = cv.getAsString("2")
+            bkRCr = cv.getAsBoolean("3")
+            currBook = cv.getAsInteger("4")
 
-        //	Once the user has dealt with the Setup scene, subsequent launches skip this step.
-        //	Any future editing of the name of the Bible will be done in a separate scene.
-		if (bkRCr) {
-            // Create the instance of Bible and
-            // ensure rest of app has access to the Bible instance
-            KITApp.bibInst = Bible(bibID, bibName, bkRCr, currBook)
-             // Go to the ChooseBookActivity
-            val i = Intent(this, ChooseBookActivity::class.java)
-            startActivity(i)
-            finish()
-        } else {
-    			// Initialise the text field and wait for user to edit Bible name
+            //	Once the user has dealt with the Setup scene, subsequent launches skip this step.
+            //	Any future editing of the name of the Bible will be done in a separate scene.
+            if (bkRCr) {
+                // Create the instance of Bible and
+                // ensure rest of app has access to the Bible instance
+                try {
+                    KITApp.bibInst = Bible(bibID, bibName, bkRCr, currBook)
+                    // Go to the ChooseBookActivity
+                    val i = Intent(this, ChooseBookActivity::class.java)
+                    startActivity(i)
+                    finish()
+//  If the Books records have already been created Bible.init() will not create any records
+//  and there will be no record creation errors; so the following catch is not needed.
+//              } catch (e:SQLiteCreateRecExc) {
+//                  KITApp.ReportError(DBC_BooErr, e.message + ": OnResume(): SetupActivity", this)
+                } catch (e:SQLiteReadRecExc) {
+                    KITApp.ReportError(DBR_BooErr, e.message + "\nOnResume()\nSetupActivity", this)
+                } catch (e: SQLiteUpdateRecExc) {
+                    KITApp.ReportError(DBU_BibRErr, e.message + "\nOnResume()\nSetupActivity", this)
+                }
+            } else {
+                // Initialise the text field and wait for user to edit Bible name
                 txt_bibname.setText(bibName)
-		}
+            }
+        } catch (e:SQLiteReadRecExc){
+            KITApp.ReportError(DBR_BibErr, e.message + "\nOnResume()\nSetupActivity", this)
+        }
     }
 
     fun goButtonAction () {
         // Get the (possibly edited) Bible name from the EditText widget
         val bibName: String = txt_bibname.text.toString()
         // Save the Bible name into the Bible record in kdb.sqlite
-        KITApp.dao.bibleUpdateName(bibName)
-        // Create the instance of Bible and
-        // ensure rest of app has access to the Bible instance
-        KITApp.bibInst = Bible(bibID, bibName, bkRCr, currBook)
-        // Go to the ChooseBookActivity
-        val i = Intent(this, ChooseBookActivity::class.java)
-        startActivity(i)
-        finish()
+        try {
+            KITApp.dao.bibleUpdateName(bibName)
+            // Create the instance of Bible and
+            // ensure rest of app has access to the Bible instance
+            try {
+                KITApp.bibInst = Bible(bibID, bibName, bkRCr, currBook)
+                // Go to the ChooseBookActivity
+                val i = Intent(this, ChooseBookActivity::class.java)
+                startActivity(i)
+                finish()
+            } catch (e:SQLiteCreateRecExc) {
+                KITApp.ReportError (DBC_BooErr, e.message + "\ngoButtonAction()\nSetupActivity", this)
+            } catch (e:SQLiteReadRecExc) {
+                KITApp.ReportError(DBR_BooErr, e.message + "\ngoButtonAction()\nSetupActivity", this)
+            } catch (e: SQLiteUpdateRecExc) {
+                KITApp.ReportError(DBU_BibRErr, e.message + "\ngoButtonAction()\nSetupActivity", this)
+            }
+        } catch (e:SQLiteUpdateRecExc) {
+            KITApp.ReportError(DBU_BibNErr, e.message + "\ngoButtonAction()\nSetupActivity", this)
+        }
     }
 }

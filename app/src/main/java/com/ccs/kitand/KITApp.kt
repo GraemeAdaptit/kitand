@@ -1,9 +1,12 @@
 package com.ccs.kitand
 
 import android.app.Application
+import android.app.PendingIntent.getActivity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.res.Resources
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AlertDialog
+
 
 //  Created by Graeme Costin on 3JUL20.
 // The author disclaims copyright to this source code.  In place of
@@ -21,9 +24,10 @@ class KITApp : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-    }
+     }
 
     companion object {
+
         var instance: KITApp? = null
             private set
 
@@ -39,5 +43,19 @@ class KITApp : Application() {
                         // The weak ref to chInst which allows rest of app to access the current
                         // Chapter instance; lasts only for the time that Chapter is the current one -
                         // the owning ref is in the Book instance
+
+        fun ReportError(errorNum: Int, msg: String, actContext: Context) {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(actContext)
+                .setTitle("Fatal Error")
+                .setMessage(msg + "\nPlease report Error No. $errorNum to the developers")
+                .setCancelable(false)
+                .setPositiveButton("OK", {
+                    dialog, id -> dialog.cancel()
+                    System.exit(0);
+                }
+            )
+            val alertDialog = builder.create()
+            alertDialog.show()
+        }
     }
 }

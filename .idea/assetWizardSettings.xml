@@ -100,7 +100,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="$PROJECT_DIR$/../KIT/KIT Logo Design/KIT Icon 180x180.png" />
+                                                <entry key="imagePath" value="$PROJECT_DIR$/../KIT/KIT Logo Design/icon_1024px.png" />
+                                                <entry key="scalingPercent" value="56" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -132,6 +133,8 @@
                                   </option>
                                   <option name="values">
                                     <map>
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="7d7dff" />
                                       <entry key="outputName" value="kitlogo" />
                                     </map>
                                   </option>
@@ -308,11 +311,6 @@
                                 </PersistentState>
                               </value>
                             </entry>
-                          </map>
-                        </option>
-                        <option name="values">
-                          <map>
-                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>

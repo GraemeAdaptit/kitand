@@ -560,7 +560,7 @@ color foreground_material_dark
 color foreground_material_light
 color highlighted_text_material_dark
 color highlighted_text_material_light
-color ic_launcher_background
+color kitlogo_background
 color material_blue_grey_800
 color material_blue_grey_900
 color material_blue_grey_950
@@ -818,7 +818,6 @@ drawable btn_radio_on_mtrl
 drawable btn_radio_on_to_off_mtrl_animation
 drawable create_pubitem
 drawable delete_pubitem
-drawable draft_logo_4
 drawable kit_icon180x180
 drawable notification_action_background
 drawable notification_bg
@@ -1183,9 +1182,9 @@ layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
 menu editchaptermenu
-mipmap ic_launcher
-mipmap ic_launcher_foreground
-mipmap ic_launcher_round
+mipmap kitlogo
+mipmap kitlogo_foreground
+mipmap kitlogo_round
 raw kit_booknames
 raw kit_bookspec
 string KIT_logo_descr

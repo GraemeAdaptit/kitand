@@ -98,6 +98,13 @@ class VerseItemAdapter(
 		})
 		// Listener for popover button
 		holder.popoverButton.setOnClickListener(View.OnClickListener() {
+			// GDLC Added saving of cursPos to fix BUGXX
+			// Save cursPos in itText of current cell
+			val currCell = edChAct.recyclerView.findViewHolderForAdapterPosition(currCellOfst)
+			if (currCell != null) {
+				val curCell = currCell as ListCell
+				cursPos = curCell.verseItemTxt.getSelectionStart()
+			}
 			// If the button is not on the current VerseItem then change the current VerseItem to this one
 			val newPos = holder.getAdapterPosition()
 			if (newPos != currCellOfst) {
@@ -188,7 +195,16 @@ class VerseItemAdapter(
 				// Save the current cell if necessary
 				if (curCell.dirty) {
 					val textSrc = curCell.verseItemTxt.getText().toString()
-					KITApp.chInst!!.copyAndSaveVItem(currCellOfst, textSrc)
+					try {
+						KITApp.chInst!!.copyAndSaveVItem(currCellOfst, textSrc)
+					} catch (e:SQLiteUpdateRecExc) {
+						KITApp.ReportError(
+							DBU_VItTxtErr,
+							e.message + "\nmoveCurrCellToClickedCell()\nVerseItemAdapter" +
+							"\nEditChapterActivity",
+							edChAct
+						)
+					}
 					curCell.dirty = false
 				}
 				// Disable the current cell
@@ -247,10 +263,11 @@ class VerseItemAdapter(
 			val newCellType = KITApp.chInst!!.BibItems[currCellOfst].itTyp
 			if (newCellType != "Para" && newCellType != "ParaCont") {
 				verseItemCell.setSelected(true)
+				cursPos = verseItemCell.verseItemTxt.getSelectionStart()
 			} else {
 				verseItemCell.setSelected(false)
+				cursPos = 0
 			}
-//			verseItemCell.setSelected(true)
 		}
 	}
 
