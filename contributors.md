@@ -1,22 +1,19 @@
 ###Contributors###
 
+* Bruce Waters
 
-###Contributors###
+    Manager
 
-Bruce Waters
+    bruce_waters@sil.org
 
-    * Manager
+* Graeme Costin
 
-    * bruce_waters@sil.org
+    Programmer
 
-Graeme Costin
+    graeme_costin@wycliffe.org.au
 
-    * Programmer
+* Erik Brommers
 
-    * graeme_costin@wycliffe.org.au
+    Programmer - Interaction with AIM
 
-Erik Brommers
-
-    * Programmer - Interaction with AIM
-
-    * erik_brommers@wycliffe.org
+    erik_brommers@wycliffe.org
