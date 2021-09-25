@@ -1,13 +1,8 @@
 package com.ccs.kitand
 
-//  Created by Graeme Costin on 25SEP20.
-// The author disclaims copyright to this source code.  In place of
-// a legal notice, here is a blessing:
 //
-//    May you do good and not evil.
-//    May you find forgiveness for yourself and forgive others.
-//    May you share freely, never taking more than you give.
-
+//  Chapter.kt
+//
 // There will be one instance of this class for the currently selected Book.
 // This instance will have a lifetime of the current book selection; its life
 // will be terminated when the user selects a different Book to keyboard, at
@@ -20,7 +15,17 @@ package com.ccs.kitand
 // On the other hand, the user interface needs only the VerseItems for the current Chapter and,
 // in addition, the user interface functions on both Android and iOS expect data to be supplied
 // from the array BibItems[] whose index matches the indexes to the cells of the
-// RecyclerView (on Android) or TableView (on iOS).
+// RecyclerView (on Android) or rows of the TableView (on iOS).
+//
+//	GDLC 17AUG21 Changed popMenuAction() to pass cursor position instead
+//
+//  Created by Graeme Costin on 25SEP20.
+//
+// In place of a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
 
 class Chapter(
 	val chID:Int,		// chapterID INTEGER PRIMARY KEY
@@ -204,12 +209,6 @@ class Chapter(
 			}
 		}
 	}
-
-//	// Return the BibItem at an index (i.e. offset in BibItems or in VerseItemAdapter
-//	// TODO: Check whether this is needed - delete if not needed
-//	fun getBibItem(index:Int) : BibItem {
-//		return BibItems[index]
-//	}
 
 	// Find the offset in BibItems[] to the element having VerseItemID withID
 	// If out of range returns offset zero (first item in the array)
@@ -954,5 +953,4 @@ class Chapter(
 			throw SQLiteUpdateRecExc(e.message + "\nsaveUSFMText()")
 		}
 	}
-
 }

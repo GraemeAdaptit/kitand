@@ -5,6 +5,14 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 
+//  Created by Graeme Costin on 2MAY20.
+//
+// In place of a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
+
 class ExportChapterActivity : AppCompatActivity() {
 
 	private lateinit var ch_name:String
