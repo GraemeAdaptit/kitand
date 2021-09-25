@@ -2,7 +2,6 @@ package com.ccs.kitand
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Half.toFloat
 import android.view.*
 import android.view.ViewTreeObserver.OnPreDrawListener
 import android.widget.*
@@ -10,9 +9,19 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+
+//	This is the EditChapterActivity. This scene will be entered
+//	only when a current Book and current Chapter have been chosen.
 //
 //	NOTE: The EditChapterActivity of kitand matches the VersesTableViewController in kitios
 //
+//  Created by Graeme Costin on 2OCT20.
+//
+// In place of a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
 
 class EditChapterActivity : AppCompatActivity() {
 
@@ -130,7 +139,6 @@ class EditChapterActivity : AppCompatActivity() {
 	// The Android system calls this function when KIT is going into the background
 	override fun onStop() {
 		saveCurrentItemText()
-		println("EditChapterActivity onStop() has been called")
 		super.onStop()
 	}
 
@@ -138,7 +146,6 @@ class EditChapterActivity : AppCompatActivity() {
 	override fun onDestroy() {
 		viewManager = null
 		viewAdapter = null
-		println("EditChapterActivity onDestroy() has been called")
 		super.onDestroy()
 	}
 

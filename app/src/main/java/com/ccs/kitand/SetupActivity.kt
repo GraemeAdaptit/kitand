@@ -7,6 +7,21 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 
+//	The SetupActivity allows the user to edit the name of the Bible and then
+//	starts the creation of the Bible -> curr Book -> curr Chapter -> curr VerseItem
+//	in-memory data structures.
+//
+//	Once the name of the Bible has been set and its Books records have been created
+//	this scene is bypassed on subsequent launches.
+//
+//  Created by Graeme Costin on 17SEP20.
+//
+// In place of a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
+
 class SetupActivity : AppCompatActivity() {
 
     lateinit var btn_go: Button

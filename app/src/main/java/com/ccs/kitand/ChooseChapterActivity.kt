@@ -5,20 +5,28 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.ViewTreeObserver
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-//import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+
+//	This is the ChooseChapterActivity that allows the user to select the Chapter. This Activity
+//	will be entered	after the current Book is selected and set up, and so it will have available
+//	the array of Chapters for the current Book.
+//
+//  Created by Graeme Costin on 15OCT20?
+//
+// In place of a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
 
 class ChooseChapterActivity : AppCompatActivity() {
 
 	// Boolean for whether to let the user choose a Chapter
 	var letUserChooseChapter = false	// Will be set from bkInst.canChooseAnotherChapter
 
-	//	lateinit var txt_bibname: TextView
 	lateinit var txt_ch_prompt: TextView
 	lateinit var lst_chapters: RecyclerView
 	lateinit var recyclerView: RecyclerView
@@ -50,7 +58,6 @@ class ChooseChapterActivity : AppCompatActivity() {
 		suppActionBar?.setDisplayHomeAsUpEnabled(true)
 
 		// Get references to layout widgets
-//		txt_bibname = findViewById(R.id.txt_ch_bibname)
 		txt_ch_prompt = findViewById(R.id.txt_ch_prompt)
 		lst_chapters = findViewById(R.id.lst_chapters)
 		ch_name = KITApp.res.getString(R.string.nm_chapter)
@@ -98,7 +105,6 @@ class ChooseChapterActivity : AppCompatActivity() {
 
 			// On first launch, and when user wants to choose another chapter,
 			// do nothing and wait for the user to choose a Chapter.
-//			txt_bibname.setText(KITApp.bibInst.bibName)
 			val prompt =
 				if (bkInst!!.bkID == 19) "Choose " + ps_name else "Choose " + ch_name + " of " + bkInst!!.bkName
 			txt_ch_prompt.setText(prompt)

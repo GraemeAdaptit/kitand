@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 //  Created by Graeme Costin on 12AUG20.
-// The author disclaims copyright to this source code.  In place of
-// a legal notice, here is a blessing:
+//
+// In place of a legal notice, here is a blessing:
 //
 //    May you do good and not evil.
 //    May you find forgiveness for yourself and forgive others.
@@ -47,14 +47,10 @@ import android.database.sqlite.SQLiteOpenHelper
 //	returns to the foreground.
 
 class SQLiteCreateRecExc(message: String) : Exception(message)
-
 class SQLiteReadRecExc(message: String) : Exception(message)
-
 class SQLiteUpdateRecExc(message: String) : Exception(message)
-
 class SQLiteDeleteRecExc(message: String) : Exception(message)
 
-// class DatabaseHelper(context: Context?) : SQLiteOpenHelper(context, "customer.db", null, 1)
 class KITDAO(
 	var context: Context
 	) : SQLiteOpenHelper(context, "kdb.sqlite", null, 1) {
@@ -562,8 +558,7 @@ class KITDAO(
 
 	fun bridgeGetRecs(itemID:Int, chInst:Chapter) {
 		this.db = this.getReadableDatabase()
-		val sql =
-			"SELECT bridgeID, textCurrBridge, textExtraVerse FROM BridgeItems WHERE itemID = ?1 ORDER BY bridgeID;"
+		val sql = "SELECT bridgeID, textCurrBridge, textExtraVerse FROM BridgeItems WHERE itemID = ?1 ORDER BY bridgeID;"
 		val whArray = arrayOf<String>(itemID.toString())
 		val cursor = db.rawQuery(sql, whArray)
 		if (!cursor.moveToFirst()) {

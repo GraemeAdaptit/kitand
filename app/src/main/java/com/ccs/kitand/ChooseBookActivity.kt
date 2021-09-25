@@ -9,6 +9,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+//	The ChooseBookActivity will be entered after the Bible instance is created and so it will
+//	always have available the array of Bible Books. But it will not always have a current Book:
+//	*	During app launch a current Book may have been read from kdb.sqlite and so this
+//		current Book can be set, and then control passed to the Select Chapter scene.
+//	*	During app use the user may want to change to a different Book and so control
+//		will be passed back to this Select Book scene to allow this to happen.
+//
+//  Created by Graeme Costin on ?.
+//
+// In place of a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
 
 class ChooseBookActivity : AppCompatActivity()  {
 
@@ -128,5 +142,4 @@ class ChooseBookActivity : AppCompatActivity()  {
 			KITApp.ReportError(DBR_ChaErr, e.message + "\nchooseBookAction()\nChooseBookActivity", this)
 		}
 	}
-
 }
