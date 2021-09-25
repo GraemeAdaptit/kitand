@@ -2,18 +2,18 @@
 
 Bruce Waters
 
-    Manager
+    * Manager
 
-    bruce_waters@sil.org
+    * bruce_waters@sil.org
 
 Graeme Costin
 
-    Programmer
+    * Programmer
 
-    graeme_costin@wycliffe.org.au
+    * graeme_costin@wycliffe.org.au
 
 Erik Brommers
 
-    Programmer - Interaction with AIM
+    * Programmer - Interaction with AIM
 
-    erik_brommers@wycliffe.org
+    * erik_brommers@wycliffe.org
