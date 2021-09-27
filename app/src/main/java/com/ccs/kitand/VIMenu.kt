@@ -3,30 +3,42 @@ package com.ccs.kitand
 import android.graphics.Paint
 import android.graphics.Typeface
 
-//
 //  VIMenu.kt
 //  kitand
 //
-// The author disclaims copyright to this source code.  In place of
-// a legal notice, here is a blessing:
-//
-//    May you do good and not evil.
-//    May you find forgiveness for yourself and forgive others.
-//    May you share freely, never taking more than you give.
-//
-//  Created by Graeme Costin on 5/1/2021.
-//  Copyright © 2021 Costin Computing Services. All rights reserved.
+//	Instances of the VIMenu class provide the popover menus when the user taps the popover
+//	button in VerseItem cells of the EditChapterActivity.
 //
 //	VIMenu gathers the data necessary for populating a popover ListView when the user
 //	taps the VerseItem label. The action of tapping a VerseItem label makes that VerseItem
 //	the current one even if it were not before the user tapped its label.
+//
+//	The UI design of KIT aims to show only valid possibilities to users. This requires a
+//	fair bit of logic in the init() of VIMenu. The rules for this logic are listed in the
+//	spreadsheet KIT Design Document Popovers.ods.
+//
+//	The init() of VIMenu also calculates the width in points needed for the popover menu.
+//
+//	As of 27SEP21, a VIMenu is created every time there is a new current VerseItem. This means
+//	that many VIMenu instances are created but never used. To reduce the amount of memory
+//	allocation and deallocation, this will later be changed so that a VIMenu is created
+//	only when it is needed, i.e. only when the user taps the popover button in a VerseItem.
+//
+//  Created by Graeme Costin on 17SEP20.
+//
+// In place of a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
+
 
 class VIMenu(curItOfst: Int)
 {
 	// Properties of a VIMenu instance (dummy values to avoid having optional variables)
 	var VIType = "Verse"						// the type of the VerseItem this menu is for
 	var numRows: Int = 0						// number of rows needed for the popover menu
-	var menuLabelLength: Float = 50.0F			// Minimum length of the menu label in points
+	var menuLabelLength: Float = 50.0F			// Required length of the menu label in points
 												// (for calculating popover menu width)
 
 	data class VIMenuItem(
@@ -188,6 +200,5 @@ class VIMenu(curItOfst: Int)
 			val width = paint.measureText(v.VIMenuLabel)
 			if (width > menuLabelLength) {menuLabelLength = width}
 		}
-
 	}
 }

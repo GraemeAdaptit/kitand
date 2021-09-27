@@ -494,6 +494,8 @@ class Chapter(
 
 	// Create a paragraph break inside a verse
 	fun createParagraphCont(cursPos: Int) {
+//	If passing cursPos runs into problems, a reinstated currTextSplit() function of
+//	VerseItemAdapter may be a solution.
 //		val cv = this.vItAda.currTextSplit()
 //        val cursPos = cv.getAsInteger("1")
 //        val txtBef = cv.getAsString("2")

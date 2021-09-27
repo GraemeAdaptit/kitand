@@ -2,18 +2,18 @@ package com.ccs.kitand
 
 import java.io.BufferedReader
 
-//  Created by Graeme Costin on 24SEP20.
-// The author disclaims copyright to this source code.  In place of
-// a legal notice, here is a blessing:
-//
-//    May you do good and not evil.
-//    May you find forgiveness for yourself and forgive others.
-//    May you share freely, never taking more than you give.
-
 // There will be one instance of this class for the currently selected Book.
 // This instance will have a lifetime of the current book selection; its life
 // will be terminated when the user selects a different Book to keyboard, at
 // which time a new Book instance will be created for the newly selected Book.
+
+//  Created by Graeme Costin on 24SEP20.
+//
+// In place of a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
 
 class Book(
 	val bkID: Int,			// bookID INTEGER
@@ -232,6 +232,7 @@ class Book(
 				// The initialisation of the instance of Chapter stores a reference in KITApp
 				try {
 					chapInst = Chapter(chap.chID, chap.bibID, chap.bkID, chap.chNum, chap.itRCr, chap.numVs, chap.numIt, chap.curIt, chap.curVN)
+//	An SQLite update error gets caught in the outer try; this gives an unwanted duplicate catch
 //				} catch (e:SQLiteUpdateRecExc) {
 //					throw SQLiteUpdateRecExc(e.message + "\nsetupCurrentChapter()")
 				} catch (e:SQLiteCreateRecExc) {
@@ -265,5 +266,4 @@ class Book(
 		BibChaps[currChapOfst].numVs = numVs
 		BibChaps[currChapOfst].numIt = numIt
 	}
-
 }

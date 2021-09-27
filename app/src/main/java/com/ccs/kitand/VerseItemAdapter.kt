@@ -9,6 +9,18 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 
+//	The VerseItemAdapter populates the RecyclerView displaying the VerseItems.
+//	It provides much of the logic for editing VerseItems and saving them to
+//	the SQLite database kdb.sqlite.
+//
+//  Created by Graeme Costin on 2OCT20?.
+//
+// In place of a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
+
 class VerseItemAdapter(
 	var BibItems: ArrayList<Chapter.BibItem>,
 	var edChAct: EditChapterActivity

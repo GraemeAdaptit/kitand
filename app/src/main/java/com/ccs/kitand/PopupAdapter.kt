@@ -9,6 +9,16 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 
+//	The PopupAdapter populates the popover menu RecyclerView.
+//
+//  Created by Graeme Costin on 9MAR21?.
+//
+// In place of a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
+
 class PopupAdapter(
 	var curPoMenu: VIMenu,
 	var edChAct: EditChapterActivity
@@ -61,5 +71,4 @@ class PopupAdapter(
 		var popup_icon: ImageView = itemView.findViewById(R.id.popup_icon)
 		var menu_cmd: EditText = itemView.findViewById(R.id.menu_cmd)
 	}
-
 }

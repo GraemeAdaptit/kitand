@@ -3,15 +3,13 @@ package com.ccs.kitand
 //  ErrorNumbers.kt
 //
 //  Adapted by Graeme Costin on 31/8/21 from ErrorNumbers.swift.
-// The author disclaims copyright to this source code.  In place of
-// a legal notice, here is a blessing:
+//
+// In place of a legal notice, here is a blessing:
 //
 //    May you do good and not evil.
 //    May you find forgiveness for yourself and forgive others.
 //    May you share freely, never taking more than you give.
 
-// Error numbers
-//
 //	Error numbers from 100 to 199 are catastrophic and need the app to close
 //	Error numbers from 200 to 299 may result in reduced capabilities but app should continue
 //	Error numbers from 300 to 399 are minor and need not be reported to the user

@@ -5,14 +5,6 @@ import java.io.BufferedReader
 
 //  Bible.kt
 //
-//  Created by Graeme Costin on 2/SEP/20.
-// The author disclaims copyright to this source code.  In place of
-// a legal notice, here is a blessing:
-//
-//    May you do good and not evil.
-//    May you find forgiveness for yourself and forgive others.
-//    May you share freely, never taking more than you give.
-//
 // This source file deals with the class Bible of which one instance will be created.
 // The initialisation of this single instance will
 // 1. Open the kdb.sqlite database (creating the database on first launch)
@@ -21,12 +13,20 @@ import java.io.BufferedReader
 //    whose life is for the duration of this run of KIT
 // 4. Do the other initialisations needed to build the partial in-memory data for the
 //    Bible -> curr Book -> curr Chapter -> curr VerseItem data structures.
+//
+//  Created by Graeme Costin on 2/SEP/20.
+//
+// In place of a legal notice, here is a blessing:
+//
+//    May you do good and not evil.
+//    May you find forgiveness for yourself and forgive others.
+//    May you share freely, never taking more than you give.
 
 class Bible (
 	val bibID: Int,			//	BibleID
 	var bibName: String,	//	Bible Name
 	var bkRCr: Boolean,		//	Book Records Created
-	var currBk: Int		//	Current Book
+	var currBk: Int			//	Current Book
 ) {
 
 	// Additional properties of the Bible instance
@@ -244,5 +244,4 @@ class Bible (
 		BibBooks[currBookOfst].curChID = curChID
 		BibBooks[currBookOfst].curChNum = curChNum
 	}
-
 }
