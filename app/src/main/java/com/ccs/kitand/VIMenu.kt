@@ -57,6 +57,9 @@ class VIMenu(curItOfst: Int)
 	init {
 		val chInst = KITApp.chInst!!
 		val bibItem = chInst.BibItems[curItOfst]
+		// Get type of next VerseItem (used in deciding whether to allow ParaCont)
+		val isLastItem = (curItOfst + 1) == chInst.numIt
+		val nextItTyp = if (isLastItem) "" else chInst.BibItems[curItOfst + 1].itTyp
 
 		VIType = bibItem.itTyp
 		val chNum = chInst.chNum
@@ -159,7 +162,7 @@ class VIMenu(curItOfst: Int)
 					VIMenuItems.add(viMI5)
 				}
 				if (curItOfst == 0 || (bibItem.itTyp != "VerseCont") ) {
-					if (!bibItem.isBrg) {
+					if (!bibItem.isBrg && nextItTyp != "ParaCont") {
 						val viMI6 = VIMenuItem("Paragraph In", "crParaCont", "C")
 						VIMenuItems.add(viMI6)
 					}
