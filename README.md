@@ -7,8 +7,8 @@
 ### How do I get set up? ###
 
 * Get Android Studio 4 or later 
-* Set up the necessary account for BitBucket (get details from Graeme Costin)
-* Use Android Studio's Source Control to clone the repo from BitBucket, and open the kitand project
+* Get the URL for the repository from Graeme Costin)
+* Use Android Studio's Source Control to clone the repo from Github, and open the kitand project
 * The SQLite database that is included in recent Android systems is used.
 
 
@@ -26,6 +26,6 @@
 
 ### Whom do I talk to? ###
 
-* Owner of this BitBucket repo is Graeme Costin.
+* Owner of this Github repo is Graeme Costin.
 
 * This app will be released as an open source freeware app provided by Wycliffe Bible Translators.
