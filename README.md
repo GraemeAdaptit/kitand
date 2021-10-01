@@ -7,7 +7,7 @@
 ### How do I get set up? ###
 
 * Get Android Studio 4 or later 
-* Get the URL for the repository from Graeme Costin)
+* Get the URL for the repository from Graeme Costin
 * Use Android Studio's Source Control to clone the repo from Github, and open the kitand project
 * The SQLite database that is included in recent Android systems is used.
 
